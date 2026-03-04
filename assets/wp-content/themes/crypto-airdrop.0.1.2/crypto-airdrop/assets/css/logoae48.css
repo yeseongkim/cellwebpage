@@ -1,0 +1,34 @@
+/*
+* Author: Crypto Airdrop Template
+* Created by: (WpFrank)
+* Copyright (c) 2018, Inc.
+* Date: 10 Aug, 2018
+* http://wpfrank.com/
+* Name: logo.css
+*/
+
+.logo_class {
+    margin-right: 0;
+    padding-bottom: 0;
+    width: 180px;
+}
+
+.logo_class img {
+/*    display: inline-block; */
+	/*  width: 15%; */
+	width: 90%; 
+    max-width: 90%;
+	/*flex-basis: auto; */
+	/* padding-top: 1.3125rem; */
+} 
+
+@media (max-width: 767px) {
+
+	.logo_class img {
+		/*display: inline-block;*/
+		width: 90%;
+		max-width: 90%;
+		/*padding-top: 1.3125rem;*/
+	} 
+
+}

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>CELL @ POSTECH</title>
+	<atom:link href="index.xml" rel="self" type="application/rss+xml" />
+	<link></link>
+	<description>EE</description>
+	<lastBuildDate>Wed, 20 Aug 2025 08:19:53 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+<image>
+	<url>../assets/wp-content/uploads/2022/09/logo.ico</url>
+	<title>CELL @ POSTECH</title>
+	<link></link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>Accepted Paper at PACT 2025</title>
+		<link>../news/post/accepted-paper-at-pact-2025/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Wed, 20 Aug 2025 08:16:16 +0000</pubDate>
+				<category><![CDATA[Papers]]></category>
+		<guid isPermaLink="false">../news/post/accepted-paper-at-pact-2025/</guid>
+
+					<description><![CDATA[Research on scalable RAG retrieval, presented in our paper “Bit-Level Semantics: Scalable RAG Retrieval with Neurosymbolic Hyperdimensional Computing,” will appear at PACT 2025.]]></description>
+										<content:encoded><![CDATA[
+<p>Research on scalable RAG retrieval, presented in our paper <em>“Bit-Level Semantics: Scalable RAG Retrieval with Neurosymbolic Hyperdimensional Computing,”</em> will appear at PACT 2025.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Accepted Paper at DAC 2025, ISCA 2025, SIGMETRICS 2025</title>
+		<link>../news/post/accepted-paper-at-dac-2025-isca-2025-sigmetrics-2025/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Thu, 24 Apr 2025 06:39:44 +0000</pubDate>
+				<category><![CDATA[Papers]]></category>
+		<guid isPermaLink="false">../news/post/accepted-paper-at-dac-2025-isca-2025-sigmetrics-2025/</guid>
+
+					<description><![CDATA[3 papers accepted : DiTTO, a novel diffusion-based framework for generating realistic, configurable, and diverse multi-device storage traces(DAC 2025); FlexNeRFer, an energy-efficient NeRF accelerator (ISCA 2025); a diffusion-based generative-AI surrogate<p><a href="../news/post/accepted-paper-at-dac-2025-isca-2025-sigmetrics-2025/" class="btn btn-skin btn-radius">Continue Reading<span class="screen-reader-text">Accepted Paper at DAC 2025, ISCA 2025, SIGMETRICS 2025</span></a></p>]]></description>
+										<content:encoded><![CDATA[
+<p>3 papers accepted : DiTTO, a novel diffusion-based framework for generating realistic, configurable, and diverse multi-device storage traces(DAC 2025); FlexNeRFer, an energy-efficient NeRF accelerator (ISCA 2025); a diffusion-based generative-AI surrogate framework for system optimization (SIGMETRICS 2025)</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Accepted Paper at ICRA 2025, DATE 2025</title>
+		<link>../news/post/accepted-paper-at-icra-2025-date-2025/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Thu, 24 Apr 2025 06:19:38 +0000</pubDate>
+				<category><![CDATA[Papers]]></category>
+		<guid isPermaLink="false">../news/post/accepted-paper-at-icra-2025-date-2025/</guid>
+
+					<description><![CDATA[3 papers accepted: Reserach on a dynamic-encoding, oversampling HD federated learning framework for mobile robots (ICRA 2025); an HD framework designed with fine-grained feature encoding and a robust training scheme<p><a href="../news/post/accepted-paper-at-icra-2025-date-2025/" class="btn btn-skin btn-radius">Continue Reading<span class="screen-reader-text">Accepted Paper at ICRA 2025, DATE 2025</span></a></p>]]></description>
+										<content:encoded><![CDATA[
+<p>3 papers accepted: Reserach on a dynamic-encoding, oversampling HD federated learning framework for mobile robots (ICRA 2025); an HD framework designed with fine-grained feature encoding and a robust training scheme to effectively capture complex data patterns(DATE 2025); and a dynamic pruning framework for large language models enabling real-time adaptation with competitive accuracy and improved efficiency (DATE 2025).</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Hojeong Kim, Selim An, Jaewoo Gwak, Sehyeon Park, Minsang Kim joined CELL</title>
+		<link>../news/post/hojeong-kim-selim-an-jaewoo-gwak-sehyeon-park-minsang-kim-joined-cell/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Mon, 24 Feb 2025 07:38:51 +0000</pubDate>
+				<category><![CDATA[Members]]></category>
+		<guid isPermaLink="false">../news/post/hojeong-kim-selim-an-jaewoo-gwak-sehyeon-park-minsang-kim-joined-cell/</guid>
+
+					<description><![CDATA[Hojeong Kim, Selim An, Jaewoo Gwak, Sehyeon Park , Minsang Kim joined CELL in the first semester of 2025. Welcome!]]></description>
+										<content:encoded><![CDATA[
+<p><em>Hojeong Kim, Selim An, Jaewoo Gwak, Sehyeon Park , <em>Minsang Kim</em></em> joined CELL in the first semester of 2025. Welcome!</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Accepted Paper at ICCD 2024</title>
+		<link>../news/post/accepted-paper-at-iccd-2024/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Mon, 24 Feb 2025 07:26:12 +0000</pubDate>
+				<category><![CDATA[Papers]]></category>
+		<guid isPermaLink="false">../news/post/accepted-paper-at-iccd-2024/</guid>
+
+					<description><![CDATA[Research on efficient forward-only training for Hyperdimensional Computing, introducing SEP and IMP for better encoding adaptability and accuracy, will be presented at ICCD 2024.]]></description>
+										<content:encoded><![CDATA[
+<p>Research on efficient forward-only training for Hyperdimensional Computing, introducing SEP and IMP for better encoding adaptability and accuracy, will be presented at ICCD 2024.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Published in ACM TODAES</title>
+		<link>../news/post/published-in-acm-todaes/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Mon, 24 Feb 2025 07:23:35 +0000</pubDate>
+				<category><![CDATA[Papers]]></category>
+		<guid isPermaLink="false">../news/post/published-in-acm-todaes/</guid>
+
+					<description><![CDATA[Research on improving Hyperdimensional Computing with trainable encoding and adaptive training is published in ACM Transactions on Design Automation of Electronic Systems (TODAES).]]></description>
+										<content:encoded><![CDATA[
+<p>Research on improving Hyperdimensional Computing with trainable encoding and adaptive training is published in <em>ACM Transactions on Design Automation of Electronic Systems (TODAES)</em>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Chaitali Bhattacharyya joined CELL</title>
+		<link>../news/post/chaitali-bhattacharyya-joined-cell/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Mon, 26 Aug 2024 07:20:22 +0000</pubDate>
+				<category><![CDATA[Members]]></category>
+		<guid isPermaLink="false">../news/post/chaitali-bhattacharyya-joined-cell/</guid>
+
+					<description><![CDATA[Chaitali Bhattacharyya in the AI department joined CELL in the second semester of 2024. Welcome!]]></description>
+										<content:encoded><![CDATA[
+<p><em>Chaitali Bhattacharyya</em> in the AI department joined CELL in the second semester of 2024. Welcome!</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Accepted paper at ICRA 2024</title>
+		<link>../news/post/accepted-paper-at-icra-2024/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Tue, 13 Aug 2024 19:00:53 +0000</pubDate>
+				<category><![CDATA[Papers]]></category>
+		<guid isPermaLink="false">../news/post/accepted-paper-at-icra-2024/</guid>
+
+					<description><![CDATA[Our recent collaboration with Coga Robotics on applying Hyperdimensional Computing to robotic sensorimotor controls has been accepted for presentation at the ICRA&#8217;24]]></description>
+										<content:encoded><![CDATA[
+<p>Our recent collaboration with Coga Robotics on applying Hyperdimensional Computing to robotic sensorimotor controls has been accepted for presentation at the ICRA&#8217;24</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Accepted paper at DATE 2024</title>
+		<link>../news/post/accepted-paper-at-date-2024/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Tue, 13 Aug 2024 19:00:20 +0000</pubDate>
+				<category><![CDATA[Papers]]></category>
+		<guid isPermaLink="false">../news/post/accepted-paper-at-date-2024/</guid>
+
+					<description><![CDATA[Our research on developing a dynamic encoder for Hyperdimensional Computing, which significantly improves accuracy and efficiency, has been accepted for presentation at DATE&#8217;24]]></description>
+										<content:encoded><![CDATA[
+<p>Our research on developing a dynamic encoder for Hyperdimensional Computing, which significantly improves accuracy and efficiency, has been accepted for presentation at DATE&#8217;24</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Junyeong Lee, Shinhyoung Jang, Seonha Ryu joined CELL</title>
+		<link>../news/post/junyeong-lee-shinhyoung-jang-seonha-ryu-joined-cell/</link>
+		
+		<dc:creator><![CDATA[CELL]]></dc:creator>
+		<pubDate>Tue, 13 Aug 2024 18:55:40 +0000</pubDate>
+				<category><![CDATA[Members]]></category>
+		<guid isPermaLink="false">../news/post/junyeong-lee-shinhyoung-jang-seonha-ryu-joined-cell/</guid>
+
+					<description><![CDATA[Junyeong Lee in the EECS department, Shinhyoung Jang, Seonha Ryu in the AI department joined CELL in the first semester of 2024. Welcome!]]></description>
+										<content:encoded><![CDATA[
+<p><em>Junyeong Lee in the EECS department, Shinhyoung Jang, Seonha Ryu </em>in the AI department joined CELL in the first semester of 2024. Welcome!</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

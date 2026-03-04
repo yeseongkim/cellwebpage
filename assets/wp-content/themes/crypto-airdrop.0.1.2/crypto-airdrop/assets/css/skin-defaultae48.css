@@ -1,0 +1,27 @@
+/*
+* Author: WpFrank
+* Created by: (WP Frank)
+* Copyright (c) 2020, include.
+* http://wpfrank.com/
+* Name: skin-default.css
+*/
+
+
+button, 
+button[disabled]:hover, 
+button[disabled]:focus, 
+input[type=button], 
+input[type=button][disabled]:hover, 
+input[type=button][disabled]:focus, 
+input[type=reset], 
+input[type=reset][disabled]:hover, 
+input[type=reset][disabled]:focus, 
+input[type=submit], 
+input[type=submit][disabled]:hover, 
+input[type=submit][disabled]:focus {
+	background: #0074da; 
+}
+
+#particles-js {
+    background: #66A7FF;
+}
