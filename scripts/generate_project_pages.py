@@ -13,6 +13,7 @@ PDF_DIR = ROOT / "pdfs"
 PUBLICATIONS_FILE = ROOT / "publications" / "index.html"
 PROJECTS_DIR = ROOT / "projects"
 DATA_JS = PROJECTS_DIR / "projects-data.js"
+HANDCRAFTED_SLUGS = {"bit-level-semantics"}
 
 
 AREA_META = {
@@ -646,6 +647,8 @@ def write_outputs(projects):
 
     for project in projects:
         page_path = PROJECTS_DIR / f"{project['slug']}.html"
+        if project["slug"] in HANDCRAFTED_SLUGS and page_path.exists():
+            continue
         page_path.write_text(render_page(project), encoding="utf-8")
 
     cards = [FINE_SCOPE_CARD]

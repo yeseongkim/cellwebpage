@@ -3,23 +3,669 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bit-Level Semantics: Scalable RAG Retrieval with Neurosymbolic Hyperdimensional Computing | CELL Project Page</title>
+<title>Bit-Level Semantics | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #091019;
+  --surface: #101a26;
+  --surface-2: #152131;
+  --border: #23364d;
+  --text: #e6eef8;
+  --muted: #8ea2bc;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(9, 16, 25, 0.88);
+  --binary: #78d4ff;
+  --scale: #43d39f;
+  --accent: #4f9eff;
+  --accent-soft: rgba(79, 158, 255, 0.14);
+  --alert: #f5a15c;
+}
+
+[data-theme="light"] {
+  --bg: #f2f6fb;
+  --surface: #ffffff;
+  --surface-2: #edf3fa;
+  --border: #cfdae8;
+  --text: #0f2237;
+  --muted: #62758d;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(242, 246, 251, 0.94);
+  --binary: #007fbe;
+  --scale: #068d60;
+  --accent: #1d73da;
+  --accent-soft: rgba(29, 115, 218, 0.08);
+  --alert: #c36b1f;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(120, 212, 255, 0.12), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(67, 211, 159, 0.10), transparent 24%),
+    radial-gradient(circle at 20% 90%, rgba(79, 158, 255, 0.08), transparent 26%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 58px 58px;
+  opacity: 0.13;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 8%;
+  background: rgba(120, 212, 255, 0.16);
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  right: -4%;
+  bottom: 12%;
+  background: rgba(67, 211, 159, 0.14);
+}
+
+.hero-inner {
+  max-width: 1040px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 960px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 82px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.binary {
+  color: var(--binary);
+  font-style: italic;
+}
+
+.scale {
+  color: var(--scale);
+}
+
+.subtitle {
+  max-width: 760px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 150;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 18px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.nav-link {
+  padding: 15px 12px;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+section {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 78px 24px;
+}
+
+.section-label {
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 22px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.12;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.divider {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.abstract-box,
+.highlight-strip,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box,
+.motivation-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 20px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.abstract-box {
+  padding: 32px 34px;
+}
+
+.abstract-box p {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.challenge-grid,
+.insight-grid,
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.motivation-card,
+.insight-card,
+.analysis-card {
+  padding: 26px 28px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.motivation-card.loss h3 {
+  color: var(--alert);
+}
+
+.motivation-card.scale-card h3 {
+  color: var(--binary);
+}
+
+.highlight-strip {
+  margin-top: 22px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.highlight-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 18px;
+  text-align: center;
+}
+
+.highlight-number {
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(42px, 5vw, 64px);
+  line-height: 1;
+  color: var(--accent);
+}
+
+.highlight-caption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.pipe-step {
+  padding: 24px 20px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  box-shadow: 0 18px 38px var(--shadow);
+}
+
+.pipe-num {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.pipe-desc {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.insight-grid {
+  margin-top: 22px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.metric-card {
+  padding: 26px 22px;
+  text-align: center;
+}
+
+.metric-value {
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(42px, 5vw, 62px);
+  line-height: 1;
+  color: var(--accent);
+}
+
+.metric-label {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.metric-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.analysis-grid {
+  margin-top: 24px;
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.takeaway-list li:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+
+.takeaway-text {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.citation-box {
+  position: relative;
+  padding: 24px 28px 28px;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 84px;
+  white-space: pre-wrap;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+footer {
+  padding: 36px 24px 44px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+}
+
+footer a {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .pipeline,
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .challenge-grid,
+  .insight-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .pipeline,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .theme-btn {
+    top: auto;
+    bottom: 16px;
+  }
+
+  .hero {
+    padding-top: 90px;
+  }
+
+  .abstract-box,
+  .motivation-card,
+  .insight-card,
+  .analysis-card,
+  .metric-card,
+  .citation-box {
+    padding: 24px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    margin-top: 42px;
+  }
+
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+</style>
 </head>
-<body data-area="llm">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · PACT 2025</div>
-    <h1 class="hero-title">Bit-Level Semantics: Scalable RAG Retrieval with Neurosymbolic Hyperdimensional Computing</h1>
-    <p class="hero-subtitle">Binary hypervectors and HD-NSW make RAG retrieval scale to tens of millions of documents with dense-level quality at much lower memory cost.</p>
-    <div class="hero-meta"><strong>Authors</strong> Hyunsei Lee, Shinhyoung Jang, Jaewoo Gwak, Jongho Park, and Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">PACT 2025</div>
+    <h1>Bit-Level Semantics turns <span class="binary">binary hypervectors</span> into a <span class="scale">scalable RAG retrieval system</span>.</h1>
+    <p class="subtitle">The paper keeps transformer semantics, projects them into 3008-bit document hypervectors, and searches them with HD-NSW: a small-world index designed specifically for Hamming-space retrieval instead of floating-point ANN pipelines.</p>
+    <div class="authors">Hyunsei Lee, Shinhyoung Jang, Jaewoo Gwak, Jongho Park, and Yeseong Kim</div>
+    <div class="affil">Department of Electrical Engineering and Computer Science, and Center for Physical AI, DGIST</div>
+
+    <div class="chip-row">
+      <div class="chip">MPNet embeddings</div>
+      <div class="chip">3008-bit hypervectors</div>
+      <div class="chip">Beam width 16</div>
+      <div class="chip">M = 256</div>
+      <div class="chip">Single RTX 4090</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +673,248 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>Dense retrieval quality, but with a binary systems stack.</h2>
   <div class="abstract-box reveal">
-    <p>Retrieval-Augmented Generation (RAG) systems typically rely on dense floating-point embeddings to retrieve relevant documents, but this approach incurs significant memory and compute costs at scale. We propose a Hyperdimensional Computing (HDC) framework that projects transformer token embeddings into high-dimensional binary hypervectors, which are aggregated into compact document representations. To support sublinear search, we introduce HD-NSW, a graph-based index inspired by navigable small-world networks. HD-NSW clusters similar hypervectors into bundled centroids and connects them with sparse Hammingdistance edges, enabling efficient, beam-guided traversal entirely in the binary domain. Across 15 BEIR benchmarks and synthetic Gaussian mixture corpora, HD-NSW achieves over 99% of dense retrieval quality, reduces memory usage by 8×, and supports over 860 queries per second at 10 million documents while maintaining over 80% throughput at 40 million documents.</p>
+    <p>Retrieval-Augmented Generation relies on dense embeddings because they preserve semantic ranking quality, but the cost profile of floating-point retrieval becomes painful once the corpus reaches millions of documents. This paper reframes the problem as a hyperdimensional retrieval pipeline: contextualized transformer token embeddings are projected into high-dimensional hypervectors, bundled into document representations, binarized, and bit-packed for efficient storage and distance computation.</p>
+    <p>The second half of the paper is the real systems contribution. Instead of using a generic ANN index on top of compressed vectors, the authors build HD-NSW, a graph over bundled centroid hypervectors that navigates directly in Hamming space using GPU-friendly XOR and population-count operations. Evaluated on all 15 BEIR tasks and synthetic corpora up to 40 million documents, the system stays within 1 percent of exact dense retrieval quality on average, reduces memory by about 8x, and sustains high throughput on a single commercial GPU.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Binary hypervectors and HD-NSW make RAG retrieval scale to tens of millions of documents with dense-level quality at much lower memory cost.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Domain-Specialized Language Systems</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">PACT 2025</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">RAG Retrieval, Hyperdimensional Computing</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>The paper is solving two different scaling failures at once.</h2>
+  <p class="section-intro">Bit-Level Semantics is not just a compression paper. It starts from the observation that large-scale RAG systems fail for two different reasons: approximate compression damages ranking quality, while exact binary search still does not scale if it remains brute-force.</p>
+
+  <div class="challenge-grid">
+    <div class="motivation-card loss reveal">
+      <h3>Compressed ANN methods lose too much quality</h3>
+      <p>On the BEIR benchmark, the paper reports that IVFPQ variants lose roughly 13 percent to 23 percent of nDCG@10 relative to exact dense search, while HNSWPQ32 degrades even more severely. The message is clear: memory savings alone are not enough if the retrieval layer stops bringing back the right evidence.</p>
+    </div>
+    <div class="motivation-card scale-card reveal">
+      <h3>Binary vectors alone are still too slow if search is exhaustive</h3>
+      <p>Even after converting documents into compact 3008-bit vectors, brute-force Hamming search collapses as the corpus grows. The paper reports only 185 queries per second at one million documents for exact binary search, which is far below what a practical large-scale RAG backend needs.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project sits in CELL&#x27;s work on retrieval, domain specialization, and adaptive compression for language systems under strict deployment budgets. The page highlights the paper through the lens of RAG Retrieval and Hyperdimensional Computing.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">3008</div>
+      <div class="highlight-caption">bits used for the document hypervector that recovers most of the dense retrieval quality.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">47</div>
+      <div class="highlight-caption">packed 64-bit words store one document representation after binarization.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">8x</div>
+      <div class="highlight-caption">approximate memory reduction versus 768-dimensional floating-point embeddings.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Retrieval-Augmented Generation (RAG) systems typically rely on dense floating-point embeddings to retrieve relevant documents, but this approach incurs significant memory and compute costs at scale.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>We propose a Hyperdimensional Computing (HDC) framework that projects transformer token embeddings into high-dimensional binary hypervectors, which are aggregated into compact document representations.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>Across 15 BEIR benchmarks and synthetic Gaussian mixture corpora, HD-NSW achieves over 99% of dense retrieval quality, reduces memory usage by 8×, and supports over 860 queries per second at 10 million documents while maintaining over 80% throughput at 40 million documents.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>HD-NSW is built as a binary-native retrieval pipeline, not a bolted-on index.</h2>
+  <p class="section-intro">The page below follows the structure of the paper itself: preserve semantics during projection, compress documents into hardware-friendly binary form, then build a graph whose traversal logic respects the geometry of Hamming space.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Contextual tokens from MPNet</div>
+      <div class="pipe-desc">Each document is first encoded with a pretrained transformer. The model keeps token-level contextual embeddings instead of collapsing everything immediately into a single dense vector.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Random projection into hyperspace</div>
+      <div class="pipe-desc">A fixed projection matrix with entries in {-1, +1} maps every token embedding into a high-dimensional hypervector. This is the bridge from neural semantics to hyperdimensional symbolic representations.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Bundle, binarize, and bit-pack</div>
+      <div class="pipe-desc">Token hypervectors are bundled across the sequence, thresholded into a 0/1 document hypervector, then packed into 64-bit words so Hamming distance can be computed with bitwise primitives.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Cluster documents into centroid nodes</div>
+      <div class="pipe-desc">Documents within a Hamming threshold of D/4 are grouped, then a bitwise majority vote produces a bundled centroid hypervector. Those centroids become the nodes of HD-NSW.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 05</div>
+      <div class="pipe-title">Beam-guided graph search in the binary domain</div>
+      <div class="pipe-desc">Queries start from diverse entry nodes, expand through nearby centroids, and only score documents in promising neighborhoods. The implementation is GPU-native and built around XOR plus population count.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why 3008 bits?</h3>
+      <p>Naive one-bit binarization of MPNet lowers average nDCG@10 by 7.2 percent relative to exact dense retrieval. Moving to a 3008-bit hyperdimensional projection recovers 97 percent of the exact performance, leaving only about 0.5 percent relative degradation. Expanding further to 4992 bits yields less than 0.2 percent additional gain, so 3008 bits is the paper's practical sweet spot.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why bundled centroids?</h3>
+      <p>The graph does not navigate individual documents directly. Instead, it navigates cluster centroids that act as semantic proxies for many documents at once. That lets HD-NSW reject entire neighborhoods before touching their payload vectors, which is where the sublinear behavior comes from.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The retrieval quality stays dense-like while the scale envelope changes.</h2>
+  <p class="section-intro">All results below are reported from the paper's evaluation on a single Intel Core i9-14900K plus one NVIDIA RTX 4090 with 24 GB VRAM. That matters: the scaling claim is not coming from a distributed serving stack.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">0.4830</div>
+      <div class="metric-label">average nDCG@10</div>
+      <div class="metric-sub">vs 0.4878 exact dense and 0.4848 HNSW across 15 BEIR tasks</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">860+</div>
+      <div class="metric-label">QPS at 10M docs</div>
+      <div class="metric-sub">while HNSW and CAGRA hit out-of-memory limits in the reported setup</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">7.68x</div>
+      <div class="metric-label">throughput gain at 5M</div>
+      <div class="metric-sub">compared with the strongest approximate baseline still operating at that scale</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">&lt;0.3 ms</div>
+      <div class="metric-label">extra encoding overhead</div>
+      <div class="metric-sub">for projection, bundling, binarization, and bit-packing on top of MPNet</div>
+    </div>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>What scales well</h3>
+      <p>The paper reports that HD-NSW stays above 800 QPS even at 40 million documents, and the median beam-search depth remains shallow as the corpus grows. That is the core systems result: graph traversal in Hamming space remains stable enough that the retrieval layer does not crumble under corpus growth.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>What it trades away</h3>
+      <p>The tradeoff is offline preprocessing. At 2.5 million documents, HD-NSW needs 804 seconds to build its index, versus 335 seconds for HNSW and 29 seconds for CAGRA in the paper's comparison. The authors are explicit that this is an offline cost paid to win on deployment-time memory and throughput.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why this work matters beyond one benchmark.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">The paper shows that hyperdimensional computing can act as a retrieval systems substrate, not just a compact representation. The index, the storage format, and the search procedure are all designed around the same binary geometry.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">It turns a vague "compress the embeddings" idea into a concrete engineering recipe: token-level projection, document bundling, bit-packing, centroid graph construction, and beam-guided search. That end-to-end coherence is what the earlier generic page was missing.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">For CELL, this paper is a good example of the lab's broader agenda: use brain-inspired representations when they change the efficiency frontier of real systems, not only because they are elegant mathematically.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Hyunsei Lee, Shinhyoung Jang, Jaewoo Gwak, Jongho Park, and Yeseong Kim. “Bit-Level Semantics: Scalable RAG Retrieval with Neurosymbolic Hyperdimensional Computing”, to appear in The International Conference on Parallel Architectures and Compilation Techniques (PACT) 2025</p>
+    <p class="citation-text" id="citation-text">Hyunsei Lee, Shinhyoung Jang, Jaewoo Gwak, Jongho Park, and Yeseong Kim. "Bit-Level Semantics: Scalable RAG Retrieval with Neurosymbolic Hyperdimensional Computing." In 2025 34th International Conference on Parallel Architectures and Compilation Techniques (PACT), IEEE, 2025. DOI: 10.1109/PACT65351.2025.00039.</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll("[data-copy-target]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.getAttribute("data-copy-target"));
+    if (!target) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(target.textContent || "");
+      const original = button.textContent;
+      button.textContent = "Copied";
+      window.setTimeout(() => {
+        button.textContent = original;
+      }, 1200);
+    } catch (err) {
+      button.textContent = "Unavailable";
+    }
+  });
+});
+</script>
 </body>
 </html>
