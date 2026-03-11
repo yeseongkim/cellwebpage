@@ -13,7 +13,7 @@ PDF_DIR = ROOT / "pdfs"
 PUBLICATIONS_FILE = ROOT / "publications" / "index.html"
 PROJECTS_DIR = ROOT / "projects"
 DATA_JS = PROJECTS_DIR / "projects-data.js"
-HANDCRAFTED_SLUGS = {"bit-level-semantics"}
+HANDCRAFTED_SLUGS = {"bit-level-semantics", "ditto-storage-traces"}
 
 
 AREA_META = {

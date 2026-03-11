@@ -3,23 +3,668 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Diffusion-Based Framework for Configurable and Realistic Multi-Storage Trace Generation | CELL Project Page</title>
+<title>DiTTO | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #0c1016;
+  --surface: #131a23;
+  --surface-2: #1a2330;
+  --border: #28384d;
+  --text: #e8eef6;
+  --muted: #91a3b8;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(12, 16, 22, 0.88);
+  --accent: #4f9eff;
+  --accent-soft: rgba(79, 158, 255, 0.12);
+  --trace: #f59d5b;
+  --config: #61d5c2;
+  --sparse: #b18cff;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef3f8;
+  --border: #d2ddea;
+  --text: #102233;
+  --muted: #64788f;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(244, 247, 251, 0.94);
+  --accent: #1d73da;
+  --accent-soft: rgba(29, 115, 218, 0.08);
+  --trace: #cc6c1f;
+  --config: #0d8f7a;
+  --sparse: #7c57d9;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(245, 157, 91, 0.12), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(97, 213, 194, 0.10), transparent 22%),
+    radial-gradient(circle at 18% 85%, rgba(177, 140, 255, 0.10), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 8%;
+  background: rgba(245, 157, 91, 0.18);
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(97, 213, 194, 0.14);
+}
+
+.hero-inner {
+  max-width: 1040px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.trace {
+  color: var(--trace);
+  font-style: italic;
+}
+
+.config {
+  color: var(--config);
+}
+
+.subtitle {
+  max-width: 760px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 150;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 18px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.nav-link {
+  padding: 15px 12px;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+section {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 78px 24px;
+}
+
+.section-label {
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 22px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.12;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.divider {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.abstract-box,
+.problem-card,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 20px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.abstract-box {
+  padding: 32px 34px;
+}
+
+.abstract-box p {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.problem-grid,
+.insight-grid,
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.problem-card,
+.insight-card,
+.analysis-card {
+  padding: 26px 28px;
+}
+
+.problem-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.problem-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.problem-card h3 {
+  color: var(--trace);
+}
+
+.problem-card.config-card h3 {
+  color: var(--config);
+}
+
+.highlight-strip {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.highlight-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px 18px;
+  text-align: center;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-number {
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(42px, 5vw, 64px);
+  line-height: 1;
+  color: var(--accent);
+}
+
+.highlight-caption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.pipe-step {
+  padding: 24px 20px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  box-shadow: 0 18px 38px var(--shadow);
+}
+
+.pipe-num {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.pipe-desc {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.insight-grid {
+  margin-top: 22px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.metric-card {
+  padding: 26px 22px;
+  text-align: center;
+}
+
+.metric-value {
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(42px, 5vw, 60px);
+  line-height: 1;
+  color: var(--accent);
+}
+
+.metric-label {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.metric-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.analysis-grid {
+  margin-top: 24px;
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.takeaway-list li:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+
+.takeaway-text {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.citation-box {
+  position: relative;
+  padding: 24px 28px 28px;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 84px;
+  white-space: pre-wrap;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+footer {
+  padding: 36px 24px 44px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+}
+
+footer a {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .pipeline,
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .problem-grid,
+  .insight-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .pipeline,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .theme-btn {
+    top: auto;
+    bottom: 16px;
+  }
+
+  .hero {
+    padding-top: 90px;
+  }
+
+  .abstract-box,
+  .problem-card,
+  .insight-card,
+  .analysis-card,
+  .metric-card,
+  .citation-box {
+    padding: 24px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    margin-top: 42px;
+  }
+
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+</style>
 </head>
-<body data-area="gen-ai">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · DAC 2025 LBR</div>
-    <h1 class="hero-title">A Diffusion-Based Framework for Configurable and Realistic Multi-Storage Trace Generation</h1>
-    <p class="hero-subtitle">A diffusion model generates realistic, configurable multi-device storage traces so storage studies no longer depend on scarce hand-collected traces alone.</p>
-    <div class="hero-meta"><strong>Authors</strong> Seohyun Kim, Junyoung Lee, Jongho Park, Jinhyung Koo, Sungjin Lee and Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">DAC 2025 Late Breaking Results</div>
+    <h1>DiTTO generates <span class="trace">realistic storage traces</span> with <span class="config">explicit workload control</span>.</h1>
+    <p class="subtitle">Instead of replaying fixed templates or hand-engineered simulators, DiTTO turns multi-device access logs into structured image-like traces, conditions a diffusion model with numeric workload targets through CHIP, and extends outputs with temporal outpainting.</p>
+    <div class="authors">Seohyun Kim, Junyoung Lee, Jongho Park, Jinhyung Koo, Sungjin Lee, and Yeseong Kim</div>
+    <div class="affil">DGIST and POSTECH</div>
+
+    <div class="chip-row">
+      <div class="chip">DiTTO</div>
+      <div class="chip">CHIP conditioning</div>
+      <div class="chip">Sparsity-aware training</div>
+      <div class="chip">Temporal outpainting</div>
+      <div class="chip">Alibaba Block IO traces</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +672,252 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>Trace generation is treated as a controllable generative modeling problem.</h2>
   <div class="abstract-box reveal">
-    <p>We propose DiTTO, a novel diffusion-based framework for generating realistic, precisely configurable, and diverse multi-device storage traces. Leveraging advanced diffusion techniques, DiTTO enables the synthesis of high-fidelity continuous traces that capture temporal dynamics and inter-device dependencies with user-defined configurations. Our experimental results demonstrate that DiTTO can generate traces with high fidelity and diversity while aligning closely with guided configurations with only 8% errors. Op N Op 1 Block io trace, SSD trace, … Device Utilization 2 System Log RAID, CephFS Block 1 Block 2 Block 3 Block 1 Block 2 Block 3 Drive 1 Drive 2 Storage Devices Decoder Device Utilizaion Inference … System Configuration Op 2 … 1 Total request, Most use device, … Diffusion U-Net Image Encoder Device Utilization Contrastive Learning System Config 3 I. I NTRODUCTION Generate Extend Traces Config Encoder Configuration Understanding and optimizing the performance of distributed storage systems require detailed workload analysis in various environments such as RAID arrays and CephFS.</p>
+    <p>DiTTO, short for Diffusion-based Trace generation and Temporal Outpainting, targets a very practical systems problem: realistic storage traces are expensive to collect, often private, and difficult to cover across the range of configurations needed for evaluation. Existing synthetic tools are usually template-driven, while earlier learning-based approaches still depend heavily on hand-crafted features.</p>
+    <p>The paper replaces that workflow with a diffusion-based generator that operates on structured multi-device trace representations. Raw access logs are converted into multi-channel images, numeric workload targets are embedded through a dedicated conditioning model called CHIP, and outpainting extends traces beyond the original time horizon. The result is a system that aims to be realistic, diverse, and explicitly steerable by measurable properties such as read/write ratios, request rates, device utilization, burstiness, and temporal dependencies.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">A diffusion model generates realistic, configurable multi-device storage traces so storage studies no longer depend on scarce hand-collected traces alone.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Generative AI for Systems and Media</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DAC 2025 LBR</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Diffusion Model, Storage Systems</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>The storage-systems problem is not just realism. It is realism plus controllability.</h2>
+  <p class="section-intro">A synthetic workload generator is only useful if researchers can ask for very specific operating conditions and still get traces that look like real systems behavior. DiTTO is built around that double requirement.</p>
+
+  <div class="problem-grid">
+    <div class="problem-card reveal">
+      <h3>Real trace collection is expensive and constrained</h3>
+      <p>Distributed storage workloads are valuable for analyzing caching, load balancing, and system bottlenecks, but direct collection carries instrumentation cost and privacy risk. That means the hardest traces to get are often the ones needed to stress new optimizations.</p>
+    </div>
+    <div class="problem-card config-card reveal">
+      <h3>Template-based synthesis is easy to run but hard to steer precisely</h3>
+      <p>Tools such as benchmark-style synthetic generators can replay predefined patterns, but they struggle to model evolving cross-device behavior. Machine learning alternatives improve realism, yet often still depend on expert-crafted features instead of letting the user specify measurable workload targets directly.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project reflects CELL&#x27;s use of generative models to synthesize difficult-to-collect data, emulate system behavior, or accelerate emerging media workloads. The page highlights the paper through the lens of Diffusion Model and Storage Systems.</p>
+
+  <div class="highlight-strip">
+    <div class="highlight-item reveal">
+      <div class="highlight-number">&lt; 8%</div>
+      <div class="highlight-caption">average error for guided read/write ratio control in the reported experiments.</div>
+    </div>
+    <div class="highlight-item reveal">
+      <div class="highlight-number">&lt; 2%</div>
+      <div class="highlight-caption">average error for device utilization patterns on 50 generated traces.</div>
+    </div>
+    <div class="highlight-item reveal">
+      <div class="highlight-number">1st</div>
+      <div class="highlight-caption">storage-trace generation work in the paper's framing to use diffusion directly for this problem.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>We propose DiTTO, a novel diffusion-based framework for generating realistic, precisely configurable, and diverse multi-device storage traces.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>Leveraging advanced diffusion techniques, DiTTO enables the synthesis of high-fidelity continuous traces that capture temporal dynamics and inter-device dependencies with user-defined configurations.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>I NTRODUCTION Generate Extend Traces Config Encoder Configuration Understanding and optimizing the performance of distributed storage systems require detailed workload analysis in various environments such as RAID arrays and CephFS.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>DiTTO is a four-part pipeline: represent, condition, denoise, then extend.</h2>
+  <p class="section-intro">The most interesting part of the paper is that it does not condition a diffusion model with vague text prompts. It builds an explicit numeric control path for workload properties and couples that with a representation designed for sparse, multi-device traces.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Turn logs into structured images</div>
+      <div class="pipe-desc">Per-device access logs with timestamps, operation types, and device identifiers are segmented over time. The x-axis is time, the y-axis is the device dimension, and separate channels encode read versus write behavior.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Reduce sparsity without destroying structure</div>
+      <div class="pipe-desc">Storage workloads are extremely sparse, so the paper adds local Gaussian noise around access events. This is not cosmetic; it gives the diffusion model enough local signal to learn temporal and cross-device context instead of mostly seeing empty space.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Condition generation with CHIP</div>
+      <div class="pipe-desc">CHIP, short for Contrastive Hyperconfiguration-Image Pretraining, maps numeric workload configurations into a latent space aligned with the image-form trace representation. This gives DiTTO explicit control over quantifiable properties rather than relying on loosely interpreted prompts.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Outpaint for arbitrary trace length</div>
+      <div class="pipe-desc">Instead of generating a fixed window once, DiTTO uses outpainting to continue the trace conditioned on the boundary state of the earlier segment. That allows long traces while preserving continuity in burst behavior, device coordination, and workload fluctuations.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why CHIP matters</h3>
+      <p>The conditioning path is the differentiator. The paper argues that storage-trace generation needs direct control over numeric targets such as read/write ratios and dominant devices. CHIP uses contrastive learning so similar configurations sit near similar trace representations, which makes the diffusion model easier to guide with precise workload constraints.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why outpainting matters</h3>
+      <p>Fixed-length samples are not enough for systems studies. Outpainting lets DiTTO extend traces while preserving what came before, which is essential if the generated output is going to be used for longer-running evaluations instead of just short qualitative demonstrations.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The reported wins are about control fidelity, diversity, and continuity.</h2>
+  <p class="section-intro">The paper's experiments are implemented in PyTorch 2.4 and evaluated on the Alibaba Block IO trace dataset. Since this is a late-breaking-results paper, the result section is compact, but it still makes the intended claim clearly.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">50</div>
+      <div class="metric-label">generated traces evaluated</div>
+      <div class="metric-sub">used in the paper's configuration-following analysis</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">&lt; 8%</div>
+      <div class="metric-label">config error</div>
+      <div class="metric-sub">for read/write ratio alignment to user guidance</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">&lt; 2%</div>
+      <div class="metric-label">device-pattern error</div>
+      <div class="metric-sub">for utilization patterns across generated traces</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">Long</div>
+      <div class="metric-label">trace extension</div>
+      <div class="metric-sub">via outpainting with continuity across segment boundaries</div>
+    </div>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>What the paper validates</h3>
+      <p>The main empirical claim is that DiTTO can stay close to user-specified workload characteristics while remaining realistic and diverse. The t-SNE analysis reported in the paper places generated traces near the original trace distribution instead of collapsing into a single synthetic mode.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>What the page should emphasize</h3>
+      <p>This is a systems-meets-generative-AI paper, not a generic diffusion showcase. The value is that synthetic traces become a controllable systems artifact: something storage researchers can ask for, vary systematically, and extend over time without collecting new production logs for every scenario.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why DiTTO fits the broader CELL project portfolio.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">It uses generative AI for a systems bottleneck rather than for user-facing media. The synthetic artifact here is a workload trace that can drive downstream design and optimization studies.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The conditioning mechanism is the core technical move. By pushing measurable workload properties into the latent guidance path, DiTTO treats controllability as a first-class requirement instead of a post hoc evaluation metric.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">For CELL's website, this project should read as a bridge between generative modeling and infrastructure research: diffusion models are being used to create better virtual playgrounds for storage-system evaluation.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Seohyun Kim, Junyoung Lee, Jongho Park, Jinhyung Koo, Sungjin Lee and Yeseong Kim. “A Diffusion-Based Framework for Configurable and Realistic Multi-Storage Trace Generation”, in 2025 Design Automation Conference (DAC), 2025</p>
+    <p class="citation-text" id="citation-text">@inproceedings{kim2025ditto,
+  author    = {Seohyun Kim and Junyoung Lee and Jongho Park and Jinhyung Koo and Sungjin Lee and Yeseong Kim},
+  title     = {Late Breaking Results: A Diffusion-Based Framework for Configurable and Realistic Multi-Storage Trace Generation},
+  booktitle = {Proceedings of the 62nd ACM/IEEE Design Automation Conference (DAC)},
+  year      = {2025},
+  publisher = {IEEE},
+  doi       = {10.1109/DAC63849.2025.11132678},
+  url       = {https://doi.org/10.1109/DAC63849.2025.11132678},
+  note      = {Late Breaking Results}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll("[data-copy-target]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.getAttribute("data-copy-target"));
+    if (!target) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(target.textContent || "");
+      const original = button.textContent;
+      button.textContent = "Copied";
+      window.setTimeout(() => {
+        button.textContent = original;
+      }, 1200);
+    } catch (err) {
+      button.textContent = "Unavailable";
+    }
+  });
+});
+</script>
 </body>
 </html>
