@@ -3,23 +3,700 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dynamically Scalable Pruning for Transformer-Based Large Language Models | CELL Project Page</title>
+<title>Matryoshka Dynamic LLM Pruning | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #0d1017;
+  --surface: #151b25;
+  --surface-2: #1b2431;
+  --border: #2a394d;
+  --text: #e8eef8;
+  --muted: #91a4bc;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(13, 16, 23, 0.9);
+  --accent: #4f9eff;
+  --accent-soft: rgba(79, 158, 255, 0.12);
+  --nest: #ffb066;
+  --adapt: #6dd0ff;
+  --runtime: #67d3a4;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef3f8;
+  --border: #d2ddea;
+  --text: #102232;
+  --muted: #657a8f;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(244, 247, 251, 0.94);
+  --accent: #1d73da;
+  --accent-soft: rgba(29, 115, 218, 0.08);
+  --nest: #ca6e23;
+  --adapt: #007bb6;
+  --runtime: #0a8d62;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 176, 102, 0.12), transparent 28%),
+    radial-gradient(circle at 80% 18%, rgba(109, 208, 255, 0.10), transparent 24%),
+    radial-gradient(circle at 18% 86%, rgba(103, 211, 164, 0.10), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 8%;
+  background: rgba(255, 176, 102, 0.18);
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(103, 211, 164, 0.14);
+}
+
+.hero-inner {
+  max-width: 1060px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.nest {
+  color: var(--nest);
+  font-style: italic;
+}
+
+.runtime {
+  color: var(--runtime);
+}
+
+.subtitle {
+  max-width: 790px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  backdrop-filter: blur(18px);
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+section {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 78px 0;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 16px;
+  max-width: 780px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 770px;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.abstract-box,
+.motivation-card,
+.pipe-step,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box,
+.table-card,
+.highlight-strip {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px var(--shadow);
+}
+
+.abstract-box,
+.table-card,
+.citation-box {
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.abstract-box p {
+  margin: 0 0 14px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.divider {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.9;
+}
+
+.problem-grid,
+.metric-grid,
+.analysis-grid,
+.insight-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 28px;
+}
+
+.motivation-card,
+.metric-card,
+.insight-card,
+.analysis-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.static-card h3 {
+  color: var(--nest);
+}
+
+.shock-card h3 {
+  color: var(--adapt);
+}
+
+.budget-card h3 {
+  color: var(--runtime);
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.highlight-item {
+  padding: 10px 12px;
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline {
+  display: grid;
+  gap: 16px;
+}
+
+.pipe-step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 230px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.pipe-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pipe-desc {
+  color: var(--muted);
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--text);
+}
+
+.citation-box {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 70px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+footer {
+  padding: 40px 20px 70px;
+  text-align: center;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipe-step,
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 96px;
+  }
+
+  section {
+    width: min(100% - 32px, 1100px);
+    padding: 64px 0;
+  }
+
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-btn {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
-<body data-area="llm">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · DATE 2025 LBR</div>
-    <h1 class="hero-title">Dynamically Scalable Pruning for Transformer-Based Large Language Models</h1>
-    <p class="hero-subtitle">Incremental submodels let a single pruned transformer adapt its runtime cost to changing latency and throughput budgets.</p>
-    <div class="hero-meta"><strong>Authors</strong> Junyoung Lee, Shinhyoung Jang, Seohyun Kim, Jongho Park, Il Hong Suh, Hoon Sung Chwa , Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">DATE 2025 Late Breaking Results</div>
+    <h1>Matryoshka turns transformer pruning into a <span class="nest">nested runtime system</span> rather than a <span class="runtime">single static compressed model</span>.</h1>
+    <p class="subtitle">The paper builds a hierarchy of LLaMA-7B submodels inside one backbone, prunes blocks incrementally instead of all at once, fades them out gradually, and switches configurations at runtime based on throughput constraints instead of forcing a separate model for every deployment target.</p>
+    <div class="authors">Junyoung Lee, Shinhyoung Jang, Seohyun Kim, Jongho Park, Il Hong Suh, Hoon Sung Chwa, and Yeseong Kim</div>
+    <div class="affil">DGIST and Coga Robotics</div>
+
+    <div class="chip-row">
+      <div class="chip">Matryoshka</div>
+      <div class="chip">LLaMA-7B</div>
+      <div class="chip">Incremental pruning</div>
+      <div class="chip">Gradual pruning</div>
+      <div class="chip">LoRA repair</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +704,330 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>The paper asks a sharper question than ordinary pruning: how do you keep one model adaptable after pruning, instead of locking in one fixed tradeoff?</h2>
   <div class="abstract-box reveal">
-    <p>We propose Matryoshka, a novel framework for transformer model pruning, enabling dynamic runtime controls while maintaining competitive accuracy to modern large language models (LLMs). Matryoshka incrementally constructs submodels with varying complexities, allowing runtime adaptation without maintaining separate models. Our evaluations on LLaMA-7B demonstrate that Matryoshka achieves up to 34% speedup and outperforms the quality of state-of-the-art pruning methods, providing a flexible solution for deploying LLMs.</p>
+    <p>Most pruning work for large language models is static. You compress the model once, accept a particular latency-quality tradeoff, and deploy that one reduced model. That is awkward for systems with fluctuating runtime budgets, because the ideal configuration can change from one workload or throughput target to the next.</p>
+    <p>Matryoshka reframes the problem around dynamic adaptability. Instead of producing one final pruned model, it incrementally constructs a family of smaller submodels nested inside the original transformer. The framework removes decoder blocks in stages, uses LoRA to recover lost knowledge after each step, applies a gradual fade-out so blocks do not vanish abruptly, and then selects the appropriate submodel online using a throughput-aware inference policy. The result is a pruning method that behaves more like runtime resource management than one-time model surgery.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Incremental submodels let a single pruned transformer adapt its runtime cost to changing latency and throughput budgets.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Domain-Specialized Language Systems</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DATE 2025 LBR</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">LLM Pruning, Dynamic Runtime</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>Three limitations of standard pruning drive the design.</h2>
+  <p class="section-intro">The paper is useful because it pinpoints where conventional transformer pruning breaks in practice: not just in accuracy, but in how rigid the deployed model becomes once pruning is finished.</p>
+
+  <div class="problem-grid">
+    <div class="motivation-card static-card reveal">
+      <h3>Static pruning is a poor fit for dynamic deployments</h3>
+      <p>Many pruning methods optimize for a single target and stop there. If the runtime budget changes later, the system needs another separately pruned model. Matryoshka tries to avoid that model zoo by embedding multiple usable submodels inside one hierarchy.</p>
+    </div>
+    <div class="motivation-card shock-card reveal">
+      <h3>Abrupt block removal damages internal representations</h3>
+      <p>When decoder blocks disappear all at once, downstream layers see a sharp distribution shift. The paper argues that this is a major source of quality loss, so it removes blocks iteratively and fades their contribution out over time instead of cutting them instantly.</p>
+    </div>
+    <div class="motivation-card budget-card reveal">
+      <h3>Real systems need runtime switching, not offline guessing</h3>
+      <p>Latency and throughput requirements can vary while the application is running. The throughput-aware inference path chooses among nested submodels at runtime, which makes the pruning strategy operationally useful rather than only benchmark-friendly.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project sits in CELL&#x27;s work on retrieval, domain specialization, and adaptive compression for language systems under strict deployment budgets. The page highlights the paper through the lens of LLM Pruning and Dynamic Runtime.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">34%</div>
+      <div class="highlight-caption">maximum reported execution-time reduction at 35 percent pruning on LLaMA-7B.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">23%</div>
+      <div class="highlight-caption">execution-time reduction at the milder 20 percent pruning level.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">&lt;1%</div>
+      <div class="highlight-caption">of the original model size is attributed to the preloaded LoRA adapters used for recovery and switching.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>We propose Matryoshka, a novel framework for transformer model pruning, enabling dynamic runtime controls while maintaining competitive accuracy to modern large language models (LLMs).</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>Matryoshka incrementally constructs submodels with varying complexities, allowing runtime adaptation without maintaining separate models.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>Our evaluations on LLaMA-7B demonstrate that Matryoshka achieves up to 34% speedup and outperforms the quality of state-of-the-art pruning methods, providing a flexible solution for deploying LLMs.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>Matryoshka is a four-part pruning schedule, not just a ranking metric.</h2>
+  <p class="section-intro">The point of the method is the full sequence: rank blocks carefully, remove them progressively, smooth the transition, then expose the resulting hierarchy to runtime control.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Rank decoder blocks by feature-space importance</div>
+      <div class="pipe-desc">Instead of pruning whole layers in one pass, the method estimates a block's importance through cosine similarity between the original model's features and the features after removing that block. Low-importance blocks are removed first, which reduces the chance of pruning highly entangled components too early.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Prune incrementally and repair with LoRA</div>
+      <div class="pipe-desc">After each pruning step, the remaining model is fine-tuned with low-rank adapters so knowledge lost with the removed block can be partially recovered. Repeating this stage by stage produces a ladder of submodels rather than a single jump from full model to compressed model.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Fade out the target block with a linear decay</div>
+      <div class="pipe-desc">Gradual pruning applies a decaying factor, αt = 1 - t/T, to the block being removed. That means the block's output shrinks toward zero over several fine-tuning steps, giving downstream layers time to adapt instead of absorbing a sudden shock.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Shuffle diverse datasets and switch submodels online</div>
+      <div class="pipe-desc">The paper reports that fine-tuning on Alpaca alone is not enough, so it mixes multiple datasets to preserve broader model quality. At inference time, a throughput-aware controller selects the nested configuration that best matches current runtime constraints without loading a separate model.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why dataset shuffling matters</h3>
+      <p>Layer removal can erase domain-specific knowledge unevenly. The mixed-data variant consistently outperforms the Alpaca-only variant in the paper, which suggests the pruning method depends as much on what recovery data it sees as on which layers get removed.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why the nested structure matters</h3>
+      <p>The Matryoshka analogy is not branding fluff. The framework is explicitly designed so smaller models live inside the larger one, letting the system move up or down the complexity ladder as throughput and latency demands change.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The strongest evidence is not only speedup, but the quality it preserves while staying switchable.</h2>
+  <p class="section-intro">The evaluation uses LLaMA-7B with LoRA rank 8 on NVIDIA RTX 3090 GPUs. The result section combines perplexity, zero-shot accuracy, and runtime tradeoffs to show that dynamic structured pruning can stay competitive with prior pruning baselines.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">62.4%</div>
+      <div class="metric-label">avg zero-shot accuracy</div>
+      <div class="metric-sub">for the 20 percent pruned mixed-data Matryoshka model, slightly above LLM-Pruner's 61.8 percent</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">13.6</div>
+      <div class="metric-label">Wiki2 perplexity</div>
+      <div class="metric-sub">at 20 percent pruning with mixed-data fine-tuning, versus 17.6 for LLM-Pruner</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">19.8</div>
+      <div class="metric-label">Wiki2 perplexity</div>
+      <div class="metric-sub">at 35 percent pruning with mixed-data fine-tuning, versus 24.2 for LLM-Pruner</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">6</div>
+      <div class="metric-label">decoder layers</div>
+      <div class="metric-sub">pruned before Figure 3 begins to show a steeper quality drop in the Alpaca-only setting</div>
+    </div>
+  </div>
+
+  <div class="table-card reveal">
+    <h3 class="table-header">Selected comparison numbers reported in Table I</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Pruning level</th>
+          <th>Wiki2 PPL</th>
+          <th>PTB PPL</th>
+          <th>Avg zero-shot accuracy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LLaMA-7B</td>
+          <td>0%</td>
+          <td>12.6</td>
+          <td>22.1</td>
+          <td>66.3</td>
+        </tr>
+        <tr>
+          <td>LLM-Pruner</td>
+          <td>20% (5.5B)</td>
+          <td>17.6</td>
+          <td>30.1</td>
+          <td>61.8</td>
+        </tr>
+        <tr>
+          <td>Matryoshka Mixed</td>
+          <td>20% (5.5B)</td>
+          <td>13.6</td>
+          <td>26.0</td>
+          <td>62.4</td>
+        </tr>
+        <tr>
+          <td>Matryoshka Alpaca</td>
+          <td>20% (5.5B)</td>
+          <td>17.5</td>
+          <td>30.1</td>
+          <td>Not separately summarized</td>
+        </tr>
+        <tr>
+          <td>LLM-Pruner</td>
+          <td>35% (4.5B)</td>
+          <td>24.2</td>
+          <td>40.7</td>
+          <td>55.5</td>
+        </tr>
+        <tr>
+          <td>Matryoshka Mixed</td>
+          <td>35% (4.5B)</td>
+          <td>19.8</td>
+          <td>37.4</td>
+          <td>55.7</td>
+        </tr>
+        <tr>
+          <td>Matryoshka Alpaca</td>
+          <td>35% (4.5B)</td>
+          <td>24.1</td>
+          <td>40.5</td>
+          <td>Not separately summarized</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>The quality win is larger in perplexity than in average accuracy</h3>
+      <p>The zero-shot average gains over LLM-Pruner are modest, but the perplexity improvements are much clearer. That fits the method: smoother pruning and LoRA repair are primarily stabilizing internal language modeling behavior rather than radically changing task specialization.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>The mixed-data variant is doing real work</h3>
+      <p>The Alpaca-only numbers degrade noticeably. The paper explicitly says insufficient fine-tuning data leads to lower quality, so the website should not hide dataset shuffling as a minor detail. It is part of why the pruning schedule holds up.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>The runtime tradeoff remains controllable</h3>
+      <p>Inference speed scales roughly with pruning rate, but the key systems value is that the framework exposes several usable points on the speed-quality curve inside one deployment. That is the difference between Matryoshka and ordinary one-shot pruning.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why this work belongs in CELL's broader LLM systems story.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">The project is not just about making an LLM smaller. It is about making one compressed LLM respond to changing deployment budgets without shipping multiple disjoint model variants.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The pruning schedule itself is the main contribution. Incremental pruning, gradual fade-out, and LoRA repair work together to make structured block removal less destructive than conventional approaches.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">For the website, this page should read as a deployment paper, not only a model-compression paper. The runtime controller and nested hierarchy are what make the method useful in real systems.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Junyoung Lee, Shinhyoung Jang, Seohyun Kim, Jongho Park, Il Hong Suh, Hoon Sung Chwa , Yeseong Kim. “Dynamically Scalable Pruning for Transformer-Based Large Language Models”, in 2025 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), IEEE, 2025</p>
+    <p class="citation-text" id="citation-text">@inproceedings{lee2025matryoshka,
+  author    = {Junyoung Lee and Shinhyoung Jang and Seohyun Kim and Jongho Park and Il Hong Suh and Hoon Sung Chwa and Yeseong Kim},
+  title     = {Late Breaking Results: Dynamically Scalable Pruning for Transformer-Based Large Language Models},
+  booktitle = {Proceedings of the 2025 Design, Automation and Test in Europe Conference and Exhibition (DATE)},
+  year      = {2025},
+  publisher = {IEEE},
+  doi       = {10.23919/DATE64628.2025.10992978},
+  url       = {https://doi.org/10.23919/DATE64628.2025.10992978},
+  note      = {Late Breaking Results}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll(".copy-btn").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    if (!target) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const oldLabel = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = oldLabel;
+      }, 1200);
+    } catch (error) {
+      button.textContent = "Failed";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1200);
+    }
+  });
+});
+</script>
 </body>
 </html>

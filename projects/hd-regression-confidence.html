@@ -3,23 +3,714 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hyperdimensional Regression with Fine-Grained and Scalable Confidence-Based Learning | CELL Project Page</title>
+<title>HBRF Confidence Regression | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #0b0f16;
+  --surface: #141b25;
+  --surface-2: #1b2532;
+  --border: #2a3c54;
+  --text: #e7eef8;
+  --muted: #92a4ba;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(11, 15, 22, 0.9);
+  --accent: #4f9eff;
+  --accent-soft: rgba(79, 158, 255, 0.12);
+  --blend: #70d3ff;
+  --confidence: #67d3a4;
+  --boost: #f2a45d;
+  --warning: #f1cf7a;
+}
+
+[data-theme="light"] {
+  --bg: #f3f7fb;
+  --surface: #ffffff;
+  --surface-2: #edf3f9;
+  --border: #d1ddea;
+  --text: #102131;
+  --muted: #63788f;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(243, 247, 251, 0.94);
+  --accent: #1d73da;
+  --accent-soft: rgba(29, 115, 218, 0.08);
+  --blend: #007bb6;
+  --confidence: #0a8c61;
+  --boost: #c66a24;
+  --warning: #aa7a11;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(112, 211, 255, 0.12), transparent 28%),
+    radial-gradient(circle at 80% 18%, rgba(103, 211, 164, 0.10), transparent 24%),
+    radial-gradient(circle at 20% 88%, rgba(242, 164, 93, 0.10), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 8%;
+  background: rgba(112, 211, 255, 0.18);
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(103, 211, 164, 0.14);
+}
+
+.hero-inner {
+  max-width: 1060px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.blend {
+  color: var(--blend);
+  font-style: italic;
+}
+
+.confidence {
+  color: var(--confidence);
+}
+
+.subtitle {
+  max-width: 780px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  backdrop-filter: blur(18px);
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+section {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 78px 0;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 16px;
+  max-width: 760px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 760px;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.abstract-box,
+.insight-card,
+.analysis-card,
+.citation-box,
+.table-card,
+.highlight-strip,
+.motivation-card,
+.pipe-step,
+.metric-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px var(--shadow);
+}
+
+.abstract-box {
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.abstract-box p {
+  margin: 0 0 14px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.divider {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.9;
+}
+
+.problem-grid,
+.metric-grid,
+.analysis-grid,
+.insight-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 28px;
+}
+
+.motivation-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.precision-card h3 {
+  color: var(--blend);
+}
+
+.trust-card h3 {
+  color: var(--confidence);
+}
+
+.boost-card h3 {
+  color: var(--boost);
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.highlight-item {
+  padding: 10px 12px;
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline {
+  display: grid;
+  gap: 16px;
+}
+
+.pipe-step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 220px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.pipe-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pipe-desc {
+  color: var(--muted);
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.insight-card,
+.analysis-card,
+.table-card,
+.citation-box {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.speedup {
+  color: var(--confidence);
+  font-weight: 700;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--text);
+}
+
+.citation-box {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 70px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+footer {
+  padding: 40px 20px 70px;
+  text-align: center;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipe-step,
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 96px;
+  }
+
+  section {
+    width: min(100% - 32px, 1100px);
+    padding: 64px 0;
+  }
+
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-btn {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
-<body data-area="hd">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · DATE 2025 LBR</div>
-    <h1 class="hero-title">Hyperdimensional Regression with Fine-Grained and Scalable Confidence-Based Learning</h1>
-    <p class="hero-subtitle">Confidence-aware HD regression adds fine-grained encoding and scalable uncertainty handling for more reliable continuous prediction.</p>
-    <div class="hero-meta"><strong>Authors</strong> Jiseung Kim, Hyunsei Lee, Tajana Rosing, Mohsen Imani, Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">DATE 2025 Late Breaking Results</div>
+    <h1>HBRF makes <span class="blend">hyperdimensional regression</span> both <span class="confidence">fine-grained and confidence-aware</span>.</h1>
+    <p class="subtitle">The paper revisits HD regression from a systems angle: encode continuous features more precisely, expose when a prediction is operating in a sparse part of the training space, and train high-dimensional models without the multi-pass overhead that slows prior methods such as RegHD.</p>
+    <div class="authors">Jiseung Kim, Hyunsei Lee, Tajana Rosing, Mohsen Imani, and Yeseong Kim</div>
+    <div class="affil">DGIST, University of California San Diego, and University of California Irvine</div>
+
+    <div class="chip-row">
+      <div class="chip">HBRF</div>
+      <div class="chip">Blend encoding</div>
+      <div class="chip">Confidence estimation</div>
+      <div class="chip">Dimension-split boosting</div>
+      <div class="chip">RTX 3090 + Alveo U280</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +718,321 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>Regression is the part of HDC that breaks once coarse encodings and weak hardware scaling show up.</h2>
   <div class="abstract-box reveal">
-    <p>We propose an advanced hyperdimensional computing (HDC) framework for regression tasks, addressing the limitations of existing methods through three key innovations: fine-grained feature encoding, confidence-based inference, and dimension-split boosting for scalable training. By preserving interfeature relationships and enabling efficient computation on highdimensional spaces, the framework achieves superior accuracy and efficiency across diverse benchmarks. Our evaluation demonstrates that HBRF achieves significant improvements in prediction quality and computational efficiency as compared to the state-ofthe-art HDC-based regression by 31% and 54.8%, respectively.</p>
+    <p>This paper targets a real gap in hyperdimensional computing. HDC is attractive for lightweight learning because its representations are simple, parallel, and robust, but most success has been in classification. Regression is harder: the model has to preserve fine changes in continuous inputs, handle nonlinear surfaces, and still stay efficient on the hardware platforms where HDC is supposed to matter.</p>
+    <p>The proposed framework, HBRF, attacks that gap with three linked ideas. First, it replaces coarse quantization with a blend-based encoder that interpolates between segment boundary hypervectors, so the representation reflects where a feature value sits inside its range instead of only which bucket it landed in. Second, it adds a confidence mechanism based on similarity to the training distribution, making it possible to tell when a prediction is being made far from familiar data. Third, it uses dimension-split boosting so training can be built from weak regressors over subsets of dimensions instead of forcing the hardware to optimize one large hypervector model in repeated passes.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Confidence-aware HD regression adds fine-grained encoding and scalable uncertainty handling for more reliable continuous prediction.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DATE 2025 LBR</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Regression, Confidence-Based Learning</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>RegHD established the baseline, but this paper is about where that baseline starts to fail.</h2>
+  <p class="section-intro">The authors are explicit that existing HDC regression is not wrong so much as incomplete. Once the target surface becomes nonlinear, the training set is uneven, or the hardware budget is tight, three weaknesses become visible at the same time.</p>
+
+  <div class="problem-grid">
+    <div class="motivation-card precision-card reveal">
+      <h3>Coarse encodings blur continuous structure</h3>
+      <p>RegHD clusters or discretizes inputs into broad hypervector bins. That is manageable for simple surfaces, but it throws away the precise inter-feature relationships needed for harder regression tasks. HBRF responds with fine-grained interpolation inside each feature segment rather than pure bucket assignment.</p>
+    </div>
+    <div class="motivation-card trust-card reveal">
+      <h3>Predictions arrive with no reliability signal</h3>
+      <p>Earlier HDC regression methods produce a number but do not tell the user whether the query looks well-supported by training data. For deployment, that is a serious limitation. The confidence path in HBRF is meant to expose when the model is extrapolating in sparse regions instead of pretending all predictions are equally trustworthy.</p>
+    </div>
+    <div class="motivation-card boost-card reveal">
+      <h3>High-dimensional training does not map cleanly to hardware</h3>
+      <p>Training full-dimensional hypervectors is expensive on real hardware because bandwidth and parallelism are limited. Prior approaches also rely on multi-pass updates. The paper's dimension-split boosting reframes training as a sequence of smaller single-pass learners that can later be concatenated into a larger model.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Regression and Confidence-Based Learning.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">31%</div>
+      <div class="highlight-caption">average reported accuracy improvement over RegHD across the evaluated benchmarks.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">54.8%</div>
+      <div class="highlight-caption">average FPGA training-time speedup from the dimension-split design in Table I.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">37%</div>
+      <div class="highlight-caption">reported GPU speedup over RegHD in the paper's Python implementation.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>We propose an advanced hyperdimensional computing (HDC) framework for regression tasks, addressing the limitations of existing methods through three key innovations: fine-grained feature encoding, confidence-based inference, and dimension-split boosting for scalable training.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>By preserving interfeature relationships and enabling efficient computation on highdimensional spaces, the framework achieves superior accuracy and efficiency across diverse benchmarks.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>Our evaluation demonstrates that HBRF achieves significant improvements in prediction quality and computational efficiency as compared to the state-ofthe-art HDC-based regression by 31% and 54.8%, respectively.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>HBRF is a five-stage recipe: interpolate, bind, normalize, estimate trust, then scale out with boosting.</h2>
+  <p class="section-intro">The website version should make the method concrete. The paper is not presenting a vague "better HDC regression" claim; it defines a specific data path from continuous features to ensemble inference.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Partition each feature and blend its boundary hypervectors</div>
+      <div class="pipe-desc">Each feature range is divided into P segments. Instead of encoding a value with a single segment hypervector, HBRF interpolates between the two neighboring boundary hypervectors so the representation tracks where the value lies inside the interval. That is the core precision upgrade over coarse quantization.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Aggregate feature hypervectors into one sample representation</div>
+      <div class="pipe-desc">The encoded feature hypervectors are combined with element-wise multiplication, preserving interactions among features in the final data hypervector. This is what lets the model retain nonlinear structure rather than treating every feature independently.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Train two model hypervectors in a single pass</div>
+      <div class="pipe-desc">For each training sample, HBRF accumulates a domain representation hypervector M that binds inputs to targets and a data hypervector W that records how the input space itself is covered. Unlike RegHD, this training path is designed to complete in a single pass over the data.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Predict with normalization and attach a confidence score</div>
+      <div class="pipe-desc">Inference uses similarity-based regression, but the important addition is confidence. If a query hypervector is dissimilar to the training examples represented in W, the model reports lower confidence. The webpage should emphasize this because it turns regression output into a more usable decision signal.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 05</div>
+      <div class="pipe-title">Split dimensions into weak regressors and boost them</div>
+      <div class="pipe-desc">To reduce training cost, the full hypervector space is divided into subsets. Weak regressors are trained on those subsets, their errors are corrected iteratively, and the final model is formed as a weighted ensemble. The paper credits this move for most of the runtime improvement on GPU and FPGA.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why the W hypervector matters</h3>
+      <p>The paper's confidence mechanism is not an afterthought. W effectively tracks how much support the training data provides around a query. That means the model can distinguish "I have seen similar inputs before" from "this is an extrapolation," which is especially useful on sparse or noisy datasets.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why dimension-split boosting is more than an optimization trick</h3>
+      <p>Splitting dimensions reduces the hardware burden, but it also changes how the system learns. Each weak regressor only handles a manageable subspace, then boosting recovers full-model behavior from the ensemble. That is why the paper can claim both accuracy gains and faster training instead of trading one for the other.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The paper backs the method with both quality and hardware numbers.</h2>
+  <p class="section-intro">Evaluation spans synthetic microbenchmarks and real datasets including Boston Housing, Diabetes, Buzz in Social Media, and Superconductor. The hardware stack includes an NVIDIA RTX 3090 for GPU measurements and a Xilinx Alveo U280 for FPGA measurements.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">31%</div>
+      <div class="metric-label">accuracy gain</div>
+      <div class="metric-sub">average improvement over RegHD reported across the benchmark suite</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">54.81%</div>
+      <div class="metric-label">FPGA speedup</div>
+      <div class="metric-sub">average training throughput improvement in the paper's Table I</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">37%</div>
+      <div class="metric-label">GPU speedup</div>
+      <div class="metric-sub">reported over RegHD for the Python 3.8 implementation</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">5</div>
+      <div class="metric-label">benchmarks in Table I</div>
+      <div class="metric-sub">Boston, Diabetes, P4PERF, Buzz, and Superconductor</div>
+    </div>
+  </div>
+
+  <div class="table-card reveal">
+    <h3 class="table-header">FPGA training throughput reported for batches of 32 samples</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Dataset</th>
+          <th>HBRF (ms)</th>
+          <th>RegHD (ms)</th>
+          <th>Speedup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Boston</td>
+          <td>1.87</td>
+          <td>3.87</td>
+          <td class="speedup">51.68%</td>
+        </tr>
+        <tr>
+          <td>Diabetes</td>
+          <td>1.81</td>
+          <td>3.71</td>
+          <td class="speedup">51.21%</td>
+        </tr>
+        <tr>
+          <td>P4PERF</td>
+          <td>6.43</td>
+          <td>15.24</td>
+          <td class="speedup">57.81%</td>
+        </tr>
+        <tr>
+          <td>Buzz</td>
+          <td>6.64</td>
+          <td>15.45</td>
+          <td class="speedup">57.02%</td>
+        </tr>
+        <tr>
+          <td>Superconductor</td>
+          <td>6.82</td>
+          <td>15.62</td>
+          <td class="speedup">56.34%</td>
+        </tr>
+        <tr>
+          <td>Average</td>
+          <td>4.71</td>
+          <td>10.78</td>
+          <td class="speedup">54.81%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>Accuracy is tied to the encoding change</h3>
+      <p>The paper attributes the quality gain to finer modeling of continuous relationships. In the microbenchmark figures, prediction surfaces become visibly better after retraining and boosting, which matches the claim that blend encoding captures nonlinear behavior more faithfully than coarse cluster-style baselines.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>Confidence drops where data coverage is weak</h3>
+      <p>The right side of Figure 2 is important because it shows the confidence score behaving as intended. Regions with limited training support receive lower confidence, which makes the model more interpretable than prior HDC regression methods that only output a scalar prediction.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>Hardware efficiency comes from single-pass weak learners</h3>
+      <p>The strongest systems claim is not just that the model is faster, but why. Dimension-split boosting avoids repeatedly training one large hypervector model, so the workload aligns better with available bandwidth and parallelism on both GPU and FPGA platforms.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why this page deserves more than a generic abstract block.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This work extends CELL's HDC line into regression without giving up the lab's efficiency-first stance. The method is still lightweight, but it stops treating continuous prediction as a classification problem in disguise.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The confidence mechanism is a practical addition, not just a theoretical one. It gives downstream users a way to judge whether the model is making a familiar prediction or stepping into poorly covered territory.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">The page should foreground the combination of algorithm and hardware reasoning. HBRF is a useful example of CELL's style: change the representation, the learning rule, and the compute path together so the efficiency gain is real on deployed platforms.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Jiseung Kim, Hyunsei Lee, Tajana Rosing, Mohsen Imani, Yeseong Kim “Hyperdimensional Regression with Fine-Grained and Scalable Confidence-Based Learning”, in 2025 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), IEEE, 2025</p>
+    <p class="citation-text" id="citation-text">@inproceedings{kim2025hbrf,
+  author    = {Jiseung Kim and Hyunsei Lee and Tajana Rosing and Mohsen Imani and Yeseong Kim},
+  title     = {Late Breaking Results: Hyperdimensional Regression with Fine-Grained and Scalable Confidence-Based Learning},
+  booktitle = {Proceedings of the 2025 Design, Automation and Test in Europe Conference and Exhibition (DATE)},
+  year      = {2025},
+  publisher = {IEEE},
+  doi       = {10.23919/DATE64628.2025.10993077},
+  url       = {https://doi.org/10.23919/DATE64628.2025.10993077},
+  note      = {Late Breaking Results}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll(".copy-btn").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    if (!target) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const oldLabel = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = oldLabel;
+      }, 1200);
+    } catch (error) {
+      button.textContent = "Failed";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1200);
+    }
+  });
+});
+</script>
 </body>
 </html>

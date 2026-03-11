@@ -3,23 +3,700 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diffusion-Based Generative System Surrogates for Scalable Learning-Driven Optimization in Virtual Playgrounds | CELL Project Page</title>
+<title>DiffNEST Virtual Playgrounds | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #0c1117;
+  --surface: #151d27;
+  --surface-2: #1b2532;
+  --border: #2b3c51;
+  --text: #e7eef8;
+  --muted: #93a5ba;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(12, 17, 23, 0.9);
+  --accent: #4f9eff;
+  --accent-soft: rgba(79, 158, 255, 0.12);
+  --signal: #ffb067;
+  --latent: #73d3ff;
+  --knob: #61d7c0;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #edf3f9;
+  --border: #d2ddea;
+  --text: #102232;
+  --muted: #657a8f;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(244, 247, 251, 0.94);
+  --accent: #1d73da;
+  --accent-soft: rgba(29, 115, 218, 0.08);
+  --signal: #c96e25;
+  --latent: #007db8;
+  --knob: #0a8e78;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 176, 103, 0.12), transparent 28%),
+    radial-gradient(circle at 80% 18%, rgba(115, 211, 255, 0.1), transparent 24%),
+    radial-gradient(circle at 18% 86%, rgba(97, 215, 192, 0.1), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 8%;
+  background: rgba(255, 176, 103, 0.18);
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(97, 215, 192, 0.14);
+}
+
+.hero-inner {
+  max-width: 1060px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.signal {
+  color: var(--signal);
+  font-style: italic;
+}
+
+.latent {
+  color: var(--latent);
+}
+
+.subtitle {
+  max-width: 790px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  backdrop-filter: blur(18px);
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+section {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 78px 0;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 16px;
+  max-width: 780px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 770px;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.abstract-box,
+.motivation-card,
+.pipe-step,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box,
+.table-card,
+.highlight-strip {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px var(--shadow);
+}
+
+.abstract-box,
+.table-card,
+.citation-box {
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.abstract-box p {
+  margin: 0 0 14px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.divider {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.9;
+}
+
+.problem-grid,
+.metric-grid,
+.analysis-grid,
+.insight-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 28px;
+}
+
+.motivation-card,
+.metric-card,
+.insight-card,
+.analysis-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.capacity-card h3 {
+  color: var(--signal);
+}
+
+.space-card h3 {
+  color: var(--latent);
+}
+
+.response-card h3 {
+  color: var(--knob);
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.highlight-item {
+  padding: 10px 12px;
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline {
+  display: grid;
+  gap: 16px;
+}
+
+.pipe-step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 230px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.pipe-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pipe-desc {
+  color: var(--muted);
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--text);
+}
+
+.citation-box {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 70px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+footer {
+  padding: 40px 20px 70px;
+  text-align: center;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipe-step,
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 96px;
+  }
+
+  section {
+    width: min(100% - 32px, 1100px);
+    padding: 64px 0;
+  }
+
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-btn {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
-<body data-area="gen-ai">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · PACM MACS 2025</div>
-    <h1 class="hero-title">Diffusion-Based Generative System Surrogates for Scalable Learning-Driven Optimization in Virtual Playgrounds</h1>
-    <p class="hero-subtitle">Diffusion-generated surrogate traces let system optimization explore large design spaces without expensive data collection on physical hardware.</p>
-    <div class="hero-meta"><strong>Authors</strong> Junyoung Lee, Seohyun Kim, Shinhyoung Jang, Jongho Park, Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">PACM MACS 2025</div>
+    <h1>DiffNEST turns system optimization into a <span class="signal">diffusion-powered virtual playground</span> for <span class="latent">learning-driven control</span>.</h1>
+    <p class="subtitle">Instead of collecting every reinforcement-learning sample on real hardware, the paper builds a processor surrogate that generates continuous PMC traces from workload descriptions and control knobs, then uses that surrogate for DVFS, cache allocation, and even gradient-based optimization.</p>
+    <div class="authors">Junyoung Lee, Seohyun Kim, Shinhyoung Jang, Jongho Park, and Yeseong Kim</div>
+    <div class="affil">Daegu Gyeongbuk Institute of Science and Technology</div>
+
+    <div class="chip-row">
+      <div class="chip">DiffNEST</div>
+      <div class="chip">PMC trace generation</div>
+      <div class="chip">TMAM prompting</div>
+      <div class="chip">Outpainting</div>
+      <div class="chip">Differentiable surrogate</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +704,309 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>The paper is really about replacing slow, risky hardware-in-the-loop optimization with a generative environment model.</h2>
   <div class="abstract-box reveal">
-    <p>Diffusion-generated surrogate traces let system optimization explore large design spaces without expensive data collection on physical hardware.</p>
+    <p>DiffNEST starts from a very practical systems bottleneck. Reinforcement learning is attractive for processor control tasks such as DVFS and cache allocation, but real hardware does not generate data fast enough, the search space is huge, and every training run risks wasting time or destabilizing the system. Traditional simulators are safer, but they are usually too slow to support large-scale policy search.</p>
+    <p>The paper answers that with a diffusion-based surrogate framework that models processor behavior directly from time-series PMC traces. Workload descriptions are encoded through interpretable Top-Down Microarchitecture Analysis Method metrics, control knobs such as frequency and cache settings are provided as conditions, and the model generates realistic trace segments that can be extended over time through outpainting. The result is not just a synthetic trace generator; it is a virtual environment for scalable system optimization, with both RL-based and gradient-based control experiments on top of it.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Diffusion-generated surrogate traces let system optimization explore large design spaces without expensive data collection on physical hardware.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Generative AI for Systems and Media</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">PACM MACS 2025</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Diffusion Surrogate, System Optimization</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>Three things break when optimization depends on physical hardware.</h2>
+  <p class="section-intro">The paper is unusually clear about the systems problem it is addressing. It does not frame DiffNEST as "diffusion is cool, so let's try it on systems." It frames it as an answer to three concrete scaling failures in hardware-driven optimization.</p>
+
+  <div class="problem-grid">
+    <div class="motivation-card capacity-card reveal">
+      <h3>Data collection is too slow</h3>
+      <p>PMC sampling on real processors provides useful observability, but it does not produce enough training data quickly enough for aggressive exploration. RL agents spend too much time waiting for experience instead of improving policies.</p>
+    </div>
+    <div class="motivation-card space-card reveal">
+      <h3>The control space explodes</h3>
+      <p>Tasks such as cache allocation create large combinatorial action spaces, and heterogeneous systems make fixed heuristics brittle. A useful optimizer needs a fast environment where it can test many more states than physical hardware can provide.</p>
+    </div>
+    <div class="motivation-card response-card reveal">
+      <h3>Online exploration hurts responsiveness</h3>
+      <p>Frequent experiments on real machines can degrade stability and responsiveness. DiffNEST creates a safer staging ground where optimization can happen before a learned policy is validated on the real CPU.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project reflects CELL&#x27;s use of generative models to synthesize difficult-to-collect data, emulate system behavior, or accelerate emerging media workloads. The page highlights the paper through the lens of Diffusion Surrogate and System Optimization.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">500x</div>
+      <div class="highlight-caption">reported speedup in data generation for single-core DVFS experiments through GPU-parallel surrogate execution.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">100x</div>
+      <div class="highlight-caption">reported speedup for the multi-core cache-allocation setting compared with hardware-driven sampling.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">1D</div>
+      <div class="highlight-caption">temporal PMC traces are treated as signals, which is why the architecture uses Conv1D rather than image-style Conv2D blocks.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Diffusion-generated surrogate traces let system optimization explore large design spaces without expensive data collection on physical hardware.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>This project reflects CELL&#x27;s use of generative models to synthesize difficult-to-collect data, emulate system behavior, or accelerate emerging media workloads.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>The project combines algorithm design with efficiency-aware deployment choices that matter in practical systems.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>DiffNEST has five moving parts: collect, compress, condition, denoise, then extend.</h2>
+  <p class="section-intro">The value of the page is in making the system concrete. The paper defines a full surrogate stack rather than a single model block, and each stage matters for why the final environment is both controllable and reusable.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Collect PMC traces, TMAM descriptors, and control knobs</div>
+      <div class="pipe-desc">The training corpus combines time-series processor events with high-level workload descriptions derived from Intel's Top-Down Microarchitecture Analysis Method. Frequency and cache settings are recorded as explicit knobs, so the surrogate learns both workload behavior and how the machine reacts to interventions.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Compress traces into a latent representation</div>
+      <div class="pipe-desc">An autoencoder maps high-dimensional PMC sequences into a smaller latent space. The implementation uses Conv1D over time rather than image convolutions, which keeps the focus on temporal structure while reducing diffusion cost by roughly 8x compared with operating directly on raw traces.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Condition the model with selectable, quantifiable prompts</div>
+      <div class="pipe-desc">The Performance Contrastive Learning network aligns trace embeddings with workload descriptions and control settings. Users do not need to provide a full configuration vector; they can specify only the TMAM aspects they care about, and masked attention handles the partial prompt.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Generate an initial trace with latent diffusion</div>
+      <div class="pipe-desc">A modified UNet denoises latent vectors conditioned on the workload and control prompt. Sampling uses DDIM so the surrogate can produce traces quickly enough to support large batches of optimization rollouts instead of behaving like a slow academic simulator.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 05</div>
+      <div class="pipe-title">Outpaint future behavior under changing controls</div>
+      <div class="pipe-desc">The bootstrap model is fine-tuned into an outpainting model that extends traces while respecting the context of what came before. That gives DiffNEST continuity over long workloads and makes it possible to model how policies affect future states, not just one static snapshot.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why TMAM prompting matters</h3>
+      <p>The paper does not rely on opaque text prompts. It uses structured TMAM metrics such as backend-bound behavior or speculation levels, which gives users a controllable and measurable handle on the type of trace they want the model to generate.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why differentiability matters</h3>
+      <p>Because the environment itself is a neural surrogate, gradients can flow through it. That is a meaningful departure from standard system optimization: the same model used for RL rollouts can also support direct gradient-based policy optimization.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The paper validates both the surrogate itself and the optimization workflows built on top of it.</h2>
+  <p class="section-intro">A thin summary would only mention the abstract headline numbers. The full result story is stronger than that: the paper first shows fidelity and controllability of generated traces, then shows that those traces materially improve optimization speed and outcome.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">5.67</div>
+      <div class="metric-label">bootstrap FPD</div>
+      <div class="metric-sub">average Whole vs. Gen score, close to the 4.14 real-data baseline</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">4.54</div>
+      <div class="metric-label">outpainting FPD</div>
+      <div class="metric-sub">showing temporally extended traces stay near the real distribution</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">0.84%</div>
+      <div class="metric-label">TMAM error</div>
+      <div class="metric-sub">average outpainting conformity error to user-specified workload conditions</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">30%</div>
+      <div class="metric-label">reward gain</div>
+      <div class="metric-sub">mean improvement of differentiable optimization over the RL baseline in DVFS evaluation</div>
+    </div>
+  </div>
+
+  <div class="table-card reveal">
+    <h3 class="table-header">The page should separate surrogate fidelity from downstream optimization impact</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Area</th>
+          <th>What the paper reports</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Distribution fidelity</td>
+          <td>Whole vs. Real FPD baseline is 4.14, bootstrap generation averages 5.67, and outpainting improves to 4.54.</td>
+          <td>The generated traces are close enough to the real trace distribution to act as a practical surrogate rather than a purely qualitative demo.</td>
+        </tr>
+        <tr>
+          <td>Condition adherence</td>
+          <td>Reverse-calculated TMAM error averages 0.99% for the bootstrap model and 0.84% for the outpainting model; all groups except Group 3 stay under 1%.</td>
+          <td>The surrogate is not only realistic, it follows the requested workload description and control settings with low error.</td>
+        </tr>
+        <tr>
+          <td>RL case studies</td>
+          <td>The abstract reports up to 50% improvement for task-aware DVFS and 16% for multi-core cache allocation over RL trained directly on hardware.</td>
+          <td>The virtual playground changes the optimization outcome, not only the sampling cost.</td>
+        </tr>
+        <tr>
+          <td>Differentiable optimization</td>
+          <td>Gradient-based optimization reaches about 30% higher mean reward than the RL baseline and reduces total training time by 50%.</td>
+          <td>DiffNEST is useful not only as an RL environment but also as a differentiable control model.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>Surrogate quality is measured with more than visuals</h3>
+      <p>The paper uses Fréchet Performance Distance, autocorrelation analysis, and TMAM reconstruction error. That matters because a systems surrogate must preserve temporal behavior and condition conformity, not merely generate plausible-looking traces.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>The RL story is about data throughput</h3>
+      <p>For both DVFS and cache allocation, the traditional hardware-driven agent fills its replay buffer slowly and updates less often. The surrogate version samples many more states per unit time, so it converges faster and reaches better policies before the hardware-only version is even properly trained.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>Fine-tuning pushes this toward a foundation-model direction</h3>
+      <p>The paper also shows adaptation across processors and workloads. Fine-tuning on smaller new-domain datasets improves FPD and RL reward on PARSEC workloads, which hints at a reusable systems foundation model rather than one surrogate per task forever.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why DiffNEST matters in the CELL portfolio.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This is a strong example of generative AI being used as infrastructure rather than as a front-end media model. The generated artifact is a processor behavior trace that becomes the training ground for systems optimization.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The conditioning design is one of the most important ideas in the paper. By using selectable TMAM metrics and explicit control knobs, the surrogate stays interpretable and useful for actual hardware-control questions.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">The differentiable-optimization result makes the page broader than a standard RL paper. DiffNEST is not only a simulator replacement; it is also a new optimization interface for systems research.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Junyoung Lee, Seohyun Kim, Shinhyoung Jang, Jongho Park, Yeseong Kim. “Diffusion-Based Generative System Surrogates for Scalable Learning-Driven Optimization in Virtual Playgrounds.” Proceedings of the ACM on Measurement and Analysis of Computing Systems 9.2 2025</p>
+    <p class="citation-text" id="citation-text">@article{lee2025diffnest,
+  author     = {Junyoung Lee and Seohyun Kim and Shinhyoung Jang and Jongho Park and Yeseong Kim},
+  title      = {Diffusion-Based Generative System Surrogates for Scalable Learning-Driven Optimization in Virtual Playgrounds},
+  journal    = {Proceedings of the ACM on Measurement and Analysis of Computing Systems},
+  volume     = {9},
+  number     = {2},
+  articleno  = {20},
+  numpages   = {27},
+  year       = {2025},
+  month      = jun,
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  doi        = {10.1145/3727112},
+  url        = {https://doi.org/10.1145/3727112}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll(".copy-btn").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    if (!target) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const oldLabel = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = oldLabel;
+      }, 1200);
+    } catch (error) {
+      button.textContent = "Failed";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1200);
+    }
+  });
+});
+</script>
 </body>
 </html>
