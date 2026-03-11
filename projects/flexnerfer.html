@@ -3,23 +3,700 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FlexNeRFer: A Multi-Dataflow, Adaptive Sparsity-Aware Accelerator for On-Device NeRF Rendering | CELL Project Page</title>
+<title>FlexNeRFer | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #091017;
+  --surface: #111a24;
+  --surface-2: #182432;
+  --border: #28405a;
+  --text: #e6eef8;
+  --muted: #8fa4bc;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(9, 16, 23, 0.9);
+  --accent: #4f9eff;
+  --accent-soft: rgba(79, 158, 255, 0.12);
+  --render: #ffb36d;
+  --sparse: #6fd4ff;
+  --scale: #64d6a1;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #edf3f9;
+  --border: #d2ddea;
+  --text: #102232;
+  --muted: #667b90;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(244, 247, 251, 0.94);
+  --accent: #1d73da;
+  --accent-soft: rgba(29, 115, 218, 0.08);
+  --render: #c86f24;
+  --sparse: #007cb7;
+  --scale: #0a8d62;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 179, 109, 0.12), transparent 28%),
+    radial-gradient(circle at 80% 18%, rgba(111, 212, 255, 0.10), transparent 24%),
+    radial-gradient(circle at 18% 86%, rgba(100, 214, 161, 0.10), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 8%;
+  background: rgba(255, 179, 109, 0.18);
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(100, 214, 161, 0.14);
+}
+
+.hero-inner {
+  max-width: 1060px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.render {
+  color: var(--render);
+  font-style: italic;
+}
+
+.scale {
+  color: var(--scale);
+}
+
+.subtitle {
+  max-width: 800px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  backdrop-filter: blur(18px);
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+section {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 78px 0;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 16px;
+  max-width: 780px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 780px;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.abstract-box,
+.motivation-card,
+.pipe-step,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box,
+.table-card,
+.highlight-strip {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px var(--shadow);
+}
+
+.abstract-box,
+.table-card,
+.citation-box {
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.abstract-box p {
+  margin: 0 0 14px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.divider {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.9;
+}
+
+.problem-grid,
+.metric-grid,
+.analysis-grid,
+.insight-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 28px;
+}
+
+.motivation-card,
+.metric-card,
+.insight-card,
+.analysis-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.diverse-card h3 {
+  color: var(--render);
+}
+
+.sparse-card h3 {
+  color: var(--sparse);
+}
+
+.device-card h3 {
+  color: var(--scale);
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.highlight-item {
+  padding: 10px 12px;
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline {
+  display: grid;
+  gap: 16px;
+}
+
+.pipe-step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 230px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.pipe-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pipe-desc {
+  color: var(--muted);
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--text);
+}
+
+.citation-box {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 70px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+footer {
+  padding: 40px 20px 70px;
+  text-align: center;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipe-step,
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 96px;
+  }
+
+  section {
+    width: min(100% - 32px, 1100px);
+    padding: 64px 0;
+  }
+
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-btn {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
-<body data-area="systems">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · ISCA 2025</div>
-    <h1 class="hero-title">FlexNeRFer: A Multi-Dataflow, Adaptive Sparsity-Aware Accelerator for On-Device NeRF Rendering</h1>
-    <p class="hero-subtitle">A multi-dataflow NeRF accelerator supports sparsity and precision scaling for efficient on-device 3D view synthesis.</p>
-    <div class="hero-meta"><strong>Authors</strong> Seock-Hwan Noh, Banseok Shin, Jeik Choi, Seungpyo Lee, Jaeha Kung, Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">ISCA 2025</div>
+    <h1>FlexNeRFer is a <span class="render">general-purpose NeRF accelerator</span> for <span class="scale">real on-device rendering budgets</span>.</h1>
+    <p class="subtitle">The paper starts from a simple systems problem: existing NeRF accelerators tend to overfit one rendering pipeline, while GPUs miss the area, power, and latency targets of portable devices. FlexNeRFer answers that with a hierarchical multi-dataflow NoC, a precision-scalable MAC array, and runtime selection of the right sparsity format for each workload tile.</p>
+    <div class="authors">Seock-Hwan Noh, Banseok Shin, Jeik Choi, Seungpyo Lee, Jaeha Kung, and Yeseong Kim</div>
+    <div class="affil">DGIST, Korea University, Samsung Electronics, DEEPX, and Fitogether</div>
+
+    <div class="chip-row">
+      <div class="chip">NeRF accelerator</div>
+      <div class="chip">HMF-NoC</div>
+      <div class="chip">4/8/16-bit MACs</div>
+      <div class="chip">Adaptive sparsity formats</div>
+      <div class="chip">28nm CMOS</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +704,311 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>The paper is not pitching one faster NeRF. It is pitching hardware that survives the diversity of modern NeRFs.</h2>
   <div class="abstract-box reveal">
-    <p>Neural Radiance Fields (NeRF), an AI-driven approach for 3D view reconstruction, has demonstrated impressive performance, sparking active research across fields. As a result, a range of advanced NeRF models has emerged, leading on-device applications to increasingly adopt NeRF for highly realistic scene reconstructions. With the advent of diverse NeRF models, NeRF-based applications leverage a variety of NeRF frameworks, creating the need for hardware capable of efficiently supporting these models. However, GPUs fail to meet the performance, power, and area (PPA) cost demanded by these on-device applications, or are specialized for specific NeRF algorithms, resulting in lower efficiency when applied to other NeRF models. To address this limitation, in this work, we introduce FlexNeRFer, an energy-efficient versatile NeRF accelerator.</p>
+    <p>NeRF has moved beyond one canonical model into a family of renderers with different network structures, encodings, sparsity patterns, and precision needs. That is the paper's real starting point: specialized accelerators can be excellent for one NeRF variant and then lose most of that advantage when the next model changes the computation mix.</p>
+    <p>FlexNeRFer is designed as a broader accelerator substrate. It profiles seven representative NeRF models, identifies GEMM/GEMV and encoding as the dominant bottlenecks, then builds an accelerator around those common kernels. The key hardware ideas are a hierarchical mesh-with-feedback NoC that supports unicast, multicast, and broadcast on a precision-scalable MAC array, plus an adaptive compression path that changes data format based on precision mode and sparsity ratio instead of hard-coding one sparse layout.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">A multi-dataflow NeRF accelerator supports sparsity and precision scaling for efficient on-device 3D view synthesis.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Efficient Systems and Accelerators</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">ISCA 2025</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">NeRF Accelerator, On-Device Rendering</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>Three constraints shape the entire design: model diversity, sparse execution, and portable-device budgets.</h2>
+  <p class="section-intro">The page should make clear that FlexNeRFer is a response to a moving target. NeRF workloads differ enough that the architecture has to stay flexible without losing efficiency.</p>
+
+  <div class="problem-grid">
+    <div class="motivation-card diverse-card reveal">
+      <h3>NeRF models do not share one fixed computational pattern</h3>
+      <p>Across the profiled models, the architecture has to handle MLP-heavy pipelines, CNN-style feature extraction, transformer-style attention, positional or hash encoding, and model-specific sparsity tricks. A single rigid accelerator leaves performance on the table as soon as the model family shifts.</p>
+    </div>
+    <div class="motivation-card sparse-card reveal">
+      <h3>The sparse format that saves memory is not constant</h3>
+      <p>The paper shows that COO, CSC/CSR, bitmap, and uncompressed layouts win under different sparsity ratios and precision modes. That means a useful accelerator has to choose formats adaptively instead of assuming one sparse representation is always best.</p>
+    </div>
+    <div class="motivation-card device-card reveal">
+      <h3>Portable devices need hard area and power limits</h3>
+      <p>The target is not a datacenter GPU. The paper explicitly frames on-device hardware around roughly sub-100 mm2 area and sub-10 W power, because AR glasses, VR systems, and similar edge devices cannot absorb desktop-class rendering hardware.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project falls in CELL&#x27;s systems thread, where accelerators, memory systems, and deployment-aware optimization are redesigned for practical efficiency. The page highlights the paper through the lens of NeRF Accelerator and On-Device Rendering.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">8.3 ms</div>
+      <div class="highlight-caption">game frame-time threshold cited by the paper for avoiding visibly slow rendering.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">16.8 ms</div>
+      <div class="highlight-caption">VR frame-time threshold cited for preventing discomfort and loss of immersion.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">7</div>
+      <div class="highlight-caption">representative NeRF models are profiled to derive common accelerator requirements.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Neural Radiance Fields (NeRF), an AI-driven approach for 3D view reconstruction, has demonstrated impressive performance, sparking active research across fields.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>As a result, a range of advanced NeRF models has emerged, leading on-device applications to increasingly adopt NeRF for highly realistic scene reconstructions.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>To address this limitation, in this work, we introduce FlexNeRFer, an energy-efficient versatile NeRF accelerator.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>FlexNeRFer is a systems stack: profile the bottlenecks, then build flexibility into the datapath, the reduction path, and the memory format.</h2>
+  <p class="section-intro">The method is not one clever block. The architecture is useful because several pieces are aligned to the same observation: NeRF workloads are irregular, sparse, and precision-variable.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Profile many NeRFs and isolate the shared bottlenecks</div>
+      <div class="pipe-desc">The paper measures seven representative NeRF models on an RTX 2080 Ti and finds that GEMM/GEMV dominates runtime across the board, while encoding also becomes a major cost for models such as KiloNeRF, NSVF, Mip-NeRF, and Instant-NGP. That profiling step is what justifies a general accelerator rather than another model-specific design.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Use HMF-NoC to feed sparse data into a bit-scalable MAC array</div>
+      <div class="pipe-desc">At the core of the GEMM/GEMV unit is a hierarchical mesh with feedback NoC. It supports 1D unicast, multicast, and broadcast so sparse and irregular tensors can still be mapped densely across the array. The same MAC substrate supports 4-bit, 8-bit, and 16-bit modes instead of locking the design to one numerical format.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Adapt the sparsity format to the data tile and precision mode</div>
+      <div class="pipe-desc">FlexNeRFer measures input sparsity ratio online and pre-analyzes weight sparsity offline, then picks the compression format with the lowest memory footprint for that operating point. This is one of the paper's most specific insights: the best format shifts as precision and sparsity change, so adaptive compression directly improves both bandwidth and energy.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Accelerate both encoding styles used in modern NeRFs</div>
+      <div class="pipe-desc">The architecture includes a positional encoding engine and a hash encoding engine. The positional engine uses arithmetic approximations and processes 64 encodings in parallel, while the hash engine extends NeuRex-style lookup with 64 coalescing hash units, 64 subgrid hash units, and 64 interpolation units to reduce redundant memory traffic.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why HMF-NoC matters</h3>
+      <p>The paper compares the proposed mesh-with-feedback NoC to HM-NoC and reports about 2.5x lower on-chip memory-access energy. The important point is not just connectivity; it is that feedback and hierarchical distribution reduce the cost of keeping the MAC array usefully busy under sparse mappings.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why precision and sparsity are coupled</h3>
+      <p>FlexNeRFer is not merely a low-bit accelerator with optional sparse support. The work explicitly studies how memory footprint shifts when the same tensor moves from 16-bit to 8-bit to 4-bit, and uses that to decide when COO, CSC/CSR, bitmap, or no compression is preferable.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The strongest result is that the accelerator stays within edge-style area and power while still beating both GPUs and a recent NeRF accelerator by wide margins.</h2>
+  <p class="section-intro">This is a layout-backed hardware paper rather than a pure architecture sketch. The reported numbers come from 28nm implementation, post-layout modeling, and comparisons across seven NeRF models on two standard datasets.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">35.4 mm2</div>
+      <div class="metric-label">area</div>
+      <div class="metric-sub">for FlexNeRFer, comfortably below the paper's practical sub-100 mm2 on-device target</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">7.3-9.2 W</div>
+      <div class="metric-label">power</div>
+      <div class="metric-sub">depending on precision mode, staying under the 10 W portable-device target</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">243.3x</div>
+      <div class="metric-label">max speedup</div>
+      <div class="metric-sub">over NVIDIA RTX 2080 Ti under the evaluated pruning and precision settings</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">520.3x</div>
+      <div class="metric-label">max energy gain</div>
+      <div class="metric-sub">over RTX 2080 Ti in the most favorable evaluated configuration</div>
+    </div>
+  </div>
+
+  <div class="table-card reveal">
+    <h3 class="table-header">Selected hardware and system numbers reported by the paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Comparison</th>
+          <th>FlexNeRFer</th>
+          <th>Reported meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Area vs. NeuRex</td>
+          <td>35.4 mm2 vs. 22.8 mm2</td>
+          <td>FlexNeRFer pays moderate area overhead for precision scaling, flexible NoC support, and adaptive compression, but still remains within the stated on-device envelope.</td>
+        </tr>
+        <tr>
+          <td>Power vs. NeuRex</td>
+          <td>7.3-9.2 W vs. 5.1 W</td>
+          <td>Power rises with added flexibility, yet the design stays below the 10 W edge target while cutting latency substantially.</td>
+        </tr>
+        <tr>
+          <td>Performance vs. GPU</td>
+          <td>8.2x to 243.3x speedup</td>
+          <td>The accelerator wins most when quantization and pruning align well with the flexible sparse datapath.</td>
+        </tr>
+        <tr>
+          <td>Energy vs. GPU</td>
+          <td>24.1x to 520.3x improvement</td>
+          <td>This is the strongest headline because mobile rendering is constrained by both latency and battery budget.</td>
+        </tr>
+        <tr>
+          <td>Performance vs. NeuRex</td>
+          <td>4.2x to 86.9x speedup</td>
+          <td>The gain comes from flexibility rather than one narrow fast path, especially when sparsity and precision change with the workload.</td>
+        </tr>
+        <tr>
+          <td>System-level latency effects</td>
+          <td>72% lower DRAM access time and 65% lower total execution time from adaptive format conversion</td>
+          <td>The format machinery is not cosmetic overhead; it meaningfully changes memory behavior.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>The area overhead is deliberate, not accidental</h3>
+      <p>Compared with NeuRex, FlexNeRFer spends more silicon and power on flexibility: the paper reports 48.4 percent area overhead and 35.18 percent power overhead. But the compute-density result is still better, at roughly 1.9x to 7.5x higher performance per area unit, because that flexibility keeps the array useful across more workloads.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>The encoding engines matter more than a generic summary suggests</h3>
+      <p>The positional encoding engine alone is reported to achieve 8.2x area reduction and 12.8x power reduction versus a DesignWare IP-based implementation. That matters because encoding is a major fraction of runtime in several NeRF variants, not a minor auxiliary step.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>The paper treats precision as a quality-efficiency curve, not a fixed choice</h3>
+      <p>The sensitivity study shows INT16 stays close to FP32 PSNR, while low-bit quantization needs outlier-aware rescue to recover quality. That is a useful systems message: the accelerator is not only fast at low precision, it gives multiple operating points that preserve image quality differently.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why this project matters beyond one rendering benchmark.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This is a hardware paper about model diversity. The core contribution is not just a faster NeRF engine, but an accelerator architecture that remains efficient as NeRF variants change their encoding, sparsity, and precision behavior.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The page should emphasize that FlexNeRFer is genuinely on-device by design. The reported area and power are part of the argument, not secondary implementation details.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">For CELL's website, this project is a clear example of deployment-aware accelerator design: profile the real workloads, identify what changes across models, and make the architecture flexible exactly where those changes occur.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Seock-Hwan Noh, Banseok Shin, Jeik Choi, Seungpyo Lee, Jaeha Kung, Yeseong Kim. “FlexNeRFer: A Multi-Dataflow, Adaptive Sparsity-Aware Accelerator for On-Device NeRF Rendering”, 2025 ACM/IEEE 52st Annual International Symposium on Computer Architecture (ISCA), Tokyo, Japan, 2025</p>
+    <p class="citation-text" id="citation-text">@inproceedings{noh2025flexnerfer,
+  author    = {Seock-Hwan Noh and Banseok Shin and Jeik Choi and Seungpyo Lee and Jaeha Kung and Yeseong Kim},
+  title     = {FlexNeRFer: A Multi-Dataflow, Adaptive Sparsity-Aware Accelerator for On-Device NeRF Rendering},
+  booktitle = {Proceedings of the 52nd Annual International Symposium on Computer Architecture},
+  series    = {ISCA '25},
+  pages     = {1894--1909},
+  year      = {2025},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3695053.3731107},
+  url       = {https://doi.org/10.1145/3695053.3731107}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll(".copy-btn").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    if (!target) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const oldLabel = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = oldLabel;
+      }, 1200);
+    } catch (error) {
+      button.textContent = "Failed";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1200);
+    }
+  });
+});
+</script>
 </body>
 </html>

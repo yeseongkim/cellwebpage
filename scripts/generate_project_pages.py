@@ -13,7 +13,18 @@ PDF_DIR = ROOT / "pdfs"
 PUBLICATIONS_FILE = ROOT / "publications" / "index.html"
 PROJECTS_DIR = ROOT / "projects"
 DATA_JS = PROJECTS_DIR / "projects-data.js"
-HANDCRAFTED_SLUGS = {"bit-level-semantics", "ditto-storage-traces", "hd-regression-confidence", "diffnest-system-surrogates", "matryoshka-llm-pruning"}
+HANDCRAFTED_SLUGS = {
+    "bit-level-semantics",
+    "ditto-storage-traces",
+    "hd-regression-confidence",
+    "diffnest-system-surrogates",
+    "matryoshka-llm-pruning",
+    "hd-federated-mobile-robots",
+    "flexnerfer",
+    "forward-only-hdc-training",
+    "trainablehd",
+    "hdc-in-the-wild-robots",
+}
 
 
 AREA_META = {
@@ -96,6 +107,15 @@ OVERRIDES = {
         "summary": "Forward-only updates reduce the cost of HD training while preserving the lightweight learning behavior needed for edge deployment.",
     },
     "Advancing Hyperdimensional Computing Based on Trainable Encoding and Adaptive Training for Efficient.pdf": {
+        "slug": "trainablehd",
+        "area": "hd",
+        "tags": ["Trainable Encoding", "Quantization"],
+        "venue_short": "TODAES 2024",
+        "summary": "TrainableHD replaces static encoders with trainable representations and adaptive optimization, pushing HDC closer to deep-learning-level accuracy.",
+        "abstract": "TrainableHD revisits hyperdimensional computing by replacing fixed random encoders and static training rules with a trainable encoder, adaptive optimizers, and quantization-aware execution. The paper shows that these changes let HDC capture richer feature relationships, improve accuracy by up to 27.99% with no extra inference cost, and deliver strong speed and energy efficiency on low-power accelerators compared with deep learning baselines.",
+        "title": "Advancing Hyperdimensional Computing Based on Trainable Encoding and Adaptive Training for Efficient and Accurate Learning",
+    },
+    "Advancing Hyperdimensional Computing Based on Trainable Encoding and Adaptive Training for Efficient and Accurate Learning.pdf": {
         "slug": "trainablehd",
         "area": "hd",
         "tags": ["Trainable Encoding", "Quantization"],
