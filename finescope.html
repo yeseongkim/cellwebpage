@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FineScope: SAE-guided Data Selection for Domain-Specific LLM Pruning</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+[data-theme="dark"] {
+  --bg:#0a0a0f; --surface:#111118; --surface2:#18181f; --border:#2a2a38;
+  --text:#e8e8f0; --muted:#7a7a95; --shadow:rgba(0,0,0,0.5);
+  --nav-bg:rgba(10,10,15,0.88); --grain:0.4;
+  --forget:#f97d6a; --focus:#4dd9ac; --accent:#7c6ff7;
+}
+[data-theme="light"] {
+  --bg:#f5f4f8; --surface:#ffffff; --surface2:#eeedf5; --border:#dddbe8;
+  --text:#1a1828; --muted:#6b6880; --shadow:rgba(0,0,0,0.10);
+  --nav-bg:rgba(245,244,248,0.92); --grain:0.12;
+  --forget:#c94f38; --focus:#1a9e79; --accent:#5b4fd4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;transition:background .35s,color .35s}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:var(--grain);transition:opacity .35s}
+a{color:inherit;text-decoration:none}
+
+.theme-btn{position:fixed;top:14px;right:18px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:7px 16px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .25s;box-shadow:0 2px 12px var(--shadow)}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+.theme-icon{font-size:12px;transition:transform .4s}
+.theme-btn:hover .theme-icon{transform:rotate(20deg)}
+
+nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:center;overflow-x:auto;transition:background .35s,border-color .35s}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:16px 16px;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{color:var(--text);border-color:var(--accent)}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px 60px;position:relative;overflow:hidden;text-align:center}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 40%,rgba(124,111,247,.12) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 60%,rgba(249,125,106,.10) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 50% 10%,rgba(77,217,172,.07) 0%,transparent 50%);animation:bgPulse 8s ease-in-out infinite alternate;transition:opacity .35s}
+[data-theme="light"] .hero-bg{background:radial-gradient(ellipse 80% 50% at 20% 40%,rgba(91,79,212,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 60%,rgba(201,79,56,.07) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 50% 10%,rgba(26,158,121,.06) 0%,transparent 50%)}
+@keyframes bgPulse{from{opacity:.7}to{opacity:1.2}}
+.dots{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.dot{position:absolute;border-radius:50%;animation:floatDot linear infinite;opacity:0}
+@keyframes floatDot{0%{transform:translateY(110vh) scale(0);opacity:0}10%{opacity:.8}90%{opacity:.4}100%{transform:translateY(-10vh) scale(1.2);opacity:0}}
+.venue-badge{display:inline-block;background:rgba(124,111,247,.12);border:1px solid rgba(124,111,247,.35);color:var(--accent);padding:6px 18px;border-radius:100px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px;animation:fadeUp .8s ease forwards;opacity:0}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(34px,6vw,78px);font-weight:400;line-height:1.08;max-width:980px;margin-bottom:12px;animation:fadeUp .8s .15s ease forwards;opacity:0}
+h1 .forget{color:var(--forget);font-style:italic}
+h1 .focus{color:var(--focus)}
+.subtitle{font-size:clamp(15px,2vw,17px);color:var(--muted);max-width:760px;margin:16px auto 36px;animation:fadeUp .8s .3s ease forwards;opacity:0}
+.authors{font-size:15px;color:var(--muted);margin-bottom:6px;animation:fadeUp .8s .4s ease forwards;opacity:0}
+.affil{font-size:13px;color:var(--muted);margin-bottom:36px;animation:fadeUp .8s .5s ease forwards;opacity:0}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .6s ease forwards;opacity:0}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{filter:brightness(1.15);transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,111,247,.3)}
+.btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+section{max-width:960px;margin:0 auto;padding:80px 24px}
+.section-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h2{font-family:'Instrument Serif',serif;font-size:clamp(26px,4vw,44px);font-weight:400;line-height:1.15;margin-bottom:24px}
+h3{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:28px}
+p{color:var(--muted);margin-bottom:16px;font-size:15.5px}
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+
+.abstract-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 40px;position:relative;overflow:hidden;transition:background .35s,border-color .35s}
+.abstract-box::before{content:'"';font-family:'Instrument Serif',serif;font-size:160px;color:var(--accent);opacity:.07;position:absolute;top:-20px;left:20px;line-height:1;pointer-events:none}
+.abstract-box p{color:var(--text);font-size:15.5px;line-height:1.85}
+
+.key-insight{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:20px;overflow:hidden;margin:40px 0}
+.insight-panel{padding:40px 36px;position:relative}
+.insight-panel.forget-panel{background:rgba(249,125,106,.08);border:1px solid rgba(249,125,106,.2);border-radius:20px 4px 4px 20px}
+.insight-panel.focus-panel{background:rgba(77,217,172,.07);border:1px solid rgba(77,217,172,.18);border-radius:4px 20px 20px 4px}
+[data-theme="light"] .insight-panel.forget-panel{background:rgba(201,79,56,.06)}
+[data-theme="light"] .insight-panel.focus-panel{background:rgba(26,158,121,.06)}
+.insight-icon{font-size:34px;margin-bottom:16px}
+.insight-panel h3{font-size:21px;margin-top:0}
+.insight-panel.forget-panel h3{color:var(--forget)}
+.insight-panel.focus-panel h3{color:var(--focus)}
+
+.highlight-strip{background:linear-gradient(135deg,rgba(124,111,247,.08),rgba(77,217,172,.06));border:1px solid rgba(124,111,247,.22);border-radius:20px;padding:48px 40px;margin:48px 0;text-align:center}
+[data-theme="light"] .highlight-strip{background:linear-gradient(135deg,rgba(91,79,212,.07),rgba(26,158,121,.06));border-color:rgba(91,79,212,.2)}
+.hl-number{font-family:'Instrument Serif',serif;font-size:clamp(60px,10vw,110px);line-height:1;background:linear-gradient(135deg,var(--accent),var(--focus));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hl-label{font-size:16px;color:var(--muted);margin-top:12px}
+.hl-sub{font-size:13px;color:var(--muted);opacity:.7;margin-top:6px}
+
+.pipeline{display:flex;align-items:stretch;border-radius:16px;overflow:hidden;border:1px solid var(--border);margin:48px 0}
+.pipe-step{flex:1;padding:32px 24px;text-align:center;position:relative}
+.pipe-step:not(:last-child)::after{content:'->';position:absolute;right:-14px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--muted);z-index:2}
+.pipe-step.step1{background:rgba(124,111,247,.06);border-right:1px solid var(--border)}
+.pipe-step.step2{background:rgba(249,125,106,.06);border-right:1px solid var(--border)}
+.pipe-step.step3{background:rgba(77,217,172,.06);border-right:1px solid var(--border)}
+.pipe-step.step4{background:rgba(124,111,247,.03)}
+.pipe-num{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);margin-bottom:10px}
+.pipe-title{font-family:'Instrument Serif',serif;font-size:21px;margin-bottom:10px}
+.step1 .pipe-title{color:var(--accent)}
+.step2 .pipe-title{color:var(--forget)}
+.step3 .pipe-title{color:var(--focus)}
+.step4 .pipe-title{color:var(--accent)}
+.pipe-desc{font-size:13px;color:var(--muted)}
+
+.models-row{display:flex;gap:12px;flex-wrap:wrap;margin:32px 0}
+.model-chip{font-family:'Space Mono',monospace;font-size:11px;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:36px 0}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 24px;text-align:center;transition:transform .2s,border-color .2s,box-shadow .2s}
+.result-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 12px 32px var(--shadow)}
+.result-card .number{font-family:'Instrument Serif',serif;font-size:50px;line-height:1;font-weight:400;margin-bottom:6px}
+.result-card .label{font-size:13px;color:var(--muted)}
+.result-card .sublabel{font-size:11px;color:var(--muted);opacity:.6;margin-top:4px}
+.card-prune .number{color:var(--forget)}
+.card-domain .number{color:var(--accent)}
+.card-code .number{color:var(--focus)}
+
+/* ── INTERACTIVE CHART ── */
+.chart-container{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;margin:36px 0;transition:background .35s}
+.chart-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.chart-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chart-desc{font-size:12px;color:var(--muted);opacity:.7;margin-top:4px}
+.toggle-row{display:flex;gap:6px;flex-wrap:wrap}
+.toggle-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;padding:6px 14px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.toggle-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(124,111,247,.1)}
+[data-theme="light"] .toggle-btn.active{background:rgba(91,79,212,.08)}
+
+.chart-body{overflow-x:auto}
+.grouped-chart{min-width:420px}
+.gc-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.gc-label{font-size:12px;color:var(--muted);min-width:120px;text-align:right;line-height:1.3;flex-shrink:0}
+.gc-bars{flex:1;display:flex;flex-direction:column;gap:5px}
+.gc-bar-wrap{display:flex;align-items:center;gap:8px}
+.gc-bar-track{flex:1;background:var(--surface2);border-radius:100px;height:9px;overflow:hidden;position:relative}
+.gc-bar-fill{height:100%;border-radius:100px;transition:width .9s cubic-bezier(.4,0,.2,1)}
+.gc-val{font-family:'Space Mono',monospace;font-size:10px;color:var(--text);min-width:36px;text-align:left}
+.gc-tag{font-family:'Space Mono',monospace;font-size:9px;min-width:72px;padding:2px 7px;border-radius:4px;text-align:center;flex-shrink:0}
+.tag-finescope{background:rgba(77,217,172,.15);color:var(--focus);border:1px solid rgba(77,217,172,.3)}
+.tag-baseline{background:rgba(122,122,149,.1);color:var(--muted);border:1px solid rgba(122,122,149,.2)}
+
+.chart-legend{display:flex;gap:20px;margin-top:18px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.legend-dot.fs{background:var(--focus)}
+.legend-dot.bl{background:#5a5a7a}
+
+.chart-note{font-size:11px;color:var(--muted);opacity:.6;margin-top:14px;font-family:'Space Mono',monospace}
+
+/* tables */
+.table-wrapper{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin:32px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead{background:var(--surface2)}
+th{padding:14px 16px;text-align:left;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:11px 16px;border-bottom:1px solid rgba(42,42,56,.3);color:var(--muted)}
+[data-theme="light"] td{border-bottom:1px solid rgba(200,200,220,.4)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(124,111,247,.04)}
+.best{color:var(--focus)!important;font-weight:600}
+.second{color:var(--accent)!important}
+.method-finescope td{background:rgba(77,217,172,.04)}
+
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:36px 0}
+.analysis-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:border-color .2s,box-shadow .2s,background .35s}
+.analysis-card:hover{border-color:var(--accent);box-shadow:0 8px 24px var(--shadow)}
+.analysis-card .icon{font-size:28px;margin-bottom:14px}
+.analysis-card h3{margin-top:0;font-size:17px}
+.analysis-card p{font-size:14px}
+
+.contrib-list{list-style:none;margin:28px 0}
+.contrib-list li{display:flex;gap:18px;align-items:flex-start;padding:20px 24px;border-left:2px solid var(--border);margin-bottom:12px;transition:border-color .2s}
+.contrib-list li:hover{border-color:var(--accent)}
+.contrib-num{font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);min-width:24px;margin-top:2px}
+.contrib-list li p{margin:0;font-size:15px}
+
+.citation-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:22px 26px;font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);line-height:1.75;margin-top:28px;position:relative;overflow:hidden;transition:background .35s}
+.copy-btn{position:absolute;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:6px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;transition:all .2s;letter-spacing:.08em;text-transform:uppercase}
+.copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;font-family:'Space Mono',monospace;transition:border-color .35s}
+
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+.tbl-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+
+@media(max-width:700px){
+  .key-insight,.analysis-grid{grid-template-columns:1fr}
+  .results-grid{grid-template-columns:1fr}
+  .pipeline{flex-direction:column}
+  .pipe-step:not(:last-child)::after{content:'v';right:auto;left:50%;top:auto;bottom:-18px;transform:translateX(-50%)}
+  nav{padding:0 12px}
+  .theme-btn{top:auto;bottom:20px;right:18px}
+  .gc-label{min-width:80px;font-size:11px}
+  .chart-header{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()">
+  <span class="theme-icon" id="themeIcon">SUN</span>
+  <span id="themeLabel">Light</span>
+</button>
+
+<div class="dots" id="dots"></div>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="venue-badge">preprint</div>
+  <h1>FineScope uses <span class="forget">SAE-guided curation</span> to build <span class="focus">domain-specific</span> pruned LLMs.</h1>
+  <p class="subtitle">FineScope couples domain-aware data selection with structured pruning and self-distillation fine-tuning to produce compact, domain-specialized language models from large unlabeled corpora.</p>
+  <div class="authors">Chaitali Bhattacharyya<sup>1</sup>, Hyunsei Lee<sup>2</sup>, Junyoung Lee<sup>1</sup>, Shinhyoung Jang<sup>2</sup>, Il Hong Suh<sup>3</sup>, Yeseong Kim<sup>1</sup></div>
+  <div class="affil"><sup>1</sup> POSTECH &nbsp; <sup>2</sup> DGIST &nbsp; <sup>3</sup> COGA Robotics</div>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+    <a class="btn btn-secondary" href="#method">See Method</a>
+    <a class="btn btn-secondary" href="#citation">Cite</a>
+  </div>
+</section>
+
+<nav>
+  <a class="nav-link" href="#abstract">Abstract</a>
+  <a class="nav-link" href="#method">Method</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#analysis">Analysis</a>
+  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#citation">Citation</a>
+</nav>
+
+<section id="abstract">
+  <div class="section-label">Abstract</div>
+  <h2>Data selection and pruning are treated as one coupled problem.</h2>
+  <div class="abstract-box reveal">
+    <p>FineScope starts from a small set of user-provided seed examples, trains sparse autoencoders (SAEs) on intermediate model activations to automatically extract semantically aligned examples from large unlabeled corpora. The curated dataset then guides structured pruning to preserve domain-relevant substructures and supports self-distillation fine-tuning to recover task-specific performance.</p>
+    <p>The goal is not just to shrink a model after adaptation. The goal is to specialize the model around the target domain so that pruning preserves useful capacity instead of removing it blindly.</p>
+    <p>Experiments across STEM, humanities, social sciences, math, and coding domains show that FineScope consistently outperforms baseline fine-tuning approaches while enabling up to 35% parameter pruning. On math reasoning tasks, it achieves an average improvement of 11.50 points across pruned models.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="method">
+  <div class="section-label">Method</div>
+  <h2>The FineScope pipeline couples retrieval, pruning, and specialization.</h2>
+  <p>FineScope uses seed examples, SAE training on intermediate activations, data retrieval via cosine similarity in SAE code space, structured pruning, and teacher-guided distillation to produce compact domain-specialized models.</p>
+
+  <div class="key-insight reveal">
+    <div class="insight-panel forget-panel">
+      <div class="insight-icon">1</div>
+      <h3>Curate before compression</h3>
+      <p>FineScope first identifies the most domain-relevant unlabeled data rather than pruning with a generic corpus. SAEs trained on intermediate activations extract semantically aligned examples from large unlabeled corpora using only a small seed set.</p>
+    </div>
+    <div class="insight-panel focus-panel">
+      <div class="insight-icon">2</div>
+      <h3>Prune with domain signal</h3>
+      <p>The curated set drives structured pruning via gradient-based attribution, and teacher-guided self-distillation fine-tuning so the compressed student retains substructures critical for the target domain.</p>
+    </div>
+  </div>
+
+  <div class="pipeline reveal">
+    <div class="pipe-step step1">
+      <div class="pipe-num">STEP 01</div>
+      <div class="pipe-title">Seed Input</div>
+      <div class="pipe-desc">Around 10 user-provided seed examples define the target domain starting point.</div>
+    </div>
+    <div class="pipe-step step2">
+      <div class="pipe-num">STEP 02</div>
+      <div class="pipe-title">SAE Training</div>
+      <div class="pipe-desc">Sparse autoencoders are trained on top-K intermediate activations selected via Jacobian sensitivity.</div>
+    </div>
+    <div class="pipe-step step3">
+      <div class="pipe-num">STEP 03</div>
+      <div class="pipe-title">Data Retrieval</div>
+      <div class="pipe-desc">Cosine similarity in SAE code space retrieves domain-aligned samples from a large unlabeled corpus.</div>
+    </div>
+    <div class="pipe-step step4">
+      <div class="pipe-num">STEP 04</div>
+      <div class="pipe-title">Prune and Distill</div>
+      <div class="pipe-desc">Structured pruning with domain-specific data plus teacher-guided distillation fine-tuning yields a smaller specialized model.</div>
+    </div>
+  </div>
+
+  <div class="models-row reveal">
+    <div class="model-chip">Vicuna-7B</div>
+    <div class="model-chip">MathCoder-CL-7B</div>
+    <div class="model-chip">LLaMA 3.1-8B</div>
+    <div class="model-chip">Qwen 2-7B</div>
+    <div class="model-chip">Qwen 2.5-7B</div>
+    <div class="model-chip">Qwen 3-8B</div>
+  </div>
+  <div class="highlight-strip reveal">
+    <div class="hl-number">35%</div>
+    <div class="hl-label">Maximum parameter pruning reported while preserving target-domain quality</div>
+    <div class="hl-sub">FineScope outperforms SelfInstruct baselines at all pruning ratios; SelfInstruct degrades at 25% while FineScope holds stable accuracy up to 35%.</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>FineScope reports consistent gains across specialization settings.</h2>
+  <p>The results below summarize improvements on MMLU domain slices, math reasoning (Pre-algebra, Algebra, Counting &amp; Probability), and coding benchmarks after SAE-guided curation and pruning-aware fine-tuning.</p>
+
+  <div class="results-grid reveal">
+    <div class="result-card card-prune">
+      <div class="number">35%</div>
+      <div class="label">Parameter pruning</div>
+      <div class="sublabel">while preserving domain accuracy</div>
+    </div>
+    <div class="result-card card-domain">
+      <div class="number">+4.45%</div>
+      <div class="label">Average MMLU gain</div>
+      <div class="sublabel">over OpenInstruct (Full-OI) baselines</div>
+    </div>
+    <div class="result-card card-code">
+      <div class="number">+11.50</div>
+      <div class="label">Math reasoning lift</div>
+      <div class="sublabel">average across pruned models</div>
+    </div>
+  </div>
+
+  <!-- ── INTERACTIVE CHART ── -->
+  <div class="chart-container reveal" id="chartContainer">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Benchmark Comparison — FineScope (pruned) vs Best Baseline</div>
+        <div class="chart-desc">All values are real numbers from the paper. Toggle to switch benchmark category.</div>
+      </div>
+      <div class="toggle-row">
+        <button class="toggle-btn active" onclick="showChart('mmlu',this)">MMLU</button>
+        <button class="toggle-btn" onclick="showChart('math',this)">Math</button>
+        <button class="toggle-btn" onclick="showChart('code',this)">Coding</button>
+      </div>
+    </div>
+
+    <div class="chart-body">
+      <!-- MMLU panel -->
+      <div class="grouped-chart" id="chart-mmlu"></div>
+      <!-- Math panel -->
+      <div class="grouped-chart" id="chart-math" style="display:none"></div>
+      <!-- Coding panel -->
+      <div class="grouped-chart" id="chart-code" style="display:none"></div>
+    </div>
+
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot fs"></div> FineScope (pruned + distilled)</div>
+      <div class="legend-item"><div class="legend-dot bl"></div> Best baseline (Alpaca or Full-corpus, pruned)</div>
+    </div>
+    <div class="chart-note" id="chartNote">Accuracy (%) on MMLU. FineScope uses SAE-curated data; baseline uses Alpaca (pruned).</div>
+  </div>
+
+  <!-- Table 1 -->
+  <p class="tbl-label" style="margin-top:40px">Table 1 — MMLU Domain Results (STEM / Social Sciences / Humanities)</p>
+  <div class="table-wrapper reveal">
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Pruned</th><th>Dataset</th><th>STEM</th><th>Social Sci.</th><th>Humanities</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vicuna-7B</td><td>✗</td><td>–</td><td>33.10</td><td>40.23</td><td>43.69</td></tr>
+        <tr><td>Vicuna-7B</td><td>✓</td><td>Alpaca</td><td>30.61</td><td>35.44</td><td>36.11</td></tr>
+        <tr><td>Vicuna-7B</td><td>✓</td><td>Full-OI</td><td>29.09</td><td>35.43</td><td>36.19</td></tr>
+        <tr class="method-finescope"><td><strong>Vicuna-7B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">31.12</td><td class="best">36.23</td><td class="best">36.55</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✗</td><td>–</td><td>31.14</td><td>11.11</td><td>9.22</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✓</td><td>Alpaca</td><td>25.14</td><td>13.11</td><td>12.33</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✓</td><td>Full-OI</td><td>23.91</td><td>12.81</td><td>12.67</td></tr>
+        <tr class="method-finescope"><td><strong>MathCoder-CL-7B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">25.89</td><td class="best">13.81</td><td class="best">13.68</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✗</td><td>–</td><td>48.01</td><td>49.61</td><td>49.32</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✓</td><td>Alpaca</td><td>38.22</td><td>40.19</td><td>39.79</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✓</td><td>Full-OI</td><td>39.32</td><td>39.91</td><td>40.93</td></tr>
+        <tr class="method-finescope"><td><strong>LLaMA 3.1-8B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="second">40.55</td><td class="best">41.07</td><td class="best">41.19</td></tr>
+        <tr><td>GPT-3 (6.7B)</td><td>✗</td><td>–</td><td>35.10</td><td>49.20</td><td>42.10</td></tr>
+        <tr><td>OLMO-7B</td><td>✗</td><td>–</td><td>22.19</td><td>31.01</td><td>30.26</td></tr>
+        <tr><td>GPT-3 (175B)</td><td>✗</td><td>–</td><td>36.70</td><td>50.40</td><td>40.80</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Table 2 -->
+  <p class="tbl-label" style="margin-top:32px">Table 2 — Math Subdomain Results (Pre-Algebra / Algebra / Counting &amp; Probability)</p>
+  <div class="table-wrapper reveal">
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Pruned</th><th>Dataset</th><th>Pre-Algebra</th><th>Algebra</th><th>Count. &amp; Prob.</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vicuna-7B</td><td>✗</td><td>–</td><td>14.31</td><td>10.17</td><td>8.11</td></tr>
+        <tr><td>Vicuna-7B</td><td>✓</td><td>Alpaca</td><td>5.56</td><td>0.30</td><td>0.21</td></tr>
+        <tr><td>Vicuna-7B</td><td>✓</td><td>Full-Math</td><td>12.73</td><td>8.91</td><td>5.48</td></tr>
+        <tr class="method-finescope"><td><strong>Vicuna-7B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">12.91</td><td class="best">10.12</td><td class="best">7.01</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✗</td><td>–</td><td>11.60</td><td>16.77</td><td>13.38</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✓</td><td>Alpaca</td><td>1.29</td><td>6.94</td><td>3.33</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✓</td><td>Full-Math</td><td>9.01</td><td>12.72</td><td>10.05</td></tr>
+        <tr class="method-finescope"><td><strong>MathCoder-CL-7B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">10.54</td><td class="best">15.51</td><td class="best">11.64</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✗</td><td>–</td><td>32.77</td><td>29.87</td><td>20.35</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✓</td><td>Alpaca</td><td>9.23</td><td>5.56</td><td>9.10</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✓</td><td>Full-Math</td><td>30.72</td><td>31.67</td><td>18.34</td></tr>
+        <tr class="method-finescope"><td><strong>LLaMA 3.1-8B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">30.83</td><td class="best">32.21</td><td class="best">19.34</td></tr>
+        <tr><td>GPT-3 (13B)</td><td>✗</td><td>–</td><td>6.80</td><td>5.30</td><td>4.50</td></tr>
+        <tr><td>GPT-3 (175B)</td><td>✗</td><td>–</td><td>7.70</td><td>6.00</td><td>4.70</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Table 3 -->
+  <p class="tbl-label" style="margin-top:32px">Table 3 — Coding Results (HumanEval / MBPP)</p>
+  <div class="table-wrapper reveal">
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Pruned</th><th>Dataset</th><th>HumanEval</th><th>MBPP</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vicuna-7B</td><td>✗</td><td>–</td><td>0.14</td><td>0.03</td></tr>
+        <tr><td>Vicuna-7B</td><td>✓</td><td>Alpaca</td><td>0.07</td><td>0.00</td></tr>
+        <tr><td>Vicuna-7B</td><td>✓</td><td>Full-OI</td><td>0.09</td><td>0.05</td></tr>
+        <tr class="method-finescope"><td><strong>Vicuna-7B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">0.13</td><td class="best">0.10</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✗</td><td>–</td><td>0.03</td><td>0.01</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✓</td><td>Alpaca</td><td>0.08</td><td>0.05</td></tr>
+        <tr><td>MathCoder-CL-7B</td><td>✓</td><td>Full-OI</td><td>0.10</td><td>0.09</td></tr>
+        <tr class="method-finescope"><td><strong>MathCoder-CL-7B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">0.11</td><td class="best">0.10</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✗</td><td>–</td><td>0.50</td><td>0.46</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✓</td><td>Alpaca</td><td>0.25</td><td>0.13</td></tr>
+        <tr><td>LLaMA 3.1-8B</td><td>✓</td><td>Full-OI</td><td>0.30</td><td>0.29</td></tr>
+        <tr class="method-finescope"><td><strong>LLaMA 3.1-8B</strong></td><td><strong>✓</strong></td><td><strong>FineScope</strong></td><td class="best">0.49</td><td class="best">0.43</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="analysis">
+  <div class="section-label">Analysis</div>
+  <h2>Why FineScope works</h2>
+  <p>These analysis points summarize why SAE-guided data curation and domain-conditioned pruning improve efficiency while preserving domain-relevant performance.</p>
+  <div class="analysis-grid reveal">
+    <div class="analysis-card">
+      <div class="icon">01</div>
+      <h3>SAE-guided retrieval</h3>
+      <p>Sparse autoencoder encoder codes give a compact retrieval space for finding semantically aligned examples from large unlabeled corpora using only a small seed set (~10 examples). Cosine similarity in SAE code space captures feature-level domain alignment rather than surface-form similarity.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="icon">02</div>
+      <h3>Jacobian-aware Top-K selection</h3>
+      <p>Top-K activation coordinates are selected by Jacobian row-norm sensitivity — coordinates that are causally responsive to input content. This outperforms magnitude, variance, and PCA-based selectors for SAE training, as validated in ablations.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="icon">03</div>
+      <h3>Teacher-guided recovery</h3>
+      <p>After pruning, teacher-guided distillation (TGD) helps the compressed student recover domain performance. TGD yields gains of 1.9% in STEM, 5.8% in Social Sciences, and 10.26% in Humanities over standard fine-tuning alone.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="icon">04</div>
+      <h3>Low seed sensitivity</h3>
+      <p>Sensitivity analysis varying initial seeds from 5 to 25 shows only marginal accuracy differences, confirming that FineScope does not require heavy user input. Performance largely plateaus after ~15–20 initial seeds.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contributions">
+  <div class="section-label">Contributions</div>
+  <h2>What FineScope contributes</h2>
+  <ul class="contrib-list reveal">
+    <li><span class="contrib-num">01</span><p><strong>Unified pipeline</strong> that connects domain-specific data selection with model pruning and fine-tuning to support efficient adaptation of large language models.</p></li>
+    <li><span class="contrib-num">02</span><p><strong>Novel SAE-guided data selection</strong> using sparse autoencoders trained on intermediate activations to identify semantically relevant samples from large unlabeled corpora, starting from only a small seed set.</p></li>
+    <li><span class="contrib-num">03</span><p><strong>Modified self-distillation fine-tuning (TGD)</strong> that transfers knowledge from the original unpruned model to the pruned student, helping recover domain-relevant behaviors lost during compression.</p></li>
+    <li><span class="contrib-num">04</span><p><strong>Consistent improvements across domains and model families</strong> — MMLU STEM/Social Sciences/Humanities, math subdomains, coding benchmarks — with up to 35% parameter reduction across Vicuna, MathCoder-CL, LLaMA 3.1, and Qwen model families.</p></li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<section id="citation">
+  <div class="section-label">Citation</div>
+  <h2>Cite FineScope</h2>
+  <p>If you use this work, please cite the FineScope submission below.</p>
+  <div class="citation-box reveal">
+    <button class="copy-btn" onclick="copyBib()">Copy</button>
+@article{bhattacharyya2025finescope,<br>
+&nbsp;&nbsp;title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {FineScope: Precision Pruning for Domain-Specialized Large Language Models Using SAE-Guided Self-Data Cultivation},<br>
+&nbsp;&nbsp;author&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {Bhattacharyya, Chaitali and Lee, Hyunsei and Lee, Junyoung and Jang, Shinhyoung and Kim, Yeseong and others},<br>
+&nbsp;&nbsp;journal&nbsp;&nbsp;&nbsp;&nbsp;= {arXiv preprint arXiv:2505.00624},<br>
+&nbsp;&nbsp;year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {2025}<br>
+}
+  </div>
+</section>
+
+<footer>
+  FineScope — SAE-guided data selection, domain-specific structured pruning, and efficient LLM specialization.
+</footer>
+
+<script>
+/* ── floating dots ── */
+const dotsEl = document.getElementById('dots');
+const dotColors = ['#7c6ff7','#f97d6a','#4dd9ac','#a891f5','#f0a896'];
+for (let i = 0; i < 28; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  const sz = Math.random() * 5 + 2;
+  d.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${dotColors[Math.floor(Math.random()*dotColors.length)]};animation-duration:${Math.random()*12+10}s;animation-delay:${Math.random()*10}s`;
+  dotsEl.appendChild(d);
+}
+
+/* ── theme ── */
+const html = document.documentElement;
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+applyTheme(localStorage.getItem('finescope-theme') || 'dark');
+function applyTheme(t) {
+  html.setAttribute('data-theme', t);
+  themeIcon.textContent = t === 'dark' ? 'SUN' : 'MOON';
+  themeLabel.textContent = t === 'dark' ? 'Light' : 'Dark';
+  localStorage.setItem('finescope-theme', t);
+}
+function toggleTheme() { applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
+
+/* ── reveal ── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(r => revealObs.observe(r));
+
+/* ── nav active ── */
+const navLinks = document.querySelectorAll('.nav-link');
+const navObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { threshold: 0.35 });
+document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+
+/* ── CHART DATA (all real paper numbers) ── */
+// MMLU: FineScope pruned vs Alpaca pruned (best baseline)
+// Scale: max across all values → map to 0–100% bar width
+const CHART_DATA = {
+  mmlu: {
+    note: 'Accuracy (%) on MMLU. FineScope uses SAE-curated data; baseline is Alpaca (pruned). Higher = better.',
+    scale: 55,   // normalise bars: 55% ≈ max in this set → fill 100%
+    rows: [
+      { label: 'Vicuna-7B\nSTEM',           fs: 31.12, bl: 30.61 },
+      { label: 'Vicuna-7B\nSoc. Sci.',      fs: 36.23, bl: 35.44 },
+      { label: 'Vicuna-7B\nHumanities',     fs: 36.55, bl: 36.11 },
+      { label: 'MathCoder-CL\nSTEM',        fs: 25.89, bl: 25.14 },
+      { label: 'MathCoder-CL\nSoc. Sci.',   fs: 13.81, bl: 13.11 },
+      { label: 'MathCoder-CL\nHumanities',  fs: 13.68, bl: 12.33 },
+      { label: 'LLaMA 3.1-8B\nSTEM',       fs: 40.55, bl: 38.22 },
+      { label: 'LLaMA 3.1-8B\nSoc. Sci.',  fs: 41.07, bl: 40.19 },
+      { label: 'LLaMA 3.1-8B\nHumanities', fs: 41.19, bl: 39.79 },
+    ]
+  },
+  math: {
+    note: 'Accuracy (%) on math subdomains. FineScope vs Alpaca (pruned). Note: Alpaca nearly collapses after pruning.',
+    scale: 35,
+    rows: [
+      { label: 'Vicuna-7B\nPre-Algebra',       fs: 12.91, bl: 5.56 },
+      { label: 'Vicuna-7B\nAlgebra',           fs: 10.12, bl: 0.30 },
+      { label: 'Vicuna-7B\nCount. & Prob.',    fs:  7.01, bl: 0.21 },
+      { label: 'MathCoder-CL\nPre-Algebra',    fs: 10.54, bl: 1.29 },
+      { label: 'MathCoder-CL\nAlgebra',        fs: 15.51, bl: 6.94 },
+      { label: 'MathCoder-CL\nCount. & Prob.', fs: 11.64, bl: 3.33 },
+      { label: 'LLaMA 3.1-8B\nPre-Algebra',   fs: 30.83, bl: 9.23 },
+      { label: 'LLaMA 3.1-8B\nAlgebra',       fs: 32.21, bl: 5.56 },
+      { label: 'LLaMA 3.1-8B\nCount. & Prob.',fs: 19.34, bl: 9.10 },
+    ]
+  },
+  code: {
+    note: 'Pass@1 on HumanEval and MBPP. FineScope vs Full-OI (pruned). LLaMA 3.1 gains are most pronounced.',
+    scale: 0.55,
+    rows: [
+      { label: 'Vicuna-7B\nHumanEval',        fs: 0.13, bl: 0.09 },
+      { label: 'Vicuna-7B\nMBPP',             fs: 0.10, bl: 0.05 },
+      { label: 'MathCoder-CL\nHumanEval',     fs: 0.11, bl: 0.10 },
+      { label: 'MathCoder-CL\nMBPP',          fs: 0.10, bl: 0.09 },
+      { label: 'LLaMA 3.1-8B\nHumanEval',    fs: 0.49, bl: 0.30 },
+      { label: 'LLaMA 3.1-8B\nMBPP',         fs: 0.43, bl: 0.29 },
+    ]
+  }
+};
+
+function buildChart(key) {
+  const data = CHART_DATA[key];
+  const el = document.getElementById('chart-' + key);
+  if (el.dataset.built) return;
+  el.dataset.built = '1';
+
+  const fmt = v => key === 'code' ? v.toFixed(2) : v.toFixed(1);
+
+  el.innerHTML = data.rows.map(row => {
+    const fsW  = Math.min(100, (row.fs / data.scale) * 100).toFixed(1);
+    const blW  = Math.min(100, (row.bl / data.scale) * 100).toFixed(1);
+    const gain = (row.fs - row.bl);
+    const gainStr = (gain >= 0 ? '+' : '') + fmt(gain);
+    const lines = row.label.split('\n');
+    return `
+    <div class="gc-row">
+      <div class="gc-label">${lines[0]}<br><span style="opacity:.6;font-size:11px">${lines[1]||''}</span></div>
+      <div class="gc-bars">
+        <div class="gc-bar-wrap">
+          <div class="gc-tag tag-finescope">FineScope</div>
+          <div class="gc-bar-track">
+            <div class="gc-bar-fill" style="background:var(--focus);width:0%" data-w="${fsW}%"></div>
+          </div>
+          <div class="gc-val">${fmt(row.fs)}</div>
+        </div>
+        <div class="gc-bar-wrap">
+          <div class="gc-tag tag-baseline">Baseline</div>
+          <div class="gc-bar-track">
+            <div class="gc-bar-fill" style="background:#5a5a7a;width:0%" data-w="${blW}%"></div>
+          </div>
+          <div class="gc-val">${fmt(row.bl)} <span style="color:var(--focus);font-size:9px">(${gainStr})</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function animateChart(key) {
+  const el = document.getElementById('chart-' + key);
+  // small delay so display:block has taken effect
+  setTimeout(() => {
+    el.querySelectorAll('.gc-bar-fill[data-w]').forEach(b => {
+      b.style.width = b.dataset.w;
+    });
+  }, 60);
+}
+
+function showChart(key, btn) {
+  // hide all
+  ['mmlu','math','code'].forEach(k => {
+    document.getElementById('chart-'+k).style.display = 'none';
+  });
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+
+  // show selected
+  btn.classList.add('active');
+  const el = document.getElementById('chart-'+key);
+  el.style.display = 'block';
+  buildChart(key);
+  animateChart(key);
+  document.getElementById('chartNote').textContent = CHART_DATA[key].note;
+}
+
+// init first tab
+buildChart('mmlu');
+// animate when chart scrolls into view
+const chartEl = document.getElementById('chartContainer');
+const chartObs = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    animateChart('mmlu');
+    chartObs.disconnect();
+  }
+}, { threshold: 0.2 });
+chartObs.observe(chartEl);
+
+/* ── copy bib ── */
+function copyBib() {
+  const text = `@article{bhattacharyya2025finescope,
+  title={FineScope: Precision Pruning for Domain-Specialized Large Language Models Using SAE-Guided Self-Data Cultivation},
+  author={Bhattacharyya, Chaitali and Lee, Hyunsei and Lee, Junyoung and Jang, Shinhyoung and Kim, Yeseong and others},
+  journal={arXiv preprint arXiv:2505.00624},
+  year={2025}
+}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied';
+    btn.style.cssText += 'background:var(--focus);color:#000;border-color:var(--focus)';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.cssText = btn.style.cssText.replace(/background[^;]+;color[^;]+;border-color[^;]+;/,'');
+    }, 2200);
+  });
+}
+</script>
+</body>
+</html>
