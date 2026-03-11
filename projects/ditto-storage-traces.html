@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Diffusion-Based Framework for Configurable and Realistic Multi-Storage Trace Generation | CELL Project Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="project-style.css">
+</head>
+<body data-area="gen-ai">
+<button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">CELL Project Page · DAC 2025 LBR</div>
+    <h1 class="hero-title">A Diffusion-Based Framework for Configurable and Realistic Multi-Storage Trace Generation</h1>
+    <p class="hero-subtitle">A diffusion model generates realistic, configurable multi-device storage traces so storage studies no longer depend on scarce hand-collected traces alone.</p>
+    <div class="hero-meta"><strong>Authors</strong> Seohyun Kim, Junyoung Lee, Jongho Park, Jinhyung Koo, Sungjin Lee and Yeseong Kim</div>
+    
+    <div class="button-row">
+      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
+      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#citation">Cite</a>
+    </div>
+  </div>
+</section>
+
+<nav>
+  <a class="nav-link active" href="#abstract">Abstract</a>
+  <a class="nav-link" href="#snapshot">Snapshot</a>
+  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#citation">Citation</a>
+</nav>
+
+<section id="abstract">
+  <div class="section-kicker">Abstract</div>
+  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="abstract-box reveal">
+    <p>We propose DiTTO, a novel diffusion-based framework for generating realistic, precisely configurable, and diverse multi-device storage traces. Leveraging advanced diffusion techniques, DiTTO enables the synthesis of high-fidelity continuous traces that capture temporal dynamics and inter-device dependencies with user-defined configurations. Our experimental results demonstrate that DiTTO can generate traces with high fidelity and diversity while aligning closely with guided configurations with only 8% errors. Op N Op 1 Block io trace, SSD trace, … Device Utilization 2 System Log RAID, CephFS Block 1 Block 2 Block 3 Block 1 Block 2 Block 3 Drive 1 Drive 2 Storage Devices Decoder Device Utilizaion Inference … System Configuration Op 2 … 1 Total request, Most use device, … Diffusion U-Net Image Encoder Device Utilization Contrastive Learning System Config 3 I. I NTRODUCTION Generate Extend Traces Config Encoder Configuration Understanding and optimizing the performance of distributed storage systems require detailed workload analysis in various environments such as RAID arrays and CephFS.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="snapshot">
+  <div class="section-kicker">Snapshot</div>
+  <h2 class="section-title">How this project fits inside CELL.</h2>
+  <p class="section-intro">A diffusion model generates realistic, configurable multi-device storage traces so storage studies no longer depend on scarce hand-collected traces alone.</p>
+  <div class="snapshot-grid">
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Research Thread</div>
+        <div class="snapshot-value">Generative AI for Systems and Media</div>
+      </div>
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Venue</div>
+        <div class="snapshot-value">DAC 2025 LBR</div>
+      </div>
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Selected Focus</div>
+        <div class="snapshot-value">Diffusion Model, Storage Systems</div>
+      </div>
+  </div>
+  <div class="context-box reveal">
+    <h3>Why it matters</h3>
+    <p>This project reflects CELL&#x27;s use of generative models to synthesize difficult-to-collect data, emulate system behavior, or accelerate emerging media workloads. The page highlights the paper through the lens of Diffusion Model and Storage Systems.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contributions">
+  <div class="section-kicker">Contributions</div>
+  <h2 class="section-title">Three takeaways from the work.</h2>
+  <div class="contributions-grid">
+      <div class="contribution-card reveal">
+        <h3>Core Idea</h3>
+        <p>We propose DiTTO, a novel diffusion-based framework for generating realistic, precisely configurable, and diverse multi-device storage traces.</p>
+      </div>
+      <div class="contribution-card reveal">
+        <h3>Design Move</h3>
+        <p>Leveraging advanced diffusion techniques, DiTTO enables the synthesis of high-fidelity continuous traces that capture temporal dynamics and inter-device dependencies with user-defined configurations.</p>
+      </div>
+      <div class="contribution-card reveal">
+        <h3>Practical Impact</h3>
+        <p>I NTRODUCTION Generate Extend Traces Config Encoder Configuration Understanding and optimizing the performance of distributed storage systems require detailed workload analysis in various environments such as RAID arrays and CephFS.</p>
+      </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="citation">
+  <div class="section-kicker">Citation</div>
+  <h2 class="section-title">Reference entry.</h2>
+  <div class="citation-box reveal">
+    <button class="copy-btn" data-copy-target="citation-text">Copy</button>
+    <p class="citation-text" id="citation-text">Seohyun Kim, Junyoung Lee, Jongho Park, Jinhyung Koo, Sungjin Lee and Yeseong Kim. “A Diffusion-Based Framework for Configurable and Realistic Multi-Storage Trace Generation”, in 2025 Design Automation Conference (DAC), 2025</p>
+  </div>
+</section>
+
+<footer>
+  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+</footer>
+
+<script src="project.js"></script>
+</body>
+</html>

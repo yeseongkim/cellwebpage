@@ -243,7 +243,7 @@ footer a{color:var(--c1)}
   </p>
 
   <div class="hero-links">
-    <a href="#llm-projects" class="btn btn-fill">🔬 Explore Projects</a>
+    <a href="#project-pages" class="btn btn-fill">🔬 Explore Projects</a>
     <a href="https://cell.postech.ac.kr" target="_blank" class="btn btn-outline">🌐 Lab Website</a>
     <a href="https://cell.postech.ac.kr/publications/" target="_blank" class="btn btn-outline">📄 All Publications</a>
   </div>
@@ -251,7 +251,7 @@ footer a{color:var(--c1)}
 
 <nav>
   <a class="nav-link active" href="#research-areas">Areas</a>
-  <a class="nav-link" href="#llm-projects">Featured Papers</a>
+  <a class="nav-link" href="#project-pages">Projects</a>
 </nav>
 
 <!-- ══ RESEARCH AREAS ════════════════════════════════════════ -->
@@ -283,38 +283,21 @@ footer a{color:var(--c1)}
 
 <hr class="divider">
 
-<!-- ══ LLM / GENERATIVE AI PROJECTS ═════════════════════════ -->
-<section class="section" id="llm-projects">
+<!-- ══ PROJECT PAGES ════════════════════════════════════════ -->
+<section class="section" id="project-pages">
   <div class="section-header reveal">
-    <div class="section-eyebrow" style="color:var(--c1)">Domain-specific LLM/SLM</div>
     <h2 class="section-title">Project Pages</h2>
-    <p class="section-desc">Selected work on domain specialization and pruning for large language models.</p>
   </div>
 
-  <div class="projects-grid">
+  <div class="area-tabs reveal">
+    <button class="area-tab active" data-area="all" type="button">All</button>
+    <button class="area-tab" data-area="llm" type="button">LLM</button>
+    <button class="area-tab" data-area="gen-ai" type="button">Generative AI</button>
+    <button class="area-tab" data-area="hd" type="button">HD Computing</button>
+    <button class="area-tab" data-area="systems" type="button">Systems</button>
+  </div>
 
-    <!-- FineScope -->
-    <div class="project-card card-llm reveal reveal-delay-1">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-tags">
-          <span class="tag tag-llm">LLM Pruning</span>
-          <span class="tag tag-llm">SAE</span>
-          <span class="tag tag-venue">ArXiv 2025</span>
-        </div>
-        <div class="card-title">FineScope: Precision Pruning for Domain-Specialized LLMs Using SAE-Guided Self-Data Cultivation</div>
-        <div class="card-authors"><strong>Chaitali Bhattacharyya</strong> et al.</div>
-        <div class="card-desc">Leverages Sparse Autoencoders (SAEs) to identify and retain only domain-relevant features during pruning, producing lightweight LLMs specialized to target domains without sacrificing core competence.</div>
-      </div>
-      <div class="card-footer">
-        <a href="https://arxiv.org/abs/2505.00624" target="_blank" class="card-btn paper">📄 ArXiv</a>
-        <a href="finescope.html" class="card-btn page">🌐 Project Page</a>
-      </div>
-    </div>
-
-  </div><!-- /projects-grid -->
-
-
+  <div class="projects-grid" id="projectsGrid"></div>
 </section>
 
 <footer>
@@ -333,6 +316,7 @@ footer a{color:var(--c1)}
   </p>
 </footer>
 
+<script src="projects/projects-data.js"></script>
 <script>
 /* ── Theme ──────────────────────────────────────── */
 const html = document.documentElement;
@@ -368,6 +352,77 @@ const navObs = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.3 });
 document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+
+/* ── Project cards ───────────────────────────────── */
+const projectsGrid = document.getElementById('projectsGrid');
+const areaTabs = document.querySelectorAll('.area-tab');
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function cardDelayClass(index) {
+  const delay = index % 3;
+  if (delay === 1) return 'reveal-delay-1';
+  if (delay === 2) return 'reveal-delay-2';
+  return 'reveal-delay-3';
+}
+
+function renderProjects(area) {
+  if (!projectsGrid || !window.CELL_PROJECTS) return;
+
+  const filtered = area === 'all'
+    ? window.CELL_PROJECTS
+    : window.CELL_PROJECTS.filter(project => project.area === area);
+
+  projectsGrid.innerHTML = filtered.map((project, index) => {
+    const lead = project.leadAuthor || project.lead_author || project.authors;
+    const authors = project.authors || lead;
+    const authorSuffix = authors.includes('et al.') || authors === lead ? authors.replace(lead, '') : ' et al.';
+    const tags = (project.tags || []).map(tag =>
+      `<span class="tag tag-${project.area}">${escapeHtml(tag)}</span>`
+    ).join('');
+    const award = project.award
+      ? `<span class="tag tag-award">${escapeHtml(project.award)}</span>`
+      : '';
+
+    return `
+      <div class="project-card card-${project.area} reveal ${cardDelayClass(index)}">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            ${tags}
+            <span class="tag tag-venue">${escapeHtml(project.venue_short)}</span>
+            ${award}
+          </div>
+          <div class="card-title">${escapeHtml(project.title)}</div>
+          <div class="card-authors"><strong>${escapeHtml(lead)}</strong>${escapeHtml(authorSuffix)}</div>
+          <div class="card-desc">${escapeHtml(project.summary)}</div>
+        </div>
+        <div class="card-footer">
+          <a href="${escapeHtml(project.page)}" class="card-btn page">Project Page</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  projectsGrid.querySelectorAll('.reveal').forEach(r => revObs.observe(r));
+}
+
+areaTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    areaTabs.forEach(item => item.classList.remove('active'));
+    tab.classList.add('active');
+    renderProjects(tab.dataset.area);
+  });
+});
+
+renderProjects('all');
 </script>
 </body>
 </html>
