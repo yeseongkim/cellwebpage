@@ -26,6 +26,10 @@ HANDCRAFTED_SLUGS = {
     "hdc-in-the-wild-robots",
     "towards-forward-only-hdc",
     "edgehd-iot",
+    "sidekick-cxl-clustering",
+    "neuro-symbolic-hdc-deep-learning",
+    "holistic-trainable-hdc",
+    "quiltnet",
 }
 
 

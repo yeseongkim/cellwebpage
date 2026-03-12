@@ -6,6 +6,253 @@
 <title>Efficient Hyperdimensional Learning with Trainable, Quantizable, and Holistic Data Representation | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="hd">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · DATE 2023</div>
     <h1 class="hero-title">Efficient Hyperdimensional Learning with Trainable, Quantizable, and Holistic Data Representation</h1>
-    <p class="hero-subtitle">Trainable, quantizable, holistic data representations make HD learning both more accurate and easier to deploy on efficient hardware.</p>
-    <div class="hero-meta"><strong>Authors</strong> Jiseung Kim, Hyunsei Lee, Mohsen Imani, and Yeseong Kim</div>
-    
+    <p class="hero-subtitle">This is the first TrainableHD paper: it learns the encoder itself, trims the dimension budget, and keeps HD inference lightweight enough for GPUs, CPUs, and FPGA targets.</p>
+    <div class="hero-meta"><strong>Authors</strong> Jiseung Kim, Hyunsei Lee, Mohsen Imani, and Yeseong Kim<br><strong>Affiliations</strong> DGIST and University of California, Irvine</div>
+    <div class="hero-chips">
+      <div class="hero-chip">Dynamic Encoder</div>
+      <div class="hero-chip">EIT</div>
+      <div class="hero-chip">QAT</div>
+      <div class="hero-chip">Jetson Xavier</div>
+      <div class="hero-chip">FPGA</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,180 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Moving HD learning past static random encoders.</h2>
   <div class="abstract-box reveal">
-    <p>Hyperdimensional computing (HDC) is a computing paradigm that draws inspiration from human memory models. It represents data in the form of high-dimensional vectors. Recently, many works in literature have tried to use HDC as a learning model due to its simple arithmetic and high efficiency. However, learning frameworks in HDC use encoders that are randomly generated and static, resulting in many parameters and low accuracy. In this paper, we propose TrainableHD, a framework for HDC that utilizes a dynamic encoder with effective quantization for higher efficiency.</p>
+    <p>Prior HDC classifiers leaned on fixed, randomly generated base hypervectors. That kept inference simple, but it also meant the encoder could not adapt to feature relationships discovered during training. The usual workaround was to increase dimensionality into the 10,000-range, which hurt efficiency and still left an accuracy gap against deep learning.</p>
+    <p>This paper introduces the first TrainableHD framework: class-hypervector errors are translated back into encoder updates, the encoder is retrained only when useful through Encoder Interval Training, and quantization-aware training keeps the learned representation deployment-friendly. The result is an HD pipeline that improves accuracy by up to 22.26 percent while preserving the lightweight inference path that makes HDC attractive for edge hardware.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Trainable, quantizable, holistic data representations make HD learning both more accurate and easier to deploy on efficient hardware.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DATE 2023</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Trainable Encoding, Quantization</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">What was limiting earlier HD learners.</h2>
+  <p class="section-intro">The paper is not just "better HDC accuracy." It attacks the core representation bottleneck: static codebooks waste dimension, ignore feature correlation, and make quantized deployment harder than it should be.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Static codebooks</h3>
+      <p>Earlier encoders generated base hypervectors once and never touched them again. That random, fixed mapping assumes near-orthogonality between features even when the dataset clearly contains structure worth learning.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Dimension pressure</h3>
+      <p>Because the encoder is not optimized, prior HD pipelines often need very large dimensions to stay accurate. The paper explicitly frames D = 10,000 as common practice and shows TrainableHD remains competitive even when the dimension budget drops sharply.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Edge deployment gap</h3>
+      <p>HD inference is attractive on efficient hardware, but only if the representation itself can be quantized cleanly. TrainableHD treats quantization as part of the learning recipe rather than an afterthought.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Trainable Encoding and Quantization.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">22.26%</div>
+      <div class="highlight-caption">Best reported accuracy gain over prior HD baselines, with 3.62 percent average improvement.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">24.48x</div>
+      <div class="highlight-caption">Average training speedup over DNN baselines before adding quantization simulation.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">56.4x</div>
+      <div class="highlight-caption">Jetson Xavier inference speedup over DNN, alongside 73x better energy efficiency.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">180.8x</div>
+      <div class="highlight-caption">FPGA speedup over DNN, with 167.8x better energy efficiency on Zynq-7000.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Hyperdimensional computing (HDC) is a computing paradigm that draws inspiration from human memory models.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>It represents data in the form of high-dimensional vectors.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>In this paper, we propose TrainableHD, a framework for HDC that utilizes a dynamic encoder with effective quantization for higher efficiency.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How TrainableHD actually changes the learning loop.</h2>
+  <p class="section-intro">The technical move is to make the encoder trainable without turning HDC into a heavy backprop-only model. The paper preserves the normal HD class-memory path, then adds a targeted way to improve the base hypervectors that define the encoder.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Encode with trainable base hypervectors</div>
+      <div class="step-desc">Instead of freezing the projection matrix after random initialization, TrainableHD lets the base hypervectors evolve during training. Feature vectors are still mapped into holistic hypervectors, but the codebook is now optimized for the dataset rather than left random forever.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Translate class error back into encoder space</div>
+      <div class="step-desc">The key insight is an interdimensional mapping view of HD encoding. Per-class scalar errors are turned into hypervector-form error signals, combined with binarization factors, and then used to update the base hypervectors. That is the paper's core mechanism for encoder learning.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Run encoder updates only when they matter</div>
+      <div class="step-desc">Encoder Interval Training caches feature hypervectors and retrains the encoder periodically instead of every minibatch. In the paper's measurements, EIT reduces training time for base updates by 89.20 percent and repeated encoding overhead by 69.89 percent.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Quantize the representation during training</div>
+      <div class="step-desc">Quantization-aware training models low-precision hypervectors, while Drift-Aware Update selectively triggers fake quantization only when weights drift enough to matter. DAU cuts quantization overhead by 84.50 percent on average with minimal accuracy change.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">Accuracy improved, but the stronger story is efficiency at smaller dimensions.</h2>
+  <p class="section-intro">The paper positions TrainableHD as an accuracy-and-systems result. It closes much of the HD-versus-DNN quality gap while preserving the cheap inference path that lets HD models excel on low-power hardware.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">3.62%</div>
+      <div class="metric-label">Average Gain</div>
+      <div class="metric-sub">Average accuracy improvement over the nonlinear HD baseline at the same dimension, with a 22.26 percent best case.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">86.31%</div>
+      <div class="metric-label">At 1K D</div>
+      <div class="metric-sub">TrainableHD at D = 1,000 slightly exceeds the baseline at D = 3,000, which reports 85.87 percent.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">12.13x</div>
+      <div class="metric-label">Training With QAT</div>
+      <div class="metric-sub">Even after quantization simulation is added, TrainableHD still trains much faster than the DNN baselines.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">3.1x</div>
+      <div class="metric-label">Extra GPU Gain</div>
+      <div class="metric-sub">INT8 quantization adds another 3.1x inference speedup on Jetson Xavier without losing reported accuracy.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative outcomes reported in the paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>HACT example</td>
+          <td>Baseline reaches 57.28 percent at D = 3,000 and 59.35 percent at D = 10,000, while TrainableHD reports 78.62 percent at D = 3,000 and 81.61 percent at D = 10,000.</td>
+          <td>The gain comes from learning the encoder, not from adding more inference work.</td>
+        </tr>
+        <tr>
+          <td>Dimension reduction</td>
+          <td>TrainableHD at D = 3,000 still outperforms the baseline at D = 10,000, and its D = 1,000 result is comparable to the baseline at D = 3,000.</td>
+          <td>The representation becomes much more data-efficient, which directly helps deployment on small devices.</td>
+        </tr>
+        <tr>
+          <td>Platform efficiency</td>
+          <td>CPU, Jetson Xavier Tensor Core, and FPGA implementations all benefit because inference arithmetic stays HD-native and lightweight.</td>
+          <td>The paper is designed for actual deployment, not just offline accuracy charts.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>Why this became a lineage page</h3>
+      <p>This DATE paper is the clean first milestone for the later TrainableHD journal version. The core ideas are already present here: encoder learning, interval-based optimization, and quantization-aware deployment.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>What stayed lightweight</h3>
+      <p>The paper is careful not to improve training by sneaking in a more expensive inference pipeline. Once training finishes, TrainableHD runs with the same style of HD query-to-class similarity operations rather than adding extra neural inference stages.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why this page matters in CELL's HD storyline.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This is the early TrainableHD paper that turns encoder learning into a first-class problem. It explains where the later, fuller TrainableHD work begins.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The page should read as both an algorithm paper and a deployment paper. Accuracy gains matter here because they are achieved without giving up HDC's efficient inference path.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, it is one of the clearest bridges from classic static-encoder HDC to the later CELL line on trainable, forward-only, and hardware-aware hyperdimensional learning.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +463,21 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Jiseung Kim, Hyunsei Lee, Mohsen Imani, and Yeseong Kim. &quot;Efficient Hyperdimensional Learning with Trainable, Quantizable, and Holistic Data Representation,&quot; in 2023 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), IEEE, 2023.</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{kim2023efficient,
+  author    = {Jiseung Kim and Hyunsei Lee and Mohsen Imani and Yeseong Kim},
+  title     = {Efficient Hyperdimensional Learning with Trainable, Quantizable, and Holistic Data Representation},
+  booktitle = {2023 Design, Automation and Test in Europe Conference and Exhibition (DATE)},
+  pages     = {1--6},
+  year      = {2023},
+  publisher = {IEEE},
+  doi       = {10.23919/DATE56975.2023.10137134},
+  url       = {https://doi.org/10.23919/DATE56975.2023.10137134}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>

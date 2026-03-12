@@ -3,23 +3,704 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sidekick: Near Data Processing for Clustering Enhanced by Automatic Memory Disaggregation | CELL Project Page</title>
+<title>Sidekick | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #091018;
+  --surface: #131d28;
+  --surface-2: #1a2736;
+  --border: #2b4159;
+  --text: #e8eef7;
+  --muted: #93a8be;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(9, 16, 24, 0.9);
+  --accent: #58b5ff;
+  --accent-soft: rgba(88, 181, 255, 0.12);
+  --cxl: #ffb56b;
+  --ga: #6bd6a3;
+  --mem: #a4b9ff;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef3f8;
+  --border: #d3deea;
+  --text: #102231;
+  --muted: #637789;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(244, 247, 251, 0.94);
+  --accent: #1d74da;
+  --accent-soft: rgba(29, 116, 218, 0.08);
+  --cxl: #bf6b23;
+  --ga: #0e8c63;
+  --mem: #536dce;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 181, 107, 0.12), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(88, 181, 255, 0.10), transparent 26%),
+    radial-gradient(circle at 18% 84%, rgba(107, 214, 163, 0.10), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(18px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 10%;
+  background: rgba(255, 181, 107, 0.18);
+}
+
+.hero::after {
+  width: 300px;
+  height: 300px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(107, 214, 163, 0.14);
+}
+
+.hero-inner {
+  max-width: 1080px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.cxl {
+  color: var(--cxl);
+  font-style: italic;
+}
+
+.ga {
+  color: var(--ga);
+}
+
+.mem {
+  color: var(--mem);
+}
+
+.subtitle {
+  max-width: 820px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  backdrop-filter: blur(18px);
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+section {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 78px 0;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 16px;
+  max-width: 820px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 770px;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.abstract-box,
+.motivation-card,
+.pipe-step,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box,
+.table-card,
+.highlight-strip {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px var(--shadow);
+}
+
+.abstract-box,
+.table-card,
+.citation-box {
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.abstract-box p {
+  margin: 0 0 14px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.divider {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.9;
+}
+
+.problem-grid,
+.metric-grid,
+.analysis-grid,
+.insight-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 28px;
+}
+
+.motivation-card,
+.metric-card,
+.insight-card,
+.analysis-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.latency-card h3 {
+  color: var(--cxl);
+}
+
+.policy-card h3 {
+  color: var(--ga);
+}
+
+.workload-card h3 {
+  color: var(--mem);
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.highlight-item {
+  padding: 10px 12px;
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline {
+  display: grid;
+  gap: 16px;
+}
+
+.pipe-step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 230px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.pipe-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pipe-desc {
+  color: var(--muted);
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--text);
+}
+
+.citation-box {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 70px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+footer {
+  padding: 40px 20px 70px;
+  text-align: center;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipe-step,
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 96px;
+  }
+
+  section {
+    width: min(100% - 32px, 1100px);
+    padding: 64px 0;
+  }
+
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-btn {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
-<body data-area="systems">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · DAC 2023</div>
-    <h1 class="hero-title">Sidekick: Near Data Processing for Clustering Enhanced by Automatic Memory Disaggregation</h1>
-    <p class="hero-subtitle">CXL-aware near-data processing and program-context-driven allocation accelerate clustering on disaggregated memory systems.</p>
-    <div class="hero-meta"><strong>Authors</strong> Sanghoon Lee, Jongho Park, Minho Ha, Byung Il Koh, Kyoung Park, and Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">DAC 2023</div>
+    <h1><span class="cxl">Sidekick</span> treats CXL disaggregation as a <span class="ga">policy problem</span>, not just a bigger memory pool.</h1>
+    <p class="subtitle">The paper builds a type-2 CXL near-data-processing system for clustering and then adds the missing systems layer: an automated migration engine that learns which functions, threads, and memory allocations should run near the remote memory. Instead of handcrafting one accelerator per clustering algorithm, Sidekick searches the offloading space with program-context analysis and a genetic algorithm.</p>
+    <div class="authors">Sanghoon Lee, Jongho Park, Minho Ha, Byung Il Koh, Kyoung Park, and Yeseong Kim</div>
+    <div class="affil">DGIST and SK Hynix</div>
+
+    <div class="chip-row">
+      <div class="chip">Type-2 CXL</div>
+      <div class="chip">Near-data processing</div>
+      <div class="chip">Program contexts</div>
+      <div class="chip">Genetic algorithm</div>
+      <div class="chip">Clustering systems</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +708,303 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>The real contribution is not only that clustering likes NDP. It is that Sidekick finds the right NDP work automatically across very different clustering codes.</h2>
   <div class="abstract-box reveal">
-    <p>Near Data Processing (NDP) is a promising solution for data mining/analysis techniques, which extract useful information from big data. In this paper, we propose a novel NDP-enabled memory disaggregation system called Sidekick, based on a type-2 CXL device and enhanced by an automated allocation technique for clustering algorithms. The key enabler of our migration technique is to understand clustering workflows in a unit of the program context, which is the function call stack for functions, threads, and memory allocations to drive the automated decision. The proposed technique relates the migrated computation tasks with a series of function calls and performs GA-based optimization to identify the optimal allocation scenario for a target clustering algorithm. In Scikit-learn, a popular machine learning library, we use the genetic algorithm to find the optimal memory allocation policy and the operation offloading policy using the program context.</p>
+    <p>CXL memory disaggregation helps clustering workloads overcome local-memory capacity limits, but it also introduces remote-memory latency that can erase the benefit of the larger memory pool. Sidekick answers that tension with a type-2 CXL design where a lightweight processor near the remote memory executes the parts of clustering that would otherwise generate expensive remote accesses.</p>
+    <p>The key move is software, not only hardware. Sidekick profiles a clustering program through program contexts, tracks both computation and memory-allocation sites, and uses a genetic algorithm to decide which work should migrate to the CXL-side near-data processor. That lets the same framework support many clustering algorithms in Scikit-learn without needing source-code annotations or a handcrafted offload policy for each one.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">CXL-aware near-data processing and program-context-driven allocation accelerate clustering on disaggregated memory systems.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Efficient Systems and Accelerators</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DAC 2023</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">CXL, Near-Data Processing</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>Three systems problems make clustering on disaggregated memory harder than “just attach more RAM.”</h2>
+  <p class="section-intro">The paper is strong because it does not stop at saying that clustering is memory-bound. It explains why CXL alone is not enough and why automation is necessary.</p>
+
+  <div class="problem-grid">
+    <div class="motivation-card latency-card reveal">
+      <h3>Remote CXL memory fixes capacity but worsens latency</h3>
+      <p>Clustering repeatedly revisits large data structures, for example during pairwise distance computation or neighborhood traversal. CXL lets the host see larger remote memory, but every remote access becomes more expensive, so naive disaggregation can simply trade one bottleneck for another.</p>
+    </div>
+    <div class="motivation-card policy-card reveal">
+      <h3>Different clustering algorithms need different offload points</h3>
+      <p>K-Means, DBSCAN, OPTICS, spectral clustering, and agglomerative methods do not stress the system in the same way. A fixed hand-tuned NDP strategy does not generalize well across algorithms, and source-code-dependent optimization is too brittle for real software stacks.</p>
+    </div>
+    <div class="motivation-card workload-card reveal">
+      <h3>Useful migration decisions span both compute and memory contexts</h3>
+      <p>The decision is not only which function to run near memory. It also includes which thread contexts and which allocation sites should live on the CXL device. The search space is large enough that an automated optimizer becomes part of the architecture.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project falls in CELL&#x27;s systems thread, where accelerators, memory systems, and deployment-aware optimization are redesigned for practical efficiency. The page highlights the paper through the lens of CXL and Near-Data Processing.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">92%</div>
+      <div class="highlight-caption">maximum execution-time improvement over the baseline case that uses disaggregated memory without NDP cores.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">96%</div>
+      <div class="highlight-caption">remote-request reduction reported for the strongest Agglomerative Complete case in the Extra Large setting.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">1T+</div>
+      <div class="highlight-caption">remote CXL requests eliminated in the DBSCAN case highlighted by the paper's memory-activity analysis.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Near Data Processing (NDP) is a promising solution for data mining/analysis techniques, which extract useful information from big data.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>In this paper, we propose a novel NDP-enabled memory disaggregation system called Sidekick, based on a type-2 CXL device and enhanced by an automated allocation technique for clustering algorithms.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>In Scikit-learn, a popular machine learning library, we use the genetic algorithm to find the optimal memory allocation policy and the operation offloading policy using the program context.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>Sidekick works because it learns an offloading policy from program behavior rather than assuming one bottleneck fits every clustering algorithm.</h2>
+  <p class="section-intro">The page should make the policy loop explicit. This is not only a CXL hardware paper. It is a profiling, search, and runtime-application paper.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Expose remote memory through a type-2 CXL NDP device</div>
+      <div class="pipe-desc">The host sees a large remote DRAM pool on the CXL device while a lightweight general-purpose processor near that memory can execute selected clustering work. The hardware intent is to reduce data motion by moving memory-intensive stages closer to where the data already live.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Profile the workload through program contexts</div>
+      <div class="pipe-desc">Instead of relying on source annotations, Sidekick identifies functions, thread spawns, and memory-allocation sites by hashing their call-stack context. The same malloc or function call can mean different things depending on how it is reached, so the call chain becomes the right granularity for migration decisions.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Encode migration scenarios as chromosomes</div>
+      <div class="pipe-desc">Computation contexts and memory contexts are represented as binary vectors that indicate whether each item stays on the host or migrates to the CXL device. Sidekick bootstraps these vectors by inheriting likely memory placement from the parent computation context, which reduces the search burden of a fully random start.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Search for the best policy with a genetic algorithm</div>
+      <div class="pipe-desc">Each candidate migration policy is evaluated on system-level metrics such as IPC, execution time, or remote-request count. Crossover and mutation generate improved candidates over multiple iterations until the policy converges on a migration pattern suited to the target clustering algorithm and optimization goal.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 05</div>
+      <div class="pipe-title">Apply the learned policy to large-scale runs</div>
+      <div class="pipe-desc">The policy is learned using a relatively small synthesized dataset, then applied to much larger Medium, Large, and Extra Large workloads. At runtime, Sidekick migrates the chosen computation and allocation tasks, hiding much of the remote-memory latency that plain CXL disaggregation would otherwise expose.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why program context is the key abstraction</h3>
+      <p>Sidekick is not simply tracing hot functions. It is distinguishing why a function or allocation is being used at a specific point in the call tree. That is what lets the same framework support multiple clustering algorithms without manual instrumentation.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why the GA matters beyond “automatic tuning”</h3>
+      <p>The search space spans both computation migration and allocation migration, and those decisions interact. The GA is what lets Sidekick optimize for different goals, such as IPC or remote-request reduction, instead of freezing one baked-in heuristic.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The results show that the right migration policy matters more than having CXL alone.</h2>
+  <p class="section-intro">That is the central message: memory disaggregation without NDP still leaves too many remote accesses on the table. Sidekick's value is in turning disaggregated memory into an adaptive execution substrate.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">3x</div>
+      <div class="metric-label">KMeans gain</div>
+      <div class="metric-sub">performance improvement reported for the Extra Large KMeans case when Sidekick optimizes IPC</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">92%</div>
+      <div class="metric-label">Best speedup</div>
+      <div class="metric-sub">maximum execution-time reduction over disaggregated memory without NDP cores</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">9</div>
+      <div class="metric-label">Algorithms</div>
+      <div class="metric-sub">state-of-the-art Scikit-learn clustering implementations evaluated under the same framework</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">16 MB</div>
+      <div class="metric-label">Profiling seed</div>
+      <div class="metric-sub">small synthesized dataset used to learn a policy that still scales to 4 GB, 8 GB, and 20 GB runs</div>
+    </div>
+  </div>
+
+  <div class="table-card reveal">
+    <h3 class="table-header">What the paper shows about policy quality and memory behavior</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Reported evidence</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Does Sidekick beat plain disaggregated memory?</td>
+          <td>Yes. The paper reports up to 92% execution-time improvement and major remote-request reductions across the evaluated clustering algorithms.</td>
+          <td>CXL capacity alone is not enough. The system needs policy-driven offload to hide the remote-memory tax.</td>
+        </tr>
+        <tr>
+          <td>Does the policy learned on small data generalize?</td>
+          <td>Yes. A policy derived from a 16 MB synthesized dataset still improves Medium, Large, and Extra Large runs with average dataset sizes of 4 GB, 8 GB, and 20 GB.</td>
+          <td>The profiling phase is lightweight enough to be practical while still capturing stable workload structure.</td>
+        </tr>
+        <tr>
+          <td>How good is the GA policy compared to a human-crafted one?</td>
+          <td>In the KMeans case study, the GA-derived Sidekick policy reduces remote CXL requests more effectively than the handcrafted migration policy and clearly beats the naive initial policy.</td>
+          <td>The automation is not only convenient; it is competitive with manual tuning even on a well-understood algorithm.</td>
+        </tr>
+        <tr>
+          <td>Where does the speedup come from?</td>
+          <td>The execution-time breakdown shows that remote-request reduction accounts for most of the benefit, contributing about 74% of the average improvement and reaching 92% for Agglomerative clustering.</td>
+          <td>Sidekick wins by cutting remote traffic, not by claiming an unrealistic compute-only acceleration story.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>The paper is really about workload portability across clustering algorithms</h3>
+      <p>Many NDP proposals are persuasive for one kernel and then brittle beyond it. Sidekick's main achievement is that the same profiling and GA machinery can steer KMeans, DBSCAN, OPTICS, spectral clustering, and agglomerative variants without a separate hand-built accelerator strategy for each.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>Remote-request reduction is the most honest systems metric here</h3>
+      <p>IPC and execution time matter, but the remote-request count explains why the improvements happen. The paper is convincing because it keeps tying performance back to the actual CXL bottleneck: too many expensive remote-memory interactions.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>Sidekick reframes CXL as a programmable memory-compute island</h3>
+      <p>The type-2 CXL device is not treated as passive expansion memory. It becomes a place where selected program contexts can run, allocate memory, and relieve the host of the worst traffic patterns. That is the architectural idea the project page should foreground.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why this page matters in CELL's systems thread.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">Sidekick is one of the clearest examples on the site of systems-software co-design. The hardware provides the CXL NDP substrate, but the real value appears only after the migration policy is learned and applied.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">For the website, this should read as a memory-systems page, not a generic clustering page. The focus is on disaggregation, remote-access avoidance, and policy automation.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, it also broadens the project list beyond HD learning by showing how CELL applies the same efficiency mindset to large-memory systems and data-intensive analytics.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Sanghoon Lee, Jongho Park, Minho Ha, Byung Il Koh, Kyoung Park, and Yeseong Kim. &quot;Sidekick: Near Data Processing for Clustering Enhanced by Automatic Memory Disaggregation,&quot; in 2023 60th ACM/IEEE Design Automation Conference (DAC), IEEE, 2023.</p>
+    <p class="citation-text" id="citation-text">@inproceedings{lee2023sidekick,
+  author    = {Sanghoon Lee and Jongho Park and Minho Ha and Byung Il Koh and Kyoung Park and Yeseong Kim},
+  title     = {Sidekick: Near Data Processing for Clustering Enhanced by Automatic Memory Disaggregation},
+  booktitle = {Proceedings of the 60th ACM/IEEE Design Automation Conference (DAC)},
+  year      = {2023},
+  publisher = {IEEE},
+  doi       = {10.1109/DAC56929.2023.10247769},
+  url       = {https://doi.org/10.1109/DAC56929.2023.10247769}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll(".copy-btn").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    if (!target) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const oldLabel = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = oldLabel;
+      }, 1200);
+    } catch (error) {
+      button.textContent = "Failed";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1200);
+    }
+  });
+});
+</script>
 </body>
 </html>

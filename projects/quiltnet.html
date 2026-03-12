@@ -6,6 +6,253 @@
 <title>QuiltNet: Efficient Deep Learning Inference on Multi-Chip Accelerators Using Model Partitioning | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="systems">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · DAC 2022</div>
     <h1 class="hero-title">QuiltNet: Efficient Deep Learning Inference on Multi-Chip Accelerators Using Model Partitioning</h1>
-    <p class="hero-subtitle">Autoencoder-based model partitioning cuts inter-chip communication so larger neural networks can run efficiently across multiple accelerators.</p>
-    <div class="hero-meta"><strong>Authors</strong> J. Park, H. Kwon, S. Kim, J. Lee, H. Minho, L. Euicheol, I. Mohsen, and Y. Kim</div>
-    
+    <p class="hero-subtitle">QuiltNet compresses tensors at the partition boundary so multi-chip DNN inference scales without asking accelerators to implement a new compression primitive.</p>
+    <div class="hero-meta"><strong>Authors</strong> Jongho Park, HyukJun Kwon, Seowoo Kim, Junyoung Lee, Minho Ha, Euicheol Lim, Mohsen Imani, and Yeseong Kim<br><strong>Affiliations</strong> DGIST, SK Hynix, and University of California, Irvine</div>
+    <div class="hero-chips">
+      <div class="hero-chip">Multi-Chip Inference</div>
+      <div class="hero-chip">Autoencoder Partitioning</div>
+      <div class="hero-chip">Weight Freezing</div>
+      <div class="hero-chip">ResNet UNet EfficientNet</div>
+      <div class="hero-chip">FPGA Deployment</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,190 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Reducing the real bottleneck in multi-chip DNN inference.</h2>
   <div class="abstract-box reveal">
-    <p>We have seen many successful deployments of deep learning accelerator designs on different platforms and technologies, e.g., FPGA, ASIC, and Processing In-Memory platforms. However, the size of the deep learning models keeps increasing, making computations a burden on the accelerators. A naive approach to resolve this issue is to design larger accelerators; however, it is not scalable due to high resource requirements, e.g., power consumption and off-chip memory sizes. A promising solution is to utilize multiple accelerators and use them as needed, similar to conventional multiprocessing. For example, for smaller networks, we may use a single accelerator, while we may use multiple accelerators with proper network partitioning for larger networks.</p>
+    <p>Scaling up a single accelerator is often the wrong answer for larger neural networks. Area, power, and memory limits push practical deployments toward model partitioning across multiple devices. The problem is that once a model is split, intermediate activations become a communication burden, and those tensors can easily dominate the cost of the pipeline.</p>
+    <p>QuiltNet inserts learned encoder and decoder layers at the partition point. They act as an autoencoder that shrinks the communicated tensor, then reconstructs it on the receiving side using only layers already supported by standard accelerators. That lets the system reduce communication by orders of magnitude without demanding hardware changes, and the paper reports up to 30.5 percent higher performance and 28.4 percent better energy efficiency on multi-chip FPGA inference.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Autoencoder-based model partitioning cuts inter-chip communication so larger neural networks can run efficiently across multiple accelerators.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Efficient Systems and Accelerators</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DAC 2022</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Multi-Chip Inference, Model Partitioning</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">Why partitioning alone was not enough.</h2>
+  <p class="section-intro">QuiltNet is a systems paper about communication-first design. Its point is that model parallelism becomes much more attractive once the tensor handed between chips stops being treated as fixed and untouchable.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Single-chip scaling hits limits</h3>
+      <p>Modern DNNs keep growing in layer count, tensor size, and memory pressure. Building a larger accelerator for every new network is not scalable once power, off-chip memory, and area budgets are taken seriously.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Inter-layer tensors dominate</h3>
+      <p>After partitioning, each accelerator effectively becomes a producer or consumer of large intermediate tensors. Those transfers can fail to keep up with compute throughput and erase the benefit of parallel execution.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Compression usually changes hardware</h3>
+      <p>A generic compression block would require hardware and software changes. QuiltNet instead makes compression part of the learned model itself, using standard fully connected or convolution layers that existing accelerators already know how to run.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project falls in CELL&#x27;s systems thread, where accelerators, memory systems, and deployment-aware optimization are redesigned for practical efficiency. The page highlights the paper through the lens of Multi-Chip Inference and Model Partitioning.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">30.5%</div>
+      <div class="highlight-caption">Best reported performance improvement over the same pipelined multi-block baseline without QuiltNet.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">28.4%</div>
+      <div class="highlight-caption">Best reported energy-efficiency improvement at the paper's moderate sweet-spot settings.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">76.9x</div>
+      <div class="highlight-caption">Autoencoder-only training speedup versus retraining the entire model when screening reduction rates.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">&lt;0.4%</div>
+      <div class="highlight-caption">Latency overhead of the inserted autoencoder blocks in the tested deployment cases.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>We have seen many successful deployments of deep learning accelerator designs on different platforms and technologies, e.g., FPGA, ASIC, and Processing In-Memory platforms.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>However, the size of the deep learning models keeps increasing, making computations a burden on the accelerators.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>For example, for smaller networks, we may use a single accelerator, while we may use multiple accelerators with proper network partitioning for larger networks.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How QuiltNet turns a split model into a communication-aware model.</h2>
+  <p class="section-intro">The method is simple to state but carefully engineered in practice: learn a narrow boundary representation, place it where the pipeline balances best, and make the training procedure robust enough for both scratch training and transfer learning.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Interpose data-projection layers at the split</div>
+      <div class="step-desc">QuiltNet inserts an encoder-decoder pair between adjacent layers. For vector-like tensors it can use a 1D fully connected autoencoder; for convolutional tensors it uses a 2D convolution autoencoder so spatial structure is preserved instead of flattened away.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Train from scratch or retrain with freezing</div>
+      <div class="step-desc">If the model is already pretrained, the new autoencoder initially produces poor outputs and can trigger catastrophic forgetting. QuiltNet handles that with a two-phase schedule: first train only the autoencoder while freezing the pretrained layers, then unfreeze the full network for fine-tuning.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Choose the partition with performance modeling</div>
+      <div class="step-desc">The paper uses a Paleo-style performance model to pick split locations that balance compute time and communication time across accelerators. For ResNet50, the automated decision lands between stage 3 and 4 in the reported setup.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Pick the reduction rate from the tradeoff curve</div>
+      <div class="step-desc">Higher reduction shrinks communication more aggressively, but it also increases accuracy risk. QuiltNet profiles accuracy-efficiency tradeoffs directly and shows that autoencoder-only loss is a cheaper proxy for selecting a good reduction rate before full retraining.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 05</div>
+      <div class="step-title">Deploy with no accelerator redesign</div>
+      <div class="step-desc">Because the learned projection layers are just standard neural layers, the split model can run on off-the-shelf accelerator stacks. The paper demonstrates the idea on FPGA-based multi-chip pipelines for ResNet50, UNet, and EfficientNet.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">The gains come from making communication secondary instead of dominant.</h2>
+  <p class="section-intro">Once the transferred tensor is compressed enough, interconnect overhead stops dictating throughput. That is the key systems result across all three model families evaluated in the paper.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">20.8%</div>
+      <div class="metric-label">ResNet50 Gain</div>
+      <div class="metric-sub">Performance improvement at R = 64, alongside 19.2 percent better energy efficiency and only 0.4 percent accuracy loss.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">30.5%</div>
+      <div class="metric-label">UNet Gain</div>
+      <div class="metric-sub">Performance improvement at R = 7.5, paired with 28.4 percent better energy efficiency in the moderate regime.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">21.4%</div>
+      <div class="metric-label">EfficientNet Gain</div>
+      <div class="metric-sub">Performance improvement at R = 8, with 17.5 percent energy-efficiency improvement.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">34.9%</div>
+      <div class="metric-label">Aggressive UNet</div>
+      <div class="metric-sub">At R = 120, QuiltNet pushes further to 34.9 percent higher performance and 32.9 percent energy savings.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the DAC paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Case</th>
+          <th>Reported result</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Transfer learning</td>
+          <td>Weight freezing improves UNet-Quilt 120x from 88.55 percent to 92.66 percent accuracy, and also nudges ResNet50-Quilt 64x from 95.22 percent to 95.62 percent.</td>
+          <td>The autoencoder needs a protected warm-up phase before the rest of the pretrained model can adapt to it.</td>
+        </tr>
+        <tr>
+          <td>Partition search</td>
+          <td>For ResNet50 with a single autoencoder at R = 64, even the worst tested placement loses only 0.47 percent accuracy; the chosen stage-3-to-4 boundary balances efficiency well.</td>
+          <td>Placement matters, but the method is robust enough that the communication-aware split remains practical.</td>
+        </tr>
+        <tr>
+          <td>Multi-part split</td>
+          <td>Using three autoencoders to split ResNet50 into four pieces still remains accurate and yields 1.44x performance improvement.</td>
+          <td>The idea is not limited to a single boundary between two chips.</td>
+        </tr>
+        <tr>
+          <td>Training proxy</td>
+          <td>Autoencoder-only training can be 76.9x faster than full-model training for ResNet50 while still serving as a useful proxy for reduction-rate selection.</td>
+          <td>The workflow is realistic enough to use when exploring deployment options.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>No hardware trickery required</h3>
+      <p>The paper deliberately avoids specialized codec hardware. Its compression block is a learned model component, so standard accelerator kernels are enough to support the method end to end.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>An early systems-thread anchor</h3>
+      <p>Chronologically, QuiltNet is one of the clearest early pages for CELL's systems work. It shows the lab treating data movement as the first-order design target rather than an afterthought behind raw compute throughput.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why this page matters in CELL's systems thread.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">QuiltNet reframes model partitioning as a learned communication problem. The project is about making the split boundary itself trainable and deployment-aware.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">For the website, this should read as a multi-chip systems page, not just an autoencoder page. The important shift is that tensor movement, not only compute, sets the throughput ceiling.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">It also broadens the project list beyond HD computing by showing the same CELL efficiency mindset applied to accelerator partitioning, model deployment, and hardware-conscious training workflows.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +473,23 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">J. Park, H. Kwon, S. Kim, J. Lee, H. Minho, L. Euicheol, I. Mohsen, and Y. Kim, “ Quiltnet: Efficient deep learning inference on multi-chip accelerators using model partitioning, ” in 2022 59th ACM/IEEE Design Automation Conference (DAC), IEEE, 2022.</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{park2022quiltnet,
+  author    = {Jongho Park and HyukJun Kwon and Seowoo Kim and Junyoung Lee and Minho Ha and Euicheol Lim and Mohsen Imani and Yeseong Kim},
+  title     = {QuiltNet: Efficient Deep Learning Inference on Multi-Chip Accelerators Using Model Partitioning},
+  booktitle = {Proceedings of the 59th ACM/IEEE Design Automation Conference},
+  series    = {DAC '22},
+  pages     = {1159--1164},
+  year      = {2022},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3489517.3530589},
+  url       = {https://doi.org/10.1145/3489517.3530589}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>
