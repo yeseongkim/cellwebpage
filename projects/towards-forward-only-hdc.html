@@ -5,21 +5,702 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Towards Forward-Only Learning for Hyperdimensional Computing | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #091018;
+  --surface: #131d28;
+  --surface-2: #1a2736;
+  --border: #2b4159;
+  --text: #e8eef7;
+  --muted: #93a8be;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(9, 16, 24, 0.9);
+  --accent: #58b5ff;
+  --accent-soft: rgba(88, 181, 255, 0.12);
+  --sep: #ffb56b;
+  --fixed: #6bd6a3;
+  --var: #a4b9ff;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef3f8;
+  --border: #d3deea;
+  --text: #102231;
+  --muted: #637789;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(244, 247, 251, 0.94);
+  --accent: #1d74da;
+  --accent-soft: rgba(29, 116, 218, 0.08);
+  --sep: #bf6b23;
+  --fixed: #0e8c63;
+  --var: #536dce;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 181, 107, 0.12), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(88, 181, 255, 0.10), transparent 26%),
+    radial-gradient(circle at 18% 84%, rgba(107, 214, 163, 0.10), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(18px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 10%;
+  background: rgba(255, 181, 107, 0.18);
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(107, 214, 163, 0.14);
+}
+
+.hero-inner {
+  max-width: 1080px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.sep {
+  color: var(--sep);
+  font-style: italic;
+}
+
+.fixed {
+  color: var(--fixed);
+}
+
+.var {
+  color: var(--var);
+}
+
+.subtitle {
+  max-width: 810px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  backdrop-filter: blur(18px);
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+section {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 78px 0;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 16px;
+  max-width: 820px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 770px;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.abstract-box,
+.motivation-card,
+.pipe-step,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box,
+.table-card,
+.highlight-strip {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px var(--shadow);
+}
+
+.abstract-box,
+.table-card,
+.citation-box {
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.abstract-box p {
+  margin: 0 0 14px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.divider {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.9;
+}
+
+.problem-grid,
+.metric-grid,
+.analysis-grid,
+.insight-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 28px;
+}
+
+.motivation-card,
+.metric-card,
+.insight-card,
+.analysis-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.static-card h3 {
+  color: var(--sep);
+}
+
+.feedback-card h3 {
+  color: var(--fixed);
+}
+
+.dimension-card h3 {
+  color: var(--var);
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.highlight-item {
+  padding: 10px 12px;
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline {
+  display: grid;
+  gap: 16px;
+}
+
+.pipe-step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 230px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.pipe-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pipe-desc {
+  color: var(--muted);
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--text);
+}
+
+.citation-box {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 70px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+footer {
+  padding: 40px 20px 70px;
+  text-align: center;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipe-step,
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 96px;
+  }
+
+  section {
+    width: min(100% - 32px, 1100px);
+    padding: 64px 0;
+  }
+
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-btn {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
-<body data-area="hd">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · DATE 2024</div>
-    <h1 class="hero-title">Towards Forward-Only Learning for Hyperdimensional Computing</h1>
-    <p class="hero-subtitle">This work reframes HD learning around forward-only optimization to simplify training and improve practicality on resource-limited hardware.</p>
-    <div class="hero-meta"><strong>Authors</strong> Hyunsei Lee, Hyukjun Kwon, Jiseung Kim, Seohyun Kim, Mohsen Imani, Yeseong Kim</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">DATE 2024</div>
+    <h1>This paper pushes HD encoder learning toward <span class="sep">forward-only updates</span> by replacing explicit feedback with a <span class="fixed">stochastic projection signal</span>.</h1>
+    <p class="subtitle">The project introduces SEP, an early forward-only dynamic-encoder method for hyperdimensional computing. Instead of backpropagating a detailed feature-level error, it perturbs the projection matrix with a random hypermatrix scaled by the model's classification error. The goal is simple: better HD representations at 3,000 dimensions without inheriting a backprop-style training loop.</p>
+    <div class="authors">Hyunsei Lee, Hyukjun Kwon, Jiseung Kim, Seohyun Kim, Mohsen Imani, and Yeseong Kim</div>
+    <div class="affil">DGIST and University of California, Irvine</div>
+
+    <div class="chip-row">
+      <div class="chip">SEP</div>
+      <div class="chip">Forward-only</div>
+      <div class="chip">Dynamic encoder</div>
+      <div class="chip">3,000-D hypervectors</div>
+      <div class="chip">Fixed and variable B</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +708,304 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>This is the paper where CELL starts asking whether HD encoder learning can stay adaptive without becoming backpropagation in disguise.</h2>
   <div class="abstract-box reveal">
-    <p>Hyperdimensional (HD) Computing is a lightweight representation system that symbolizes data as high-dimensioned vectors. HD computing has been growing in popularity in recent years as an alternative to deep neural networks mainly due to its simple and efficient operations. In HD-based learning frameworks, the encoding of the high dimensional representations are widely cited to be the most contributing procedure to accuracy and efficiency. However, throughout HD computing’s history, the encoder has largely remained static. In this work, we explore methods for a dynamic encoder that yields better representations as training progresses.</p>
+    <p>Classic HD learning treats the encoder as fixed infrastructure. Once the projection matrix is initialized, only the class hypervectors are retrained. That leaves a structural weakness: if the projection is poor, the model is forced to compensate by using larger dimensions or accepting a weaker representation.</p>
+    <p>Towards Forward-Only Learning for Hyperdimensional Computing introduces Stochastic Error Projection, or SEP, as a lightweight answer. SEP still trains the class hypervectors in the usual way, but it also updates the projection matrix using the average class error and a random hypermatrix instead of an explicit backpropagated correction. The method is intentionally rougher than later dynamic-encoder work, but the paper shows that this implicit signal is already enough to match strong HD baselines while staying at D = 3,000.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">This work reframes HD learning around forward-only optimization to simplify training and improve practicality on resource-limited hardware.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DATE 2024</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Forward-Only, Learning Rule</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>Three issues make this early forward-only paper more important than its short length suggests.</h2>
+  <p class="section-intro">The work is compact, but it is aimed at a precise gap in the HD literature: better encoder learning without importing a heavy explicit-feedback mechanism.</p>
+
+  <div class="problem-grid">
+    <div class="motivation-card static-card reveal">
+      <h3>Static encoders lock in avoidable representation error</h3>
+      <p>Once the projection matrix is frozen, retraining can only repair mistakes through the class hypervectors. The paper argues that this is too limiting for complex data and forces HD models to spend dimensions compensating for weak projections.</p>
+    </div>
+    <div class="motivation-card feedback-card reveal">
+      <h3>Explicit encoder feedback is not the only path to adaptation</h3>
+      <p>Prior dynamic-encoder approaches can improve quality, but they rely on more explicit correction signals. SEP asks whether a simpler forward-only perturbation mechanism can still move the encoder toward better representations.</p>
+    </div>
+    <div class="motivation-card dimension-card reveal">
+      <h3>Dimension should not be the default repair mechanism</h3>
+      <p>The paper keeps the model at D = 3,000 and frames the main win as better accuracy at lower dimensionality. That matters because the cost of encoding, similarity search, and deployment all scale with hypervector width.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Forward-Only and Learning Rule.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">3.32x</div>
+      <div class="highlight-caption">average inference speedup from staying at D = 3,000 instead of relying on 10,000-dimensional HD models.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">96.99%</div>
+      <div class="highlight-caption">final inference accuracy reported for the variable-<em>B</em> SEP variant on the MNIST example in the paper.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">50</div>
+      <div class="highlight-caption">retraining iterations are used in the reported comparison against TrainableHD and the two SEP variants.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Hyperdimensional (HD) Computing is a lightweight representation system that symbolizes data as high-dimensioned vectors.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>HD computing has been growing in popularity in recent years as an alternative to deep neural networks mainly due to its simple and efficient operations.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>In this work, we explore methods for a dynamic encoder that yields better representations as training progresses.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>SEP keeps the HD learning loop familiar, then inserts one stochastic step that lets the encoder move.</h2>
+  <p class="section-intro">That added step is the heart of the paper. The model still encodes inputs, updates class hypervectors, and measures error. The difference is what happens to the projection matrix afterward.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Encode the sample with a nonlinear projection matrix</div>
+      <div class="pipe-desc">The input feature vector is projected into hyperspace with a learned projection matrix <code>P</code> and a ReLU-style nonlinear encoding. This is the same structural location where static HD methods would normally stop adapting once initialization is done.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Update class hypervectors from the softmax classification error</div>
+      <div class="pipe-desc">SEP still performs the usual class-hypervector update. The encoded hypervector is compared against the class memory, normalized with softmax, and used to produce a per-class error vector that corrects the class hypervectors first.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Project the average error into the encoder through a random hypermatrix</div>
+      <div class="pipe-desc">Instead of explicitly tracing the error back through the features, SEP generates a random hypermatrix <code>B</code> with the same shape as <code>P</code>, scales it by the mean class error and learning rate, and binds that update into the projection matrix. Large errors induce larger stochastic movement; small errors leave the encoder more stable.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Choose between fixed and variable stochastic guidance</div>
+      <div class="pipe-desc">The fixed-<code>B</code> version reuses the same random matrix across retraining, while the variable-<code>B</code> version regenerates it at each iteration. The paper treats these as two distinct design points: fixed <code>B</code> is more stable, while variable <code>B</code> is noisier early but more robust.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 05</div>
+      <div class="pipe-title">Exploit the smaller dimension at inference time</div>
+      <div class="pipe-desc">Because SEP reaches competitive quality at D = 3,000, the paper's efficiency claim is straightforward. The learned encoder lets the model stay narrower, which directly lowers similarity-search and inference cost relative to 10,000-dimensional HD baselines.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why the stochastic update matters</h3>
+      <p>SEP is deliberately approximate. It does not tell each feature exactly how it should change. Instead, it asks whether a coarse but cheap update direction can still improve the encoder enough to move the whole model forward. The answer in this paper is yes.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why this page should not be confused with the later forward-only paper</h3>
+      <p>This DATE paper is the precursor, not the full endpoint. It introduces SEP only, establishes the core forward-only idea, and validates that implicit encoder feedback can work. The later ICCD work expands the design space from here.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The evidence is compact, but it makes a clear point: implicit encoder feedback can close most of the gap without paying for a 10K model.</h2>
+  <p class="section-intro">Because this is a short DATE paper, the evaluation is narrower than the later journal and conference extensions. The page should reflect that honestly while still surfacing the paper's main quantitative claim.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">96.99%</div>
+      <div class="metric-label">SEP var</div>
+      <div class="metric-sub">final inference accuracy reported on the MNIST convergence example after retraining</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">96.87%</div>
+      <div class="metric-label">SEP fixed</div>
+      <div class="metric-sub">final inference accuracy reported for the fixed-<em>B</em> variant in the same study</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">94.91%</div>
+      <div class="metric-label">TrainableHD 3K</div>
+      <div class="metric-sub">reported comparison point for the 3,000-dimensional explicit-feedback baseline</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">3.32x</div>
+      <div class="metric-label">Inference gain</div>
+      <div class="metric-sub">average speedup the paper attributes to remaining at D = 3,000 rather than moving to 10,000 dimensions</div>
+    </div>
+  </div>
+
+  <div class="table-card reveal">
+    <h3 class="table-header">How the paper positions SEP against explicit-feedback dynamic encoder learning</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>What the paper emphasizes</th>
+          <th>Main tradeoff</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TrainableHD 3K</td>
+          <td>Provides the closest explicit-feedback comparison at the same dimensionality.</td>
+          <td>Uses a more detailed correction signal but ends the reported MNIST example below both SEP variants.</td>
+        </tr>
+        <tr>
+          <td>TrainableHD 10K</td>
+          <td>Represents the high-dimension quality target that SEP is trying to approach.</td>
+          <td>Achieves the strongest reported comparison accuracy, but pays the wider-dimension inference cost.</td>
+        </tr>
+        <tr>
+          <td>SEP fixed 3K</td>
+          <td>Reuses one stochastic guidance matrix and converges more stably.</td>
+          <td>Can be slightly less robust than regenerating the random guidance over time.</td>
+        </tr>
+        <tr>
+          <td>SEP var 3K</td>
+          <td>Regenerates the stochastic guidance every iteration and reaches the best reported SEP accuracy.</td>
+          <td>Early training is noisier and slightly slower to settle because the guidance changes each round.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>The main result is qualitative as much as quantitative</h3>
+      <p>The exact numbers matter, but the larger claim is architectural: encoder adaptation does not need to be feature-perfect to be useful. Even a stochastic, mean-error-driven update can meaningfully improve HD representations.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>Fixed and variable <em>B</em> expose an important design choice</h3>
+      <p>The paper does not collapse SEP into one variant. It shows that stability and robustness can be tuned by whether the random guidance matrix is persistent or regenerated, which is a useful framing for later work.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>This paper's contribution is proof of viability, not a fully expanded training framework</h3>
+      <p>That is exactly why it matters. It establishes that forward-only encoder learning is worth pursuing before the later work broadens the method family and pushes deeper into hardware-aware acceleration.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why this page matters within CELL's HD storyline.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This is the clean precursor page for the later forward-only HD work. It introduces the core SEP idea and shows that encoder learning can become adaptive without leaning on a full backprop-style mechanism.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The website should frame it as a focused methodological step: dynamic encoder learning, stochastic implicit feedback, and a clear efficiency win from staying at 3,000 dimensions.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">For readers moving through the project pages chronologically, this paper explains where the later SEP-and-IMP forward-only training line begins.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Hyunsei Lee, Hyukjun Kwon, Jiseung Kim, Seohyun Kim, Mohsen Imani, Yeseong Kim, “Towards Forward-Only Learning for Hyperdimensional Computing” , in 2024 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), IEEE, 2024</p>
+    <p class="citation-text" id="citation-text">@inproceedings{lee2024towardsforwardonly,
+  author    = {Hyunsei Lee and Hyukjun Kwon and Jiseung Kim and Seohyun Kim and Mohsen Imani and Yeseong Kim},
+  title     = {Towards Forward-Only Learning for Hyperdimensional Computing},
+  booktitle = {Proceedings of the 2024 Design, Automation and Test in Europe Conference and Exhibition (DATE)},
+  pages     = {1--2},
+  year      = {2024},
+  publisher = {IEEE},
+  doi       = {10.23919/DATE58400.2024.10546643},
+  url       = {https://doi.org/10.23919/DATE58400.2024.10546643}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll(".copy-btn").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    if (!target) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const oldLabel = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = oldLabel;
+      }, 1200);
+    } catch (error) {
+      button.textContent = "Failed";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1200);
+    }
+  });
+});
+</script>
 </body>
 </html>

@@ -24,6 +24,8 @@ HANDCRAFTED_SLUGS = {
     "forward-only-hdc-training",
     "trainablehd",
     "hdc-in-the-wild-robots",
+    "towards-forward-only-hdc",
+    "edgehd-iot",
 }
 
 

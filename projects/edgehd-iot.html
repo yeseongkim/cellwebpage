@@ -3,23 +3,704 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hierarchical, distributed and brain-inspired learning for internet of things systems | CELL Project Page</title>
+<title>EdgeHD | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="project-style.css">
+<style>
+[data-theme="dark"] {
+  --bg: #091018;
+  --surface: #131d28;
+  --surface-2: #1a2736;
+  --border: #2b4159;
+  --text: #e8eef7;
+  --muted: #93a8be;
+  --shadow: rgba(0, 0, 0, 0.42);
+  --nav-bg: rgba(9, 16, 24, 0.9);
+  --accent: #58b5ff;
+  --accent-soft: rgba(88, 181, 255, 0.12);
+  --hier: #ffb56b;
+  --comm: #6bd6a3;
+  --fpga: #a4b9ff;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef3f8;
+  --border: #d3deea;
+  --text: #102231;
+  --muted: #637789;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --nav-bg: rgba(244, 247, 251, 0.94);
+  --accent: #1d74da;
+  --accent-soft: rgba(29, 116, 218, 0.08);
+  --hier: #bf6b23;
+  --comm: #0e8c63;
+  --fpga: #536dce;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 181, 107, 0.12), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(88, 181, 255, 0.10), transparent 26%),
+    radial-gradient(circle at 18% 84%, rgba(107, 214, 163, 0.10), transparent 24%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.75;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 200;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 8px 15px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.hero {
+  min-height: 100vh;
+  padding: 104px 24px 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(18px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hero::before {
+  width: 340px;
+  height: 340px;
+  left: -8%;
+  top: 10%;
+  background: rgba(255, 181, 107, 0.18);
+}
+
+.hero::after {
+  width: 300px;
+  height: 300px;
+  right: -4%;
+  bottom: 10%;
+  background: rgba(107, 214, 163, 0.14);
+}
+
+.hero-inner {
+  max-width: 1080px;
+  position: relative;
+  z-index: 1;
+}
+
+.venue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+h1 {
+  margin: 0 auto 16px;
+  max-width: 980px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.04;
+  font-weight: 400;
+}
+
+.hier {
+  color: var(--hier);
+  font-style: italic;
+}
+
+.comm {
+  color: var(--comm);
+}
+
+.fpga {
+  color: var(--fpga);
+}
+
+.subtitle {
+  max-width: 820px;
+  margin: 0 auto 22px;
+  color: var(--muted);
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.authors,
+.affil {
+  color: var(--muted);
+}
+
+.authors {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.affil {
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.chip-row,
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip-row {
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  backdrop-filter: blur(18px);
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+section {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 78px 0;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0 0 16px;
+  max-width: 820px;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+.section-intro {
+  max-width: 770px;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.abstract-box,
+.motivation-card,
+.pipe-step,
+.insight-card,
+.metric-card,
+.analysis-card,
+.citation-box,
+.table-card,
+.highlight-strip {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px var(--shadow);
+}
+
+.abstract-box,
+.table-card,
+.citation-box {
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.abstract-box p {
+  margin: 0 0 14px;
+}
+
+.abstract-box p:last-child {
+  margin-bottom: 0;
+}
+
+.divider {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+  opacity: 0.9;
+}
+
+.problem-grid,
+.metric-grid,
+.analysis-grid,
+.insight-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 28px;
+}
+
+.motivation-card,
+.metric-card,
+.insight-card,
+.analysis-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.motivation-card h3,
+.insight-card h3,
+.analysis-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.motivation-card p,
+.insight-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.cloud-card h3 {
+  color: var(--hier);
+}
+
+.hetero-card h3 {
+  color: var(--comm);
+}
+
+.deploy-card h3 {
+  color: var(--fpga);
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.highlight-item {
+  padding: 10px 12px;
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline {
+  display: grid;
+  gap: 16px;
+}
+
+.pipe-step {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 230px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 22px;
+}
+
+.pipe-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pipe-title {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pipe-desc {
+  color: var(--muted);
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 46px;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--text);
+}
+
+.citation-box {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.citation-text {
+  margin: 0;
+  padding-right: 70px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+footer {
+  padding: 40px 20px 70px;
+  text-align: center;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipe-step,
+  .takeaway-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 96px;
+  }
+
+  section {
+    width: min(100% - 32px, 1100px);
+    padding: 64px 0;
+  }
+
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-btn {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .citation-text {
+    padding-right: 0;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
-<body data-area="hd">
+<body>
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-label">CELL Project Page · ICDCS 2023</div>
-    <h1 class="hero-title">Hierarchical, distributed and brain-inspired learning for internet of things systems</h1>
-    <p class="hero-subtitle">EdgeHD distributes online learning across IoT hierarchies so edge systems can adapt continuously without centralizing all data.</p>
-    <div class="hero-meta"><strong>Authors</strong> Mohsen Imani*, Yeseong Kim*, Behnam Khaleghi, Justin Morris, Haleh Alimohamadi, Farhad Imani, Hugo Latapie</div>
-    
-    <div class="button-row">
-      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+    <div class="venue-badge">ICDCS 2023</div>
+    <h1><span class="hier">EdgeHD</span> turns an IoT hierarchy into a <span class="comm">learning system</span> instead of a data funnel, and backs it with a <span class="fpga">low-power FPGA path</span>.</h1>
+    <p class="subtitle">The paper combines brain-inspired hyperdimensional learning with hierarchy-aware model aggregation, confidence-routed inference, online updates from user feedback, and a hardware implementation meant for edge-class devices. The result is a distributed IoT learning stack that keeps quality close to centralized learning while cutting computation, energy, and communication cost.</p>
+    <div class="authors">Mohsen Imani, Yeseong Kim, Behnam Khaleghi, Justin Morris, Haleh Alimohamadi, Farhad Imani, and Hugo Latapie</div>
+    <div class="affil">UC Irvine, DGIST, Qualcomm, California State University San Marcos, UCLA, University of Connecticut, and Cisco</div>
+
+    <div class="chip-row">
+      <div class="chip">Hierarchy-aware learning</div>
+      <div class="chip">RBF-style HD encoding</div>
+      <div class="chip">Confidence-routed inference</div>
+      <div class="chip">Online updates</div>
+      <div class="chip">FPGA acceleration</div>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">See Pipeline</a>
+      <a class="btn btn-secondary" href="#results">Results</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,81 +708,309 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
-  <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="section-label">Abstract</div>
+  <h2>The paper is really about one systems question: how do you let many small IoT nodes learn together without making the cloud the only place where intelligence lives?</h2>
   <div class="abstract-box reveal">
-    <p>In this paper, we propose EdgeHD, a hierarchyaware learning solution that performs online training and inference in a highly distributed, cost-effective way. We use brain-inspired hyperdimensional (HD) computing as the key enabler. HD computing performs the computation tasks on a high-dimensional space to emulate functionalities of the human memory, such as inter-data relationship reasoning and information aggregation. EdgeHD exploits HD computing to effectively learn the classification models on individual devices and combine the models through the hierarchical IoT nodes without high communication costs. We also propose a hardware design that accelerates EdgeHD on low-power FPGA platforms.</p>
+    <p>Centralized machine learning works poorly for real IoT hierarchies because the raw data are distributed, the feature sets are heterogeneous, the nodes are resource constrained, and communication can dominate cost. EdgeHD addresses that problem by using hyperdimensional computing as a learning representation that can be trained, merged, compressed, and updated with simple hypervector operations rather than dense gradient traffic.</p>
+    <p>The framework combines a non-linear HD encoder, local model training on end devices, hierarchy-aware aggregation across gateway and central nodes, confidence-based inference routing, and online model correction from negative user feedback. It then maps the full pipeline onto FPGA hardware to show that the hierarchy-aware learning story is not just algorithmically plausible, but implementable on low-power edge platforms.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">EdgeHD distributes online learning across IoT hierarchies so edge systems can adapt continuously without centralizing all data.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">ICDCS 2023</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Edge Learning, IoT Systems</div>
-      </div>
+<section id="motivation">
+  <div class="section-label">Motivation</div>
+  <h2>Three concrete IoT constraints drive the design of EdgeHD.</h2>
+  <p class="section-intro">The paper is useful because it treats distributed learning as a combined representation, communication, and deployment problem rather than as a purely algorithmic one.</p>
+
+  <div class="problem-grid">
+    <div class="motivation-card cloud-card reveal">
+      <h3>Centralized learning makes communication the bottleneck</h3>
+      <p>Sending all sensor data to a cloud is expensive and slow, especially when the hierarchy spans homes, street-level gateways, and central nodes. Even if centralized models are accurate, the data movement burden grows too quickly for always-on IoT deployment.</p>
+    </div>
+    <div class="motivation-card hetero-card reveal">
+      <h3>IoT nodes do not all observe the same features</h3>
+      <p>A fridge, stove, TV, wearable, or environmental sensor does not naturally fit into a single homogeneous feature table. EdgeHD uses hypervectors because they are easier to aggregate across heterogeneous nodes than dense intermediate activations in conventional DNN pipelines.</p>
+    </div>
+    <div class="motivation-card deploy-card reveal">
+      <h3>Training must remain feasible on low-power hardware</h3>
+      <p>The paper is not satisfied with a hierarchy-aware algorithm that still assumes a large centralized accelerator. It explicitly designs an FPGA implementation and reports power and energy numbers, which makes the deployment claim much more concrete.</p>
+    </div>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Edge Learning and IoT Systems.</p>
+
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">85%</div>
+      <div class="highlight-caption">communication reduction during training compared with the centralized learning approach reported in the paper.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">11.7x</div>
+      <div class="highlight-caption">training energy-efficiency improvement of EdgeHD over the centralized learning baseline.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">0.28W</div>
+      <div class="highlight-caption">average power consumption of the FPGA learning node in the hierarchical setup, versus 9.8W for the centralized FPGA setting.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>In this paper, we propose EdgeHD, a hierarchyaware learning solution that performs online training and inference in a highly distributed, cost-effective way.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>We use brain-inspired hyperdimensional (HD) computing as the key enabler.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>We also propose a hardware design that accelerates EdgeHD on low-power FPGA platforms.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-label">Pipeline</div>
+  <h2>EdgeHD works because every stage of the hierarchy is designed around how hypervectors can be combined, compressed, and corrected.</h2>
+  <p class="section-intro">The right mental model is not “federated learning with HD.” It is a hierarchy of HD models where local computation and model transfer are both part of the representation design.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 01</div>
+      <div class="pipe-title">Encode local sensor data with a universal non-linear HD map</div>
+      <div class="pipe-desc">The paper uses a random-feature-style encoder that approximates an RBF kernel, then binarizes the result so each device can form compact hypervectors. This matters because the non-linear encoding substantially improves quality over the older linear HD baseline and gives the hierarchy a stronger local representation to work with.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 02</div>
+      <div class="pipe-title">Train local class hypervectors, then retrain with batch hypervectors</div>
+      <div class="pipe-desc">Each edge device performs standard HD training and retraining locally. To reduce communication during retraining, the device does not forward every encoded sample upward. Instead, it bundles samples into batch hypervectors and sends those summaries through the hierarchy.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 03</div>
+      <div class="pipe-title">Aggregate children with hierarchical encoding rather than raw concatenation</div>
+      <div class="pipe-desc">Parent nodes assign dimensions proportional to the amount of information they need to represent, concatenate child hypervectors, then project the result with a sparse ternary matrix so the combined model regains holographic distribution. This is how EdgeHD preserves interactions across devices without shipping all original data.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 04</div>
+      <div class="pipe-title">Route inference to the right node based on confidence</div>
+      <div class="pipe-desc">Inference can happen locally, at a gateway, or at the central node. EdgeHD measures confidence from the relative similarity between the query and class hypervectors, then decides whether the current node should answer or whether the query should move upward for a more informed prediction.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 05</div>
+      <div class="pipe-title">Compress and propagate updates only when the user is dissatisfied</div>
+      <div class="pipe-desc">Online learning is driven by negative feedback rather than dense labels for every sample. Each node accumulates residual hypervectors for misclassified queries, updates its local model, and then periodically propagates the residual upward so the rest of the hierarchy can correct its own models with far less communication.</div>
+    </div>
+    <div class="pipe-step reveal">
+      <div class="pipe-num">Step 06</div>
+      <div class="pipe-title">Accelerate the whole flow on FPGA with a unified residual-update engine</div>
+      <div class="pipe-desc">The FPGA design reuses the same hardware backbone across initial training, retraining, and online learning. Sparse weight vectors live in BRAM, dot products are parallelized, cosine is handled through LUT logic, and residual hypervectors accumulate updates before the final model write-back.</div>
+    </div>
   </div>
+
+  <div class="insight-grid">
+    <div class="insight-card reveal">
+      <h3>Why hierarchical encoding is the key move</h3>
+      <p>The framework does not merely aggregate scalar statistics from children. It aggregates hypervectors, then reprojects them so higher-level nodes can reason over interactions across devices. That is what lets the hierarchy act like a distributed learning system rather than a logging tree.</p>
+    </div>
+    <div class="insight-card reveal">
+      <h3>Why online learning fits HD especially well here</h3>
+      <p>Because hypervectors can accumulate corrections additively, the model can react to negative feedback with residual hypervectors instead of replaying a large gradient-based training loop. That is a particularly good fit for embedded nodes with intermittent supervision.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-label">Results</div>
+  <h2>The strongest result is that EdgeHD stays close to centralized quality while moving much more work into the hierarchy itself.</h2>
+  <p class="section-intro">The paper evaluates both learning quality and the systems cost of achieving it. That dual view is important because EdgeHD only matters if the hierarchy-aware version is still accurate enough to be worth deploying.</p>
+
+  <div class="metric-grid">
+    <div class="metric-card reveal">
+      <div class="metric-value">3.4x</div>
+      <div class="metric-label">Training speedup</div>
+      <div class="metric-sub">reported over the centralized learning approach, alongside 11.7x better training energy efficiency</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">1.9x</div>
+      <div class="metric-label">Inference speedup</div>
+      <div class="metric-sub">reported over the centralized learning approach, alongside 7.8x better inference energy efficiency</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">4.7%</div>
+      <div class="metric-label">Accuracy gain</div>
+      <div class="metric-sub">average classification improvement over the baseline HD classifier from the new non-linear encoding method</div>
+    </div>
+    <div class="metric-card reveal">
+      <div class="metric-value">0.4%</div>
+      <div class="metric-label">Central-quality gap</div>
+      <div class="metric-sub">average difference between the deepest hierarchy node and the centralized model in the reported comparison</div>
+    </div>
+  </div>
+
+  <div class="table-card reveal">
+    <h3 class="table-header">What the paper shows about quality, locality, and hierarchy depth</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Observation</th>
+          <th>Reported evidence</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>EdgeHD vs non-HD baselines</td>
+          <td>At D = 4,000 and 80% sparsity, EdgeHD reaches accuracy comparable to DNN, SVM, and AdaBoost while exceeding the baseline linear-encoding HD classifier by 4.7% on average.</td>
+          <td>The hierarchy-aware system is not paying for efficiency with a fundamentally weak local representation.</td>
+        </tr>
+        <tr>
+          <td>Centralized vs hierarchical quality</td>
+          <td>The paper reports that the third hierarchy level reaches 94.4% average accuracy, only 0.4% below the centralized model on average, while end nodes still achieve 85.7% without communication.</td>
+          <td>This is the core deployment tradeoff: local nodes can answer cheaply, and deeper nodes recover most of centralized quality when needed.</td>
+        </tr>
+        <tr>
+          <td>Online learning on PECAN</td>
+          <td>With online learning, the house-, street-, and city-level nodes move to 59.5%, 81.3%, and 98.3% accuracy, and the central node's share of inference drops from 28.9% to 0.3% after full online learning.</td>
+          <td>The hierarchy becomes more self-sufficient over time, which is exactly what an adaptive IoT system should do.</td>
+        </tr>
+        <tr>
+          <td>Hardware and communication cost</td>
+          <td>EdgeHD cuts communication by 85% for training and 78% for inference, while each hierarchical FPGA node averages 0.28W instead of the centralized FPGA's 9.8W.</td>
+          <td>The paper's systems claim is not abstract. The hierarchy is cheaper because both data motion and per-node compute shrink.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="analysis-card reveal">
+      <h3>The paper solves distributed learning by changing the representation, not only the optimizer</h3>
+      <p>That is the most important architectural point. Hypervectors are being used as the unit of distributed communication, local learning, and model aggregation all at once, which is why EdgeHD can handle heterogeneous nodes more naturally than a standard centralized DNN workflow.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>Confidence-aware inference is what makes the hierarchy practical</h3>
+      <p>If every query still had to climb to the central node, training might be distributed but inference would remain centralized. The confidence mechanism lets the system spend communication only when lower-level predictions are not trustworthy enough.</p>
+    </div>
+    <div class="analysis-card reveal">
+      <h3>The FPGA section is part of the scientific contribution</h3>
+      <p>The unified residual-update engine, sparse BRAM-friendly encoding, and lightweight similarity search are not afterthoughts. They show that the hierarchy-aware algorithm can actually be carried by the kind of low-power hardware the paper is targeting.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-label">Takeaways</div>
+  <h2>Why this page matters within CELL's embedded learning work.</h2>
+  <ol class="takeaway-list">
+    <li class="reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">EdgeHD is the project page that makes CELL's HD work legible at the systems level. It is not only an efficient classifier, but a way to distribute learning and inference across a real hierarchy of devices.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The paper is broader than a standalone algorithm paper because it joins representation learning, communication reduction, online adaptation, and FPGA implementation inside one design.</div>
+    </li>
+    <li class="reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">For the website, the central message should be clear: embedded intelligence does not have to mean shipping everything to the cloud. EdgeHD shows how a hierarchy can learn locally, escalate selectively, and still preserve strong accuracy.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
 
 <section id="citation">
-  <div class="section-kicker">Citation</div>
-  <h2 class="section-title">Reference entry.</h2>
+  <div class="section-label">Citation</div>
+  <h2>Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Mohsen Imani*, Yeseong Kim*, Behnam Khaleghi, Justin Morris, Haleh Alimohamadi, Farhad Imani, Hugo Latapie, “Hierarchical, distributed and brain-inspired learning for internet of things systems” , in 2023 IEEE 43rd International Conference on Distributed Computing Systems (ICDCS), IEEE, 2023 (* Co-corresponding authors)</p>
+    <p class="citation-text" id="citation-text">@inproceedings{imani2023edgehd,
+  author    = {Mohsen Imani and Yeseong Kim and Behnam Khaleghi and Justin Morris and Haleh Alimohamadi and Farhad Imani and Hugo Latapie},
+  title     = {Hierarchical, Distributed and Brain-Inspired Learning for Internet of Things Systems},
+  booktitle = {Proceedings of the 2023 IEEE 43rd International Conference on Distributed Computing Systems (ICDCS)},
+  pages     = {511--522},
+  year      = {2023},
+  publisher = {IEEE Computer Society},
+  doi       = {10.1109/ICDCS57875.2023.00083},
+  url       = {https://doi.org/10.1109/ICDCS57875.2023.00083}
+}</p>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
-<script src="project.js"></script>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeBtn");
+const themeLabel = document.getElementById("themeLabel");
+const savedTheme = localStorage.getItem("cell-project-theme") || "dark";
+
+function applyTheme(theme) {
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("cell-project-theme", theme);
+  if (themeLabel) {
+    themeLabel.textContent = theme === "dark" ? "Light" : "Dark";
+  }
+}
+
+applyTheme(savedTheme);
+
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    const nextTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) {
+      return;
+    }
+    navLinks.forEach((link) => link.classList.remove("active"));
+    const active = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+    if (active) {
+      active.classList.add("active");
+    }
+  });
+}, { threshold: 0.32 });
+
+document.querySelectorAll("section[id]").forEach((section) => navObserver.observe(section));
+
+document.querySelectorAll(".copy-btn").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    if (!target) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      const oldLabel = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = oldLabel;
+      }, 1200);
+    } catch (error) {
+      button.textContent = "Failed";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1200);
+    }
+  });
+});
+</script>
 </body>
 </html>
