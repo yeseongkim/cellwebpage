@@ -30,6 +30,8 @@ HANDCRAFTED_SLUGS = {
     "neuro-symbolic-hdc-deep-learning",
     "holistic-trainable-hdc",
     "quiltnet",
+    "algorithm-hardware-hdc-edge",
+    "edge-tpu-performance-power",
 }
 
 

@@ -6,6 +6,253 @@
 <title>Algorithm-Hardware Co-Design for Efficient Brain-Inspired Hyperdimensional Learning on Edge | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="hd">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · DATE 2022</div>
     <h1 class="hero-title">Algorithm-Hardware Co-Design for Efficient Brain-Inspired Hyperdimensional Learning on Edge</h1>
-    <p class="hero-subtitle">An HDC pipeline reinterpreted as a hyper-wide neural network leverages CPUs and Edge TPUs together for fast edge learning.</p>
-    <div class="hero-meta"><strong>Authors</strong> Y. Ni, Y. Kim*, T. Rosing, and M. Imani*</div>
-    <div class="hero-meta"><strong>Note</strong> Best Paper Award</div>
+    <p class="hero-subtitle">This paper turns HDC into something deployable on commodity edge hardware by mapping its wide vector operations onto Edge TPU inference kernels and keeping only the lightweight class-memory updates on the host CPU.</p>
+    <div class="hero-meta"><strong>Authors</strong> Yang Ni, Yeseong Kim, Tajana Rosing, and Mohsen Imani<br><strong>Award</strong> Best Paper Award</div>
+    <div class="hero-chips">
+      <div class="hero-chip">Best Paper Award</div>
+      <div class="hero-chip">Edge TPU</div>
+      <div class="hero-chip">CPU TPU Co-Design</div>
+      <div class="hero-chip">Bagging</div>
+      <div class="hero-chip">Edge Learning</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,185 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Making HDC run on hardware people can actually buy.</h2>
   <div class="abstract-box reveal">
-    <p>Machine learning methods have been widely utilized to provide high quality for many cognitive tasks. Running sophisticated learning tasks requires high computational costs to process a large amount of learning data. Brain-inspired Hyperdimensional Computing (HDC) is introduced as an alternative solution for lightweight learning on edge devices. However, HDC models still rely on accelerators to ensure realtime and efficient learning. These hardware designs are not commercially available and need a relatively long period to synthesize and fabricate after deriving the new applications.</p>
+    <p>Hyperdimensional computing is attractive for edge learning because training and inference are much lighter than deep neural networks, but the common hardware story used to depend on custom accelerators that are not easy to deploy in the field. This paper takes the opposite route: instead of designing new silicon first, it adapts HDC to the matrix-heavy primitives already available on low-power edge ML hardware.</p>
+    <p>The key idea is to reinterpret HDC as a hyper-wide neural network. Encoding and similarity-heavy inference are mapped to TensorFlow and Edge TPU execution, while the remaining class-hypervector updates stay on the host CPU. On top of that, bagging reduces CPU-side training work without sacrificing final quality. The result is a practical edge-learning framework that is 4.5x faster for training and 4.2x faster for inference than the baseline platform, and 19.4x and 8.9x faster than a similar-power Raspberry Pi baseline.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">An HDC pipeline reinterpreted as a hyper-wide neural network leverages CPUs and Edge TPUs together for fast edge learning.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DATE 2022</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Edge TPU, Co-Design</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">Why this paper mattered for edge HDC.</h2>
+  <p class="section-intro">The paper is less about inventing a new HDC rule and more about showing that HDC can be shaped to fit mainstream low-power ML hardware rather than waiting for a custom accelerator pipeline.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Custom accelerators were the bottleneck</h3>
+      <p>Earlier HDC acceleration stories often relied on ASIC-style hardware proposals. Those designs can be compelling academically, but they are slow to fabricate and difficult to deploy when an application changes.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Edge TPU is useful but incomplete</h3>
+      <p>Google Edge TPU already provides efficient low-power inference, but it does not support the full training flow needed by HDC, especially class-hypervector updates. The framework therefore has to split work intelligently between TPU and CPU.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Wide hypervectors still cost time</h3>
+      <p>Even though HDC is lightweight compared with DNNs, encoding with 10,000-dimensional hypervectors still involves large matrix operations. Those computations are exactly where commodity accelerators can help if the algorithm is mapped correctly.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Edge TPU and Co-Design.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">4.5x</div>
+      <div class="highlight-caption">Headline training speedup on the mobile CPU plus Edge TPU platform relative to the baseline platform.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">4.2x</div>
+      <div class="highlight-caption">Headline inference speedup from moving the HDC inference path onto Edge TPU.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">19.4x</div>
+      <div class="highlight-caption">Average training speedup over Raspberry Pi 3, with 8.9x faster inference at similar power.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">9.37x</div>
+      <div class="highlight-caption">Best encoding-stage speedup reported when the input feature dimension is large enough to use Edge TPU effectively.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Machine learning methods have been widely utilized to provide high quality for many cognitive tasks.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>Running sophisticated learning tasks requires high computational costs to process a large amount of learning data.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>These hardware designs are not commercially available and need a relatively long period to synthesize and fabricate after deriving the new applications.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How the framework splits HDC across CPU and Edge TPU.</h2>
+  <p class="section-intro">The system view is simple: put the dense, accelerator-friendly parts onto the TPU, leave the unsupported incremental updates on CPU, and then reduce the CPU burden with an ensemble trick that still collapses back into one inference model.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Interpret HDC as a hyper-wide neural network</div>
+      <div class="step-desc">The paper maps the HDC encoder to the first half of a three-layer fully connected network. Input features become the input layer, the 10,000-dimensional hypervector space becomes a wide hidden layer, and the randomly generated base hypervectors become the weight matrix.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Push encoding and inference onto Edge TPU</div>
+      <div class="step-desc">Because HDC encoding is fundamentally a large vector-matrix multiply plus a nonlinearity, it fits TensorFlow Lite execution well. The same mapping idea also turns the final similarity-to-class computation into an Edge TPU-friendly matrix operation for inference.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Keep class-memory updates on CPU</div>
+      <div class="step-desc">Edge TPU does not support on-device weight updates or the element-wise operations needed for class hypervector training. The framework therefore keeps bundling and detaching updates on the host CPU, where the class memories are adjusted from encoded samples.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Use bagging to shrink CPU-side work</div>
+      <div class="step-desc">Bagging creates several weaker submodels trained on bootstrap-sampled subsets. That allows fewer training iterations and reduced per-model cost, then merges the learned base and class hypervectors back into a single full inference model with no extra inference-time ensemble overhead.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">The practical win is that edge learning becomes fast without losing HDC's accuracy profile.</h2>
+  <p class="section-intro">The experiments cover five datasets and compare three setups: CPU-only baseline, TPU acceleration without bagging, and the full TPU-plus-bagging framework. The strongest gains appear when the feature dimension is large enough for the Edge TPU to stay busy.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">4.49x</div>
+      <div class="metric-label">Max Training Gain</div>
+      <div class="metric-sub">Best end-to-end training speedup over the CPU baseline, reported on MNIST after optimizing both TPU encoding and CPU-side updates.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">4.19x</div>
+      <div class="metric-label">Max Inference Gain</div>
+      <div class="metric-sub">Best reported inference speedup over the CPU baseline, again on MNIST, with no extra ensemble overhead at deployment time.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">4.74x</div>
+      <div class="metric-label">CPU Update Gain</div>
+      <div class="metric-sub">Maximum speedup for the host-side class-hypervector update stage obtained from the bagging-based optimization.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">8.25x</div>
+      <div class="metric-label">Feature Scaling</div>
+      <div class="metric-sub">Encoding speedup when the input sample has 700 features, showing why large-feature datasets benefit most.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the DATE 2022 paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dataset-level runtime</td>
+          <td>Training speedups include 3.49x on FACE, 2.45x on ISOLET, 1.81x on UCIHAR, and 4.49x on MNIST; inference speedups include 3.16x, 2.13x, 3.08x, and 4.19x on those same datasets.</td>
+          <td>The full framework helps both phases, but especially when input vectors are wide enough to benefit from TPU matrix throughput.</td>
+        </tr>
+        <tr>
+          <td>Accuracy retention</td>
+          <td>The Edge TPU versions retain similar inference accuracy to the CPU baseline, and the bagging-based version can even improve over the full model on datasets such as ISOLET and PAMAP2.</td>
+          <td>The speedup is not purchased by accepting a worse final classifier.</td>
+        </tr>
+        <tr>
+          <td>Bagging parameters</td>
+          <td>The paper settles on dataset sampling ratio alpha = 0.6, disables feature sampling, and uses 6 training iterations for the bagging setting.</td>
+          <td>The ensemble is used as a runtime optimization, not as a heavyweight accuracy-maximizing ensemble at inference time.</td>
+        </tr>
+        <tr>
+          <td>Failure mode</td>
+          <td>PAMAP2 shows weaker gains because it has far fewer input features than the other datasets.</td>
+          <td>This makes clear that Edge TPU acceleration is most valuable when encoding is large enough to amortize transfer and setup overhead.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>An early deployment-first HDC page</h3>
+      <p>The paper's importance is that it reframes HDC as something that can live on standardized ML stacks. It does not wait for a custom accelerator ecosystem to appear before trying to solve edge deployment.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>Why the co-design matters</h3>
+      <p>This is not a simple "run it on TPU" story. The authors are explicit that the unsupported training path remains on CPU, then engineer the algorithm around that boundary with bagging so the system still works end to end.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why this page matters in CELL's early HD systems arc.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This is one of the clearest early project pages for CELL's "efficient learning on existing hardware" philosophy. The contribution is not only an HDC method but a deployment recipe.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The page should emphasize co-design more than raw acceleration. Mapping encoding and inference to Edge TPU while reshaping training around the CPU boundary is the actual systems insight.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, it is also a strong anchor for the lab's later work on trainable, hardware-aware, and edge-oriented hyperdimensional learning. The Best Paper Award note is worth keeping visible.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +468,22 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Y. Ni, Y. Kim*, T. Rosing, and M. Imani*, “ Algorithm-hardware co-design for efficient brain-inspired hyperdimensional learning on edge ,” in 2022 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), IEEE, 2022 (*Co-corresponding authors), Best Paper Award</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{ni2022algorithmhardware,
+  author    = {Yang Ni and Yeseong Kim and Tajana Rosing and Mohsen Imani},
+  title     = {Algorithm-Hardware Co-Design for Efficient Brain-Inspired Hyperdimensional Learning on Edge},
+  booktitle = {2022 Design, Automation and Test in Europe Conference and Exhibition (DATE)},
+  pages     = {292--297},
+  year      = {2022},
+  publisher = {IEEE},
+  doi       = {10.23919/DATE54114.2022.9774524},
+  url       = {https://doi.org/10.23919/DATE54114.2022.9774524},
+  note      = {Best Paper Award}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>

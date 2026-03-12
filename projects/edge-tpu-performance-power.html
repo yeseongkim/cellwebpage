@@ -3,9 +3,256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online performance and power prediction for edge TPU via comprehensive characterization | CELL Project Page</title>
+<title>Online Performance and Power Prediction for Edge TPU via Comprehensive Characterization | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="systems">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -13,13 +260,19 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · DATE 2022</div>
-    <h1 class="hero-title">Online performance and power prediction for edge TPU via comprehensive characterization</h1>
-    <p class="hero-subtitle">Comprehensive characterization turns Edge TPU behavior into predictive models for performance and power-aware deployment.</p>
-    <div class="hero-meta"><strong>Authors</strong> Y. Ni, Y. Kim*, T. Rosing, and M. Imani*</div>
-    
+    <h1 class="hero-title">Online Performance and Power Prediction for Edge TPU via Comprehensive Characterization</h1>
+    <p class="hero-subtitle">PETET turns detailed Edge TPU characterization into fast online estimates of time, power, and energy, so deployment decisions do not have to rely on naive MAC-count heuristics or repeated full compilation.</p>
+    <div class="hero-meta"><strong>Authors</strong> Yang Ni, Yeseong Kim, Tajana Rosing, and Mohsen Imani</div>
+    <div class="hero-chips">
+      <div class="hero-chip">PETET</div>
+      <div class="hero-chip">10,158 Models</div>
+      <div class="hero-chip">Random Forest</div>
+      <div class="hero-chip">Edge TPU</div>
+      <div class="hero-chip">Online Prediction</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,190 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Why Edge TPU prediction needed more than MAC counts.</h2>
   <div class="abstract-box reveal">
-    <p>In this paper, we characterize and model the performance and power consumption of Edge TPU, which efficiently accelerates deep learning (DL) inference in a low-power environment. Systolic array, as a high throughput computation architecture, its usage in the edge excites our interest in its performance and power pattern. We perform an extensive study for various neural network settings and sizes using more than 10,000 DL models. Through comprehensive exploration, we profile which factors highly influence the inference time and power to run DL Models. We show our key remarks for the relation between the performance/power and DL model complexity to enable hardware-aware optimization and design decisions.</p>
+    <p>This paper starts from a practical problem: when deploying deep learning on resource-limited edge hardware, the usual rule of thumb is to estimate performance from the number of MAC or FLOP operations. The authors show that this is not reliable for Google Edge TPU because actual behavior depends strongly on layer type, memory placement, and compiler decisions about on-chip versus off-chip usage.</p>
+    <p>To make this concrete, the paper characterizes 10,158 models and then builds PETET, a machine-learning-based estimator that predicts execution time, power, and energy from model descriptions. PETET learns memory behavior with random forests, then uses those estimates to predict the final metrics online. The resulting framework stays within 10 percent error for both fully connected and convolutional networks and reaches 6.51 percent average energy error on practical MobileNet and VGG models.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Comprehensive characterization turns Edge TPU behavior into predictive models for performance and power-aware deployment.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Efficient Systems and Accelerators</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DATE 2022</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Performance Modeling, Edge TPU</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">What simple performance models were missing.</h2>
+  <p class="section-intro">The paper is valuable because it treats Edge TPU as a real closed-source deployment target. It does not assume the compiler, memory hierarchy, and power behavior can be collapsed into one linear compute-cost formula.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>MAC count is not enough</h3>
+      <p>For both fully connected and convolutional models, the paper finds that inference time does not scale linearly with the number of MAC operations. The observed curves are stepped, clustered, and highly dependent on model structure.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Memory placement changes everything</h3>
+      <p>Edge TPU uses both on-chip SRAM and host-side off-chip memory. When the compiler spills tensors or parameters off chip, communication overhead changes the latency curve substantially.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Design exploration needs fast estimates</h3>
+      <p>Compiling every candidate model and measuring it physically is too slow for hyperparameter search or deployment planning. The paper therefore aims for online prediction directly from model descriptions.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project falls in CELL&#x27;s systems thread, where accelerators, memory systems, and deployment-aware optimization are redesigned for practical efficiency. The page highlights the paper through the lens of Performance Modeling and Edge TPU.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">10,158</div>
+      <div class="highlight-caption">Measured Edge TPU runs used for characterization, spanning 7,560 fully connected and 2,598 convolutional models.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">&lt;10%</div>
+      <div class="highlight-caption">Target error band reached for time, power, and energy prediction across both FC and CONV families.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">6.51%</div>
+      <div class="highlight-caption">Average energy-estimation error on MobileNet V1/V2 and VGG16/VGG19 cross-validation cases.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">74.5s</div>
+      <div class="highlight-caption">Largest compile overhead observed in compile-based mode, motivating the prediction-based path for practical online use.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>In this paper, we characterize and model the performance and power consumption of Edge TPU, which efficiently accelerates deep learning (DL) inference in a low-power environment.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>Systolic array, as a high throughput computation architecture, its usage in the edge excites our interest in its performance and power pattern.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>We show our key remarks for the relation between the performance/power and DL model complexity to enable hardware-aware optimization and design decisions.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How PETET predicts performance, power, and energy.</h2>
+  <p class="section-intro">PETET stands for Performance/power Estimation Technique for Edge TPU. Its structure reflects the paper's main claim: memory behavior has to be estimated first, and only then can execution time and power be predicted accurately.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Characterize the hardware broadly</div>
+      <div class="step-desc">The paper generates and measures more than ten thousand TensorFlow models, covering MAC counts from 192 to 4.7 x 10^11. It records inference time and power on Edge TPU for both fully connected and convolutional settings.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Extract model-level features</div>
+      <div class="step-desc">For each candidate model, PETET extracts network type, number of layers, input size, parameter count, and MAC count. These are the descriptors used to infer memory use and final runtime behavior.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Predict on-chip and off-chip memory use</div>
+      <div class="step-desc">Random forest estimators model the hidden memory-allocation behavior of the Edge TPU toolchain. PETET supports both compile-based mode, which reads memory from actual compilation, and prediction-based mode, which estimates it directly without compiling.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Predict time and power from memory plus compute</div>
+      <div class="step-desc">Once memory usage and MAC count are available, PETET predicts execution time and power with separate learned models. Energy then follows from those two outputs, enabling one-shot hardware-aware design estimates.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 05</div>
+      <div class="step-title">Validate on real architectures, not just synthetic ones</div>
+      <div class="step-desc">The framework is finally cross-validated on practical MobileNet and VGG families at multiple input sizes and width multipliers, showing that the learned estimator generalizes beyond the synthetic characterization set.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">The core result is explanatory accuracy, not just a low average error number.</h2>
+  <p class="section-intro">PETET matters because it captures the actual sources of Edge TPU variability. The reported errors are low, but the deeper contribution is identifying which factors create those non-linear runtime and power patterns in the first place.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">9.02%</div>
+      <div class="metric-label">CONV Time Error</div>
+      <div class="metric-sub">Prediction-based mode MAPE for convolutional execution-time estimation.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">2.67%</div>
+      <div class="metric-label">CONV Power Error</div>
+      <div class="metric-sub">Prediction-based mode MAPE for convolutional power estimation.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">6.06%</div>
+      <div class="metric-label">FC Time Error</div>
+      <div class="metric-sub">Prediction-based mode MAPE for fully connected execution-time estimation, with 1.56 percent power error.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">1.2 KB</div>
+      <div class="metric-label">Memory MAE</div>
+      <div class="metric-sub">PETET's off-chip or on-chip memory prediction error on CONV-S, compared with 57 KB for linear regression.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the DATE 2022 paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Observation</th>
+          <th>Reported evidence</th>
+          <th>Implication</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FC models are often memory-bounded</td>
+          <td>For the studied FC networks, performance shifts strongly once off-chip memory is used, and the paper notes a clear threshold behavior around image width W = 48 in one setup.</td>
+          <td>Estimators need memory-placement awareness, not just arithmetic intensity.</td>
+        </tr>
+        <tr>
+          <td>CONV behavior depends on multiple interacting factors</td>
+          <td>Convolutional inference is influenced by MAC count, on-chip memory usage, and off-chip memory usage, with no single factor always dominating.</td>
+          <td>A single scalar complexity metric is too weak for accurate prediction.</td>
+        </tr>
+        <tr>
+          <td>Prediction-based mode is practical</td>
+          <td>PETET's PB mode avoids repeated compilation while still predicting time, power, and energy with low error, and differs negligibly from compile-based quality by about 3.94 percent.</td>
+          <td>This makes the model suitable for online search and deployment tooling.</td>
+        </tr>
+        <tr>
+          <td>Real-model validation holds up</td>
+          <td>Across MobileNet V1/V2 and VGG16/VGG19 configurations, the average energy-estimation error is 6.51 percent.</td>
+          <td>The learned model generalizes beyond the synthetic characterization set.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>A systems-modeling page, not just a benchmark page</h3>
+      <p>The paper's strength is that it explains why Edge TPU behaves the way it does. The step-wise latency, the off-chip threshold effects, and the converging power curves are what make PETET defensible as more than a curve-fit.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>Useful for real search loops</h3>
+      <p>The prediction-based mode is what makes this project page important for the website. It turns characterization into a reusable tool for hardware-aware architecture and model-search decisions without requiring full compiler runs each time.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why this page matters in CELL's systems thread.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This page shows CELL working at the measurement-modeling boundary of systems research. The contribution is not a new network architecture, but a way to reason correctly about a commercial edge accelerator.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">For the website, PETET should be framed as a deployment-enabling model. The key move is learning hidden memory behavior well enough to make online power and latency estimates credible.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, it also complements the neighboring Edge TPU HDC page: one paper adapts a learning algorithm to the device, while this one builds the predictive systems understanding needed to use the device intelligently.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +473,21 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Y. Ni, Y. Kim*, T. Rosing, and M. Imani*, “ Online performance and power prediction for edge TPU via comprehensive characterization ,” in 2022 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), IEEE, 2022 (*Co-corresponding authors)</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{ni2022online,
+  author    = {Yang Ni and Yeseong Kim and Tajana Rosing and Mohsen Imani},
+  title     = {Online Performance and Power Prediction for Edge TPU via Comprehensive Characterization},
+  booktitle = {2022 Design, Automation and Test in Europe Conference and Exhibition (DATE)},
+  pages     = {612--615},
+  year      = {2022},
+  publisher = {IEEE},
+  doi       = {10.23919/DATE54114.2022.9774764},
+  url       = {https://doi.org/10.23919/DATE54114.2022.9774764}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>
