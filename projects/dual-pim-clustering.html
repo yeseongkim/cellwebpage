@@ -6,6 +6,253 @@
 <title>DUAL: Acceleration of Clustering Algorithms using Digital-based Processing In-Memory | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="systems">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · MICRO 2020</div>
     <h1 class="hero-title">DUAL: Acceleration of Clustering Algorithms using Digital-based Processing In-Memory</h1>
-    <p class="hero-subtitle">Digital processing-in-memory accelerates clustering by keeping data-intensive computation inside memory rather than paying repeated movement costs.</p>
-    <div class="hero-meta"><strong>Authors</strong> Mohsen Imani*, Saikishan Pampana, Saransh Gupta, Minxuan Zhou, Yeseong Kim*, and Tajana Rosing</div>
-    
+    <p class="hero-subtitle">DUAL recasts clustering around binary hypervectors and digital crossbar search, so hierarchical clustering, k-means, and DBSCAN can run inside memory without the ADC/DAC-heavy overhead of analog PIM.</p>
+    <div class="hero-meta"><strong>Authors</strong> Mohsen Imani, Saikishan Pampana, Saransh Gupta, Minxuan Zhou, Yeseong Kim, and Tajana Rosing<br><strong>Affiliations</strong> UC Irvine, DGIST, and UC San Diego</div>
+    <div class="hero-chips">
+      <div class="hero-chip">Digital PIM</div>
+      <div class="hero-chip">HD-Mapper</div>
+      <div class="hero-chip">Hierarchical + DBSCAN + K-means</div>
+      <div class="hero-chip">Hamming Search</div>
+      <div class="hero-chip">MICRO 2020</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,185 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Making unsupervised clustering look like a memory problem, not a data-movement problem.</h2>
   <div class="abstract-box reveal">
-    <p>Today’s applications generate a large amount of data that need to be processed by learning algorithms. In practice, the majority of the data are not associated with any labels. Unsupervised learning, i.e., clustering methods, are the most commonly used algorithms for data analysis. However, running clustering algorithms on traditional cores results in high energy consumption and slow processing speed due to a large amount of data movement between memory and processing units. In this paper, we propose DUAL, a Digital-based Unsupervised learning AcceLeration, which supports a wide range of popular algorithms on conventional crossbar memory.</p>
+    <p>Clustering is dominated by pairwise distance computation, nearest-neighbor search, and repeated updates over large data sets. On conventional processors that means moving large volumes of data between compute and memory. Existing analog PIM designs help with dot products, but they are a poor fit for the full clustering pipeline and pay a heavy price in ADC and DAC overhead.</p>
+    <p>DUAL changes both the algorithm and the hardware interface. It first maps data points into binary hypervectors so similarity can be evaluated with Hamming distance instead of Euclidean distance, then executes the core clustering operations directly inside digital crossbar memories. The result is a PIM architecture that supports search and arithmetic in place, handles multiple popular clustering algorithms, and scales better than a GPU baseline on large workloads.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">Digital processing-in-memory accelerates clustering by keeping data-intensive computation inside memory rather than paying repeated movement costs.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Efficient Systems and Accelerators</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">MICRO 2020</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Clustering, Digital PIM</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">Why clustering was a bad match for both CPUs and prior PIM designs.</h2>
+  <p class="section-intro">The paper is not just proposing "PIM for clustering." It starts by showing why the usual clustering kernels and the usual PIM assumptions do not line up cleanly.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Pairwise distance dominates runtime</h3>
+      <p>Hierarchical clustering, DBSCAN, and k-means repeatedly compare points or cluster centers across large data sets. That creates heavy pairwise distance traffic and nearest-search pressure before any useful structure has been extracted.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Analog PIM is not enough</h3>
+      <p>Earlier PIM accelerators were mostly designed around analog dot products. The paper points out that clustering needs search, Hamming similarity, distance updates, and control-heavy memory interaction that analog PIM does not support cleanly.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>ADC and DAC overhead breaks efficiency</h3>
+      <p>The authors highlight that ADC and DAC blocks can dominate area and power in prior PIM systems, with one cited class of DNN accelerators spending 98 percent of chip power and area there. DUAL explicitly avoids that tax by staying digital.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project falls in CELL&#x27;s systems thread, where accelerators, memory systems, and deployment-aware optimization are redesigned for practical efficiency. The page highlights the paper through the lens of Clustering and Digital PIM.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">58.8x</div>
+      <div class="highlight-caption">Average end-to-end speedup over the NVIDIA GTX 1080 GPU baseline across the clustering workloads evaluated in the paper.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">251.3x</div>
+      <div class="highlight-caption">Average energy-efficiency improvement over the same GPU baseline.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">67.1x</div>
+      <div class="highlight-caption">Average speedup for hierarchical clustering, where search-heavy execution fits DUAL particularly well.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">98%</div>
+      <div class="highlight-caption">Representative chip power and area share attributed to ADC and DAC blocks in prior analog PIM designs that DUAL avoids.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Today’s applications generate a large amount of data that need to be processed by learning algorithms.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>In practice, the majority of the data are not associated with any labels.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>In this paper, we propose DUAL, a Digital-based Unsupervised learning AcceLeration, which supports a wide range of popular algorithms on conventional crossbar memory.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How DUAL turns clustering into binary search plus in-memory updates.</h2>
+  <p class="section-intro">The important move is algorithm-hardware co-design. DUAL would not work by dropping a standard Euclidean clustering kernel onto PIM, so the paper first changes the representation and then builds the memory operations around it.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Map original data into binary hypervectors</div>
+      <div class="step-desc">DUAL's HD-Mapper projects each feature vector with random Gaussian base vectors, applies a cosine-based nonlinearity, and binarizes the result. That preserves neighborhood structure well enough to replace Euclidean distance with the PIM-friendly Hamming metric.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Use data and distance blocks inside digital crossbars</div>
+      <div class="step-desc">Data blocks store encoded points and perform row-parallel Hamming distance computation. Distance blocks store pairwise distances and support nearest search plus arithmetic updates. The paper presents a modified CAM-style search flow with non-linear sampling to support 7-bit Hamming windows and exact nearest-value search.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Support multiple clustering algorithms with the same primitives</div>
+      <div class="step-desc">Hierarchical clustering runs by computing pairwise similarities, searching for the nearest pair, and updating linkage distances in memory. The same search and arithmetic blocks also support DBSCAN and k-means with different controller flows.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Scale through pipelining, interconnects, and parallel copies</div>
+      <div class="step-desc">DUAL organizes tiles of crossbar memories with bit-serial, row-parallel transfers between neighboring blocks. Interconnects and counter blocks keep Hamming computation and distance updates moving, while extra copies of encoded data trade area for more clustering throughput.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">The quality stays close to conventional clustering while the hardware efficiency jumps.</h2>
+  <p class="section-intro">The paper evaluates DUAL on hierarchical clustering, DBSCAN, and k-means over both synthetic and real data sets, compares against GPU implementations, and also checks how much quality is lost when the hyperspace dimension is reduced for more speed.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">1.2%</div>
+      <div class="metric-label">Quality Gain</div>
+      <div class="metric-sub">Average quality improvement over the baseline hierarchical clustering implementation at D = 4000, while DBSCAN improves by 0.4 percent on average.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">5.9%</div>
+      <div class="metric-label">Vs. LSH</div>
+      <div class="metric-sub">At D = 4000 on MNIST, DUAL beats LSH-based hierarchical clustering quality by 5.9 percent, with 5.2 percent and 3.3 percent gains for k-means and DBSCAN.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">71.7x</div>
+      <div class="metric-label">DBSCAN Speedup</div>
+      <div class="metric-sub">Average DBSCAN speedup over GPU, along with 293.3x higher energy efficiency.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">90.6x</div>
+      <div class="metric-label">1% Loss Mode</div>
+      <div class="metric-sub">Hierarchical clustering speedup when dimension is reduced enough to allow at most 1 percent quality loss, paired with 443.9x higher energy efficiency.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the MICRO 2020 paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Quality retention</td>
+          <td>At D = 4000, DUAL reports comparable clustering quality to Euclidean baselines: +1.2 percent for hierarchical clustering, +0.4 percent for DBSCAN, and -1.3 percent for k-means on average.</td>
+          <td>The binary hypervector mapping is not just a speed hack. It keeps enough structure to make the clustering outcome competitive.</td>
+        </tr>
+        <tr>
+          <td>Algorithm-level gains</td>
+          <td>Hierarchical clustering reaches 67.1x speedup and 328.7x energy efficiency over GPU; DBSCAN reaches 71.7x and 293.3x; k-means reaches 37.5x and 131.6x.</td>
+          <td>Search-heavy algorithms benefit the most because DUAL's in-memory Hamming and nearest-search operations are much stronger than its slower NOR-based arithmetic path.</td>
+        </tr>
+        <tr>
+          <td>Dimension-quality tradeoff</td>
+          <td>With only 1 percent quality loss, hierarchical clustering reaches 90.6x speedup and 443.9x energy efficiency; at 2 percent loss, the same paper reports 116.7x and 572.2x.</td>
+          <td>The hyperspace dimension becomes a direct system knob for quality versus performance.</td>
+        </tr>
+        <tr>
+          <td>Design importance</td>
+          <td>Removing interconnects slows hierarchical clustering by 3.9x, and removing counters slows the algorithms by about 2.1x to 2.7x on average.</td>
+          <td>The paper's architecture details are not incidental. The counters and local data movement path are central to the final efficiency numbers.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>Why this is a foundational systems page</h3>
+      <p>DUAL is one of the clearest early examples of CELL's systems work going beyond accelerator placement and into representation design. The HD-Mapper is what makes the digital PIM architecture possible in the first place.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>What makes it different from generic PIM</h3>
+      <p>The paper is not simply "clustering on memory." It introduces a digital search-and-update substrate that can support nearest search, Hamming computation, and linkage updates together, which is why it can cover hierarchical clustering, DBSCAN, and k-means in one framework.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why DUAL belongs in CELL's project-page set.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">DUAL shows how a clustering workload can be reformulated around hardware-native operations instead of trying to force Euclidean kernels onto an ill-suited memory substrate.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The page matters because it connects representation learning, digital PIM, and scalable unsupervised algorithms in one system rather than treating them as separate optimization layers.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, this is an early anchor for the lab's memory-centric accelerator thread and for later work where algorithm structure is deliberately shaped around the target hardware.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +468,21 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Mohsen Imani*, Saikishan Pampana, Saransh Gupta, Minxuan Zhou, Yeseong Kim*, and Tajana Rosing, “DUAL: Acceleration of Clustering Algorithms using Digital-based Processing In-Memory,” IEEE/ACM International Symposium on Microarchitecture (MICRO), Oct 2020 (*Co-corresponding authors)</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{imani2020dual,
+  author    = {Mohsen Imani and Saikishan Pampana and Saransh Gupta and Minxuan Zhou and Yeseong Kim and Tajana Rosing},
+  title     = {DUAL: Acceleration of Clustering Algorithms using Digital-based Processing In-Memory},
+  booktitle = {2020 53rd Annual IEEE/ACM International Symposium on Microarchitecture (MICRO)},
+  pages     = {356--371},
+  year      = {2020},
+  publisher = {IEEE},
+  doi       = {10.1109/MICRO50266.2020.00039},
+  url       = {https://doi.org/10.1109/MICRO50266.2020.00039}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>

@@ -6,6 +6,253 @@
 <title>CascadeHD: Efficient Many-Class Learning Framework Using Hyperdimensional Computing | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="hd">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · DAC 2021</div>
     <h1 class="hero-title">CascadeHD: Efficient Many-Class Learning Framework Using Hyperdimensional Computing</h1>
-    <p class="hero-subtitle">A cascaded HDC framework scales many-class classification without giving up the efficiency that makes HD learning attractive.</p>
+    <p class="hero-subtitle">CascadeHD revisits HDC for many-class problems by fixing how class hypervectors are trained and by organizing inference as a tree that spends more work only on confusing classes.</p>
     <div class="hero-meta"><strong>Authors</strong> Yeseong Kim, Jiseung Kim, and Mohsen Imani</div>
-    
+    <div class="hero-chips">
+      <div class="hero-chip">MASS</div>
+      <div class="hero-chip">Waterfall Training</div>
+      <div class="hero-chip">Many-Class HDC</div>
+      <div class="hero-chip">Jetson</div>
+      <div class="hero-chip">Proxy Nodes</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,185 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Scaling HDC when the number of classes gets large.</h2>
   <div class="abstract-box reveal">
-    <p>The brain-inspired hyperdimensional computing (HDC) gains attention as a light-weight and extremely parallelizable learning solution alternative to deep neural networks. Prior research shows the effectiveness of HDC-based learning on less powerful systems such as edge computing devices. However, the many-class classification problem is beyond the focus of mainstream HDC research; the existing HDC would not provide sufficient quality and efficiency due to its coarse-grained training. In this paper, we propose an efficient many-class learning framework, called CascadeHD, which identifies latent high-dimensional patterns of many classes holistically while learning a hierarchical inference structure using a novel meta-learning algorithm for high efficiency. Our evaluation conducted on the NVIDIA Jetson device family shows that CascadeHD improves the accuracy for many-class classification by up to 18% while achieving 32% speedup compared to the existing HDC.</p>
+    <p>Hyperdimensional computing is attractive on edge devices because training and inference are lightweight, parallel, and hardware-friendly. The problem is that most prior HDC work focused on small-class settings. Once the label space grows, standard HDC retraining struggles to separate confusing classes and inference becomes expensive because every query must be compared against every class hypervector.</p>
+    <p>CascadeHD addresses those two issues with two orthogonal ideas. MAny class Similarity Scaling, or MASS, replaces the traditional two-class correction rule with an all-class update based on similarity gaps, which stabilizes many-class learning. Waterfall training then converts the flat class list into a hierarchical inference structure that merges similar classes into latent decision nodes and routes difficult cases more selectively. Together they improve accuracy by up to 18 percent and improve runtime by 32 percent over prior HDC, while still delivering very large efficiency gains over DNN baselines on Jetson devices.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">A cascaded HDC framework scales many-class classification without giving up the efficiency that makes HD learning attractive.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DAC 2021</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Many-Class Learning, HDC</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">Why many-class HDC needs different training and different inference.</h2>
+  <p class="section-intro">CascadeHD is important because it identifies two separate failure modes in prior HDC systems and fixes both: model quality falls when classes are numerous and decision boundaries get crowded, and inference cost rises because every class must still be checked exhaustively.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Coarse retraining breaks down</h3>
+      <p>The standard HDC retraining rule only updates two class hypervectors for a misclassified sample. In many-class settings that is too weak, often too slow to converge, and can leave narrow or unstable margins between classes.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Similarity search scales poorly</h3>
+      <p>As K grows, HDC inference must compute distances to every class hypervector. The result is that one of HDC's main benefits, cheap inference, erodes exactly when the classification problem becomes more realistic.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Confusing classes need extra structure</h3>
+      <p>Not every class pair is equally hard. CascadeHD uses that fact to merge similar classes into latent categories and reserve fine-grained comparisons for the subsets of classes that are actually hard to tell apart.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Many-Class Learning and HDC.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">18%</div>
+      <div class="highlight-caption">Best reported accuracy improvement for many-class classification over the prior HDC method.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">32%</div>
+      <div class="highlight-caption">Reported speedup over existing HDC from the combined CascadeHD framework.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">65.6x</div>
+      <div class="highlight-caption">Jetson Xavier speedup over the DNN baselines, paired with 76.0x energy-efficiency gain.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">22.4%</div>
+      <div class="highlight-caption">Runtime reduction from the waterfall model over baseline HDC, with 21.3 percent energy savings.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>The brain-inspired hyperdimensional computing (HDC) gains attention as a light-weight and extremely parallelizable learning solution alternative to deep neural networks.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>Prior research shows the effectiveness of HDC-based learning on less powerful systems such as edge computing devices.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>Our evaluation conducted on the NVIDIA Jetson device family shows that CascadeHD improves the accuracy for many-class classification by up to 18% while achieving 32% speedup compared to the existing HDC.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How CascadeHD changes both training and inference.</h2>
+  <p class="section-intro">The paper keeps the familiar HDC flow of encoding into a high-dimensional hyperspace, but then replaces the old retraining rule and reorganizes the final classifier into a learned cascade.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Encode with a strong nonlinear HDC map</div>
+      <div class="step-desc">Samples are encoded into D = 10,000 dimensional hypervectors using a nonlinear encoding built from random base hypervectors, element-wise accumulation, cosine nonlinearity, and binarization. The goal is to expose latent interactions between features before class learning starts.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Train all classes with MASS</div>
+      <div class="step-desc">Instead of only correcting the true class and the current winner, MASS computes similarities to all class hypervectors, builds a target one-hot similarity vector, and updates every class proportionally to its distance from that target. This produces faster convergence and stronger separation in many-class settings.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Learn a waterfall hierarchy from class confusion</div>
+      <div class="step-desc">After training the flat class model, CascadeHD uses a validation set and class-hypervector similarity analysis to identify confusing class pairs. Similar classes are merged into latent categories, producing a tree of decision nodes instead of a single flat K-way comparison.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Retrain in-node classifiers and add proxy nodes</div>
+      <div class="step-desc">Each merged node gets its own in-node binary classifier. If upper-level routing errors become important, proxy decision nodes can be added so selected nodes classify more than two classes and give the model a second chance before a mistake becomes unrecoverable.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">CascadeHD closes most of the accuracy gap to DNN while preserving HDC's edge efficiency.</h2>
+  <p class="section-intro">The evaluation spans PLANT, EXTRA, ISOLET, MNISTMIX, and AUDIO on Jetson TX2 and Xavier. The paper separates the benefit of MASS from the benefit of waterfall modeling, which makes the result much clearer than a single aggregate number.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">0.78%</div>
+      <div class="metric-label">Top-5 Gap</div>
+      <div class="metric-sub">Average top-5 accuracy loss versus the optimized DNN models after applying MASS retraining.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">1.36%</div>
+      <div class="metric-label">Top-1 Gap</div>
+      <div class="metric-sub">Average top-1 accuracy loss versus optimized DNN, while remaining far more efficient at inference.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">14.4%</div>
+      <div class="metric-label">Audio Recovery</div>
+      <div class="metric-sub">Baseline HDC trails the DNN by 14.4 percent on AUDIO, but MASS recovers that gap to roughly the same accuracy level.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">40.5%</div>
+      <div class="metric-label">Extra Runtime Gain</div>
+      <div class="metric-sub">When the waterfall threshold is loosened to 3 percent, CascadeHD further improves inference time by 40.5 percent at the cost of 3.7 percent accuracy loss.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the DAC 2021 paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MASS accuracy</td>
+          <td>CascadeHD with MASS achieves accuracy comparable to AutoKeras-searched DNNs while significantly outperforming the baseline HDC retraining across PLANT, EXTRA, ISOLET, MNISTMIX, and AUDIO.</td>
+          <td>The main improvement comes from treating many-class retraining as an all-class similarity-scaling problem rather than a two-class mistake correction.</td>
+        </tr>
+        <tr>
+          <td>HDC versus DNN efficiency</td>
+          <td>On Jetson TX2 and Xavier, CascadeHD achieves 61.4x and 65.6x speedup over DNN inference and 69.7x and 76.0x energy-efficiency improvement.</td>
+          <td>The paper preserves HDC's edge-deployment advantage even while moving much closer to DNN accuracy.</td>
+        </tr>
+        <tr>
+          <td>Waterfall benefit</td>
+          <td>The hierarchical model reduces runtime by 22.4 percent on average and saves 21.3 percent energy compared with the baseline flat HDC inference.</td>
+          <td>The tree structure makes inference cheaper by avoiding exhaustive all-class similarity checks at every query.</td>
+        </tr>
+        <tr>
+          <td>Proxy-node recovery</td>
+          <td>For AUDIO, setting P = 10 proxy nodes recovers 1.87 percent accuracy while still keeping a 48 percent efficiency improvement over baseline HDC.</td>
+          <td>The hierarchy can be made more accurate again at a limited performance cost when root-level mistakes are especially expensive.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>An HDC scaling page</h3>
+      <p>CascadeHD is one of the clearest pages on the site for how CELL turned HDC from a small-class, toy-friendly method into something more robust for realistic label spaces.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>Why both pieces matter</h3>
+      <p>MASS and waterfall training solve different problems. MASS fixes representation quality and training convergence; the waterfall model fixes inference cost and, in some cases, can even improve accuracy by focusing on confusing class subsets.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why this page matters in CELL's HD line.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This is an early anchor for CELL's work on making HDC accurate enough for harder real-world classification problems without abandoning efficiency.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">For the website, CascadeHD should read as a dual contribution: a better many-class retraining rule and a better inference structure. Those are separate design moves with separate payoffs.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, this page also foreshadows later CELL work on trainable, hierarchical, and deployment-aware HDC systems. It is one of the first pages where HDC is clearly treated as a systems problem as much as a representation problem.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +468,21 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Yeseong Kim, Jiseung Kim, and Mohsen Imani, “CascadeHD: Efficient Many-Class Learning Framework Using Hyperdimensional Computing,” IEEE/ACM Design Automation Conference (DAC), Dec 2021</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{kim2021cascadehd,
+  author    = {Yeseong Kim and Jiseung Kim and Mohsen Imani},
+  title     = {CascadeHD: Efficient Many-Class Learning Framework Using Hyperdimensional Computing},
+  booktitle = {2021 58th ACM/IEEE Design Automation Conference (DAC)},
+  pages     = {775--780},
+  year      = {2021},
+  publisher = {IEEE},
+  doi       = {10.1109/DAC18074.2021.9586235},
+  url       = {https://doi.org/10.1109/DAC18074.2021.9586235}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>

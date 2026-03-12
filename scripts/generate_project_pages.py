@@ -32,6 +32,12 @@ HANDCRAFTED_SLUGS = {
     "quiltnet",
     "algorithm-hardware-hdc-edge",
     "edge-tpu-performance-power",
+    "pim-big-data-classification",
+    "cascadehd",
+    "stemhd-spatiotemporal",
+    "revisiting-hdc-fpga",
+    "dual-pim-clustering",
+    "geniehd",
 }
 
 

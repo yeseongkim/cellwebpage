@@ -6,6 +6,253 @@
 <title>GenieHD: Efficient DNA Pattern Matching Accelerator Using Hyperdimensional Computing | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="hd">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · DATE 2020</div>
     <h1 class="hero-title">GenieHD: Efficient DNA Pattern Matching Accelerator Using Hyperdimensional Computing</h1>
-    <p class="hero-subtitle">A hyperdimensional accelerator makes DNA pattern matching faster and more efficient for large bioinformatics search workloads.</p>
-    <div class="hero-meta"><strong>Authors</strong> Yeseong Kim, Mohsen Imani, Niema Moshiri, and Tajana Rosing</div>
-    <div class="hero-meta"><strong>Note</strong> Best Paper Nomination</div>
+    <p class="hero-subtitle">GenieHD converts DNA pattern matching into hypervector encoding plus similarity search, so long reference genomes can be reused across many queries and accelerated efficiently on FPGA, GPU, or ASIC hardware.</p>
+    <div class="hero-meta"><strong>Authors</strong> Yeseong Kim, Mohsen Imani, Niema Moshiri, and Tajana Rosing<br><strong>Affiliation</strong> University of California San Diego</div>
+    <div class="hero-chips">
+      <div class="hero-chip">Best Paper Nomination</div>
+      <div class="hero-chip">Bioinformatics</div>
+      <div class="hero-chip">Sliding-Window Encoding</div>
+      <div class="hero-chip">Multi-Query Reuse</div>
+      <div class="hero-chip">FPGA + ASIC</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,185 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Rewriting DNA pattern matching as a hypervector search problem.</h2>
   <div class="abstract-box reveal">
-    <p>DNA pattern matching is widely applied in many bioinformatics applications. The increasing volume of the DNA data exacerbates the runtime and power consumption to discover DNA patterns. In this paper, we propose a hardware-software codesign, called GenieHD, which efficiently parallelizes the DNA pattern matching task. We exploit brain-inspired hyperdimensional (HD) computing which mimics pattern-based computations in human memory. We transform inherent sequential processes of the DNA pattern matching to highly-parallelizable computation tasks using HD computing.</p>
+    <p>DNA pattern matching sits inside many bioinformatics pipelines, but common approaches still inherit the sequential structure of classical string-matching algorithms. That makes them awkward to accelerate efficiently on parallel hardware, especially when the reference genome is huge and query streams keep arriving.</p>
+    <p>GenieHD takes a different route. It encodes DNA sequences into high-dimensional hypervectors, combines the reference genome into a reusable hypervector representation, and then answers pattern queries through lightweight similarity computation. The accelerator story follows directly from that reformulation: once the expensive reference encoding is done, many queries can reuse the same representation and exploit massive dimension-level parallelism.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">A hyperdimensional accelerator makes DNA pattern matching faster and more efficient for large bioinformatics search workloads.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">DATE 2020</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Bioinformatics, Accelerator</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">Why classical DNA matching was still too sequential.</h2>
+  <p class="section-intro">The paper is not just about building a faster accelerator. It argues that the real opportunity is to redesign the algorithm so the hardware is solving pattern-oriented vector operations rather than fighting the serial control flow of classical matchers.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>String matching stays sequential</h3>
+      <p>Methods such as Boyer-Moore and Knuth-Morris-Pratt can be parallelized around the edges, but their core matching logic is still sequential. Prior FPGA and GPU accelerators therefore inherit a lot of memory traffic and control overhead.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Reference genomes are enormous</h3>
+      <p>Human genome searches work over references with hundreds of millions of bases. If every incoming query has to revisit the reference in a conventional way, the runtime and energy costs quickly dominate the whole pipeline.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Single-query measurements hide reuse</h3>
+      <p>The paper shows that reference encoding takes more than 97.6 percent of execution time on average for a single query. That makes reuse of the encoded reference the central systems insight, not just a secondary optimization.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Bioinformatics and Accelerator.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">44.4x</div>
+      <div class="highlight-caption">Average FPGA speedup over the prior FPGA design on repeated-query workloads using the same encoded reference.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">54.1x</div>
+      <div class="highlight-caption">Average FPGA energy-efficiency improvement over the same FPGA baseline.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">122x</div>
+      <div class="highlight-caption">ASIC speedup over the prior GPU-based implementation at similar die size, paired with 707x higher energy efficiency.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">50%</div>
+      <div class="highlight-caption">ASIC power reduction from voltage overscaling at 1 percent accuracy loss, which grows to 61 percent at 2 percent loss.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>DNA pattern matching is widely applied in many bioinformatics applications.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>The increasing volume of the DNA data exacerbates the runtime and power consumption to discover DNA patterns.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>We transform inherent sequential processes of the DNA pattern matching to highly-parallelizable computation tasks using HD computing.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How GenieHD turns sequence matching into reusable hyperspace arithmetic.</h2>
+  <p class="section-intro">The method combines a lightweight encoding rule with a reference-construction algorithm that is designed from the start for reuse across many incoming DNA queries.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Encode DNA strings with base hypervectors and permutations</div>
+      <div class="step-desc">GenieHD starts from four nearly orthogonal base hypervectors for A, C, G, and T. A query string is encoded by binding those bases together after position-dependent permutations, so different k-mers map to near-orthogonal hypervectors in high-dimensional space.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Build the reference hypervector with a sliding window</div>
+      <div class="step-desc">Instead of re-encoding every substring from scratch, GenieHD updates the reference incrementally. It removes the outgoing base, inserts the incoming one, and aggregates all windows in the target length range, reducing the reference construction complexity to O(N + ell) rather than paying a full cost for every substring.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Detect matches through a single similarity test</div>
+      <div class="step-desc">Once the reference hypervector R and query hypervector Q are available, the pattern-matching decision reduces to a similarity test against a threshold. The paper models the noise statistically so it can estimate error behavior and trade accuracy against dimensionality.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Exploit reuse across many queries</div>
+      <div class="step-desc">The accelerator architecture separates reference encoding, query encoding, and discovery. The key win is that the same encoded reference can be reused for many later queries, which shifts the workload away from repeated long-reference processing and into cheap parallel similarity operations.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">The numbers get much better once reference reuse is part of the story.</h2>
+  <p class="section-intro">The paper evaluates GenieHD on E. coli, human chromosome 14, and synthetic random DNA data. It reports same-platform comparisons against prior FPGA and GPU designs, a CPU comparison against Bowtie2, and the quality-performance tradeoff from reducing dimension or lowering voltage.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">97.6%</div>
+      <div class="metric-label">Ref. Encoding Cost</div>
+      <div class="metric-sub">For a single query, more than 97.6 percent of execution time comes from reference encoding, which is why reuse across queries matters so much.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">199.7x</div>
+      <div class="metric-label">Vs. Bowtie2</div>
+      <div class="metric-sub">When the encoded reference is already available, GenieHD-ASIC is 199.7x faster and 369.9x more energy efficient than Bowtie2.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">43.9x</div>
+      <div class="metric-label">GPU Multi-Query</div>
+      <div class="metric-sub">Average speedup for 10^6 queries on GPU versus the prior GPU implementation, driven by reference reuse.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">2x</div>
+      <div class="metric-label">2% Loss Mode</div>
+      <div class="metric-sub">Using only half the dimensions gives about 2x speedup with roughly 2 percent extra error, creating a direct accuracy-efficiency knob.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the DATE 2020 paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Same-platform comparisons</td>
+          <td>GenieHD-FPGA beats SCADIS by 11.1x speed and 13.5x energy efficiency; GenieHD-GPU beats ADEY by 10.9x and 10.6x on the same platform.</td>
+          <td>The gain is not just from moving to a different hardware class. The algorithm itself is a better fit for the same hardware budget.</td>
+        </tr>
+        <tr>
+          <td>Reference reuse</td>
+          <td>For 10^6 queries, GenieHD reports average speedups of 43.9x on GPU and 44.4x on FPGA over the prior same-platform baselines.</td>
+          <td>The paper's main systems argument is that once the reference is encoded, later queries become extremely cheap.</td>
+        </tr>
+        <tr>
+          <td>ASIC case</td>
+          <td>At similar die size, GenieHD-ASIC outperforms the prior GPU implementation by 122x in speed and 707x in energy efficiency.</td>
+          <td>This shows the HD reformulation is strong enough to matter even beyond the FPGA comparison in the headline abstract.</td>
+        </tr>
+        <tr>
+          <td>Power-accuracy tradeoff</td>
+          <td>Voltage overscaling saves 50 percent and 61 percent power at 1 percent and 2 percent accuracy loss, respectively.</td>
+          <td>The high-dimensional representation gives the design a controllable robustness margin that the hardware can spend on lower power.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>Why this is a key early HD application page</h3>
+      <p>GenieHD matters because it shows hyperdimensional computing as more than a classifier. It uses the same pattern-centric representation to solve a bioinformatics search problem that is traditionally viewed as string processing.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>What the page should emphasize</h3>
+      <p>The big idea is reuse of the encoded reference and the sliding-window formulation, not only the FPGA headline. That is what turns a serial matching pipeline into something hardware-friendly across GPU, FPGA, and ASIC targets.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why GenieHD still deserves a standalone page.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">GenieHD is an early proof that hyperdimensional computing can reformulate sequence-search problems, not just lightweight classification tasks.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The project combines algorithm redesign, statistical accuracy control, and hardware mapping in a way that fits the lab's later style of efficient-learning systems work.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, this page is a strong early anchor for CELL's bioinformatics and HD-computing storyline, and the Best Paper Nomination is worth keeping visible.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +468,22 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Yeseong Kim, Mohsen Imani, Niema Moshiri, and Tajana Rosing, “ Geniehd: Efficient DNA pattern matching accelerator using hyperdimensional computing, ” 2020 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), 2020, Best Paper Nomination</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{kim2020geniehd,
+  author    = {Yeseong Kim and Mohsen Imani and Niema Moshiri and Tajana Rosing},
+  title     = {GenieHD: Efficient DNA Pattern Matching Accelerator Using Hyperdimensional Computing},
+  booktitle = {2020 Design, Automation and Test in Europe Conference and Exhibition (DATE)},
+  pages     = {115--120},
+  year      = {2020},
+  publisher = {IEEE},
+  doi       = {10.23919/DATE48585.2020.9116397},
+  url       = {https://doi.org/10.23919/DATE48585.2020.9116397},
+  note      = {Best Paper Nomination}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>

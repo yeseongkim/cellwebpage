@@ -6,6 +6,253 @@
 <title>Efficient Brain-Inspired Hyperdimensional Learning with Spatiotemporal Structured Data | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="hd">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · MASCOTS 2021</div>
     <h1 class="hero-title">Efficient Brain-Inspired Hyperdimensional Learning with Spatiotemporal Structured Data</h1>
-    <p class="hero-subtitle">STEM-HD preserves spatial and temporal structure in HDC encodings, improving accuracy and hardware efficiency for structured sensor data.</p>
-    <div class="hero-meta"><strong>Authors</strong> Jiseung Kim, Hyunsei Lee, Mohsen Imani, and Yeseong Kim</div>
-    
+    <p class="hero-subtitle">STEM-HD replaces random position codes with correlated base hypervectors, letting hyperdimensional learning preserve spatial and temporal continuity while staying lightweight enough for FPGA deployment.</p>
+    <div class="hero-meta"><strong>Authors</strong> Jiseung Kim, Hyunsei Lee, Mohsen Imani, and Yeseong Kim<br><strong>Affiliations</strong> DGIST and University of California, Irvine</div>
+    <div class="hero-chips">
+      <div class="hero-chip">Structured Sensor Data</div>
+      <div class="hero-chip">Spatiotemporal Encoding</div>
+      <div class="hero-chip">1D + 2D Features</div>
+      <div class="hero-chip">Computation Reuse</div>
+      <div class="hero-chip">Kintex-7 FPGA</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,185 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">Treating nearby features as related instead of accidentally orthogonal.</h2>
   <div class="abstract-box reveal">
-    <p>STEM-HD targets structured spatiotemporal data by explicitly encoding spatial and temporal relationships instead of treating all features as independent random positions. The work combines a new hyperdimensional encoding scheme with hardware-aware computation reuse, improving accuracy while reducing training time and energy for structured sensor workloads on efficient hardware.</p>
+    <p>Classic HDC encoders are attractive because they are simple, but they usually assign independent random base hypervectors to every feature position. That assumption is wasteful for structured signals such as sensor streams, spectrogram-like features, or images, where neighboring positions are often correlated. In those cases the encoder throws away useful spatiotemporal information before learning even begins.</p>
+    <p>STEM-HD reframes the encoder as the main opportunity for improvement. It generates correlated base hypervectors so nearby positions stay similar in hyperspace, plugs that mechanism into existing HDC encoders without adding runtime overhead, and then exploits the resulting regularity for hardware reuse. The result is a cleaner representation for structured data and a faster accelerator path for training and inference.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">STEM-HD preserves spatial and temporal structure in HDC encodings, improving accuracy and hardware efficiency for structured sensor data.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">MASCOTS 2021</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Spatiotemporal Data, Accelerator</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">Why structured data was a weak spot for earlier HDC encoders.</h2>
+  <p class="section-intro">The paper is not trying to redesign the entire HDC pipeline. It targets one assumption that had quietly become expensive: treating every feature index as unrelated to every other one.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Random positions erase continuity</h3>
+      <p>Earlier encoders map each feature position to a random base hypervector. That makes adjacent time steps, neighboring pixels, or nearby frequency bins nearly orthogonal even when the original signal is smooth and strongly correlated.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Large dimensions become a workaround</h3>
+      <p>Because the encoder ignores positional structure, prior HDC systems often rely on very high dimensions just to maintain enough separability. The paper explicitly frames that as representation waste rather than an unavoidable property of HDC.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Encoding dominates the hardware budget</h3>
+      <p>On the Kintex-7 FPGA baseline used in the paper, encoding takes 10.6x more runtime than the rest of inference. If the encoder stays random and irregular, the accelerator has little opportunity to reuse work.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Spatiotemporal Data and Accelerator.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">10.6x</div>
+      <div class="highlight-caption">Encoding runtime over the rest of HDC inference in the FPGA baseline, which motivates focusing on the encoder rather than only the classifier stage.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">16.3%</div>
+      <div class="highlight-caption">Training runtime reduction from the reuse-oriented hardware optimization built on STEM-HD's correlated base hypervectors.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">19.7%</div>
+      <div class="highlight-caption">Training energy reduction with less than 0.25 percent reported accuracy loss.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">1.96x</div>
+      <div class="highlight-caption">Average inference speedup once the same structure-aware encoding idea is paired with the accelerator optimization.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>STEM-HD targets structured spatiotemporal data by explicitly encoding spatial and temporal relationships instead of treating all features as independent random positions.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>The work combines a new hyperdimensional encoding scheme with hardware-aware computation reuse, improving accuracy while reducing training time and energy for structured sensor workloads on efficient hardware.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>The project combines algorithm design with efficiency-aware deployment choices that matter in practical systems.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How STEM-HD changes the encoder without breaking the rest of HDC.</h2>
+  <p class="section-intro">The important design choice is compatibility. STEM-HD is introduced as a new base-hypervector generator that can be dropped into existing HDC encoders rather than a complete replacement for training, retraining, or inference.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Generate correlated base hypervectors</div>
+      <div class="step-desc">Instead of sampling every position independently, STEM-HD creates partition hypervectors and interpolates between them so nearby feature indices produce similar base hypervectors. The paper presents this both for 1D sequences and for 2D feature layouts.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Preserve spatiotemporal distance during encoding</div>
+      <div class="step-desc">Once the base hypervectors are correlated, shifted or neighboring patterns in the original feature space remain closer in hyperspace. That directly fixes the failure mode where two nearly identical structured signals were projected too far apart by random position codes.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Reuse existing HDC learning rules</div>
+      <div class="step-desc">Initial training, retraining, and inference still follow the normal HDC class-memory flow. The paper emphasizes that STEM-HD modifies how base hypervectors are created, not the lightweight learning procedure that makes HDC appealing for embedded systems.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Exploit duplicated components in hardware</div>
+      <div class="step-desc">Because neighboring base hypervectors now share structure, the accelerator can reuse computations that would otherwise be recomputed independently. That is the bridge from a better representation to the reported runtime and energy savings on FPGA.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">The win is modestly better accuracy plus a much cleaner hardware story.</h2>
+  <p class="section-intro">STEM-HD is evaluated on structured-data workloads including human activity recognition, emotion recognition, and position recognition. The paper argues that the new encoder converges faster, tolerates smaller dimensions better, and creates the regularity needed for practical reuse in an FPGA implementation.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">&lt;0.25%</div>
+      <div class="metric-label">Accuracy Cost</div>
+      <div class="metric-sub">The reuse-driven hardware optimization keeps the quality impact negligible while reducing runtime and energy.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">1.96x</div>
+      <div class="metric-label">Inference Gain</div>
+      <div class="metric-sub">Average model inference speedup reported for the accelerator path after exploiting STEM-HD structure.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">16.3%</div>
+      <div class="metric-label">Training Faster</div>
+      <div class="metric-sub">Runtime reduction from reusing duplicated encoder components on the FPGA implementation.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">19.7%</div>
+      <div class="metric-label">Energy Saved</div>
+      <div class="metric-sub">Training energy improvement on the same hardware path, showing that the encoder change pays off as a systems result.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings reported in the paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Structured encoding</td>
+          <td>STEM-HD explicitly models positional correlation for 1D and 2D feature layouts instead of assigning fully random position codes.</td>
+          <td>The method is aimed at the right failure mode for sensor and spatial data rather than only tuning later stages of the classifier.</td>
+        </tr>
+        <tr>
+          <td>Dimension robustness</td>
+          <td>The paper reports that STEM-HD is more robust to dimensionality reduction than the state-of-the-art baseline encoders.</td>
+          <td>That matters for embedded deployment because the benefit is not tied to keeping a very large hypervector budget.</td>
+        </tr>
+        <tr>
+          <td>Hardware integration</td>
+          <td>The encoder is designed to integrate with existing HDC encoding methods while adding no extra runtime overhead to the baseline inference flow.</td>
+          <td>The contribution is practical: better structure awareness without abandoning the low-cost HDC pipeline.</td>
+        </tr>
+        <tr>
+          <td>FPGA deployment</td>
+          <td>The implementation is demonstrated on a Kintex-7 FPGA KC705 platform across multiple structured-data workloads.</td>
+          <td>This positions the work as an algorithm-and-accelerator co-design paper, not just a representation paper.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>Why this page matters in CELL's HD line</h3>
+      <p>This paper is an early example of CELL treating the encoder as the real design surface. Later work in the lab keeps pushing trainable, forward-only, or hardware-aware encoding, and STEM-HD is one of the clearest first steps in that direction.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>What changed architecturally</h3>
+      <p>The novelty is not a heavier classifier. STEM-HD keeps HDC lightweight, but stops pretending that neighboring features are unrelated. That one change improves learning quality and makes computation reuse possible on hardware.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why STEM-HD deserves a standalone project page.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">STEM-HD shows that HDC accuracy and efficiency can both improve when the encoder respects the geometry of the original data instead of randomizing it away.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The page should read as a joint representation-and-systems result. The spatiotemporal encoder matters because it creates reusable structure for the accelerator, not only because it changes the math.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, this is a strong anchor for the lab's later work on smarter HD encoders, lower-dimensional deployment, and practical edge hardware mappings.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +468,21 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Jiseung Kim, Hyunsei Lee, Mohsen Imani, and Yeseong Kim, “Efficient Brain-Inspired Hyperdimensional Learning with Spatiotemporal Structured Data,” IEEE International Symposium on the Modeling, Analysis, and Simulation of Computer and Telecommunication Systems (MASCOTS), Nov 2021</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{kim2021stemhd,
+  author    = {Jiseung Kim and Hyunsei Lee and Mohsen Imani and Yeseong Kim},
+  title     = {Efficient Brain-Inspired Hyperdimensional Learning with Spatiotemporal Structured Data},
+  booktitle = {2021 29th International Symposium on Modeling, Analysis, and Simulation of Computer and Telecommunication Systems (MASCOTS)},
+  year      = {2021},
+  publisher = {IEEE},
+  doi       = {10.1109/MASCOTS53633.2021.9614302},
+  url       = {https://doi.org/10.1109/MASCOTS53633.2021.9614302},
+  numpages  = {8}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>

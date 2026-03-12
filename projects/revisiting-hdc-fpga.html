@@ -6,6 +6,253 @@
 <title>Revisiting HyperDimensional Learning for FPGA and Low-Power Architectures | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="hd">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -14,12 +261,18 @@
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · HPCA 2021</div>
     <h1 class="hero-title">Revisiting HyperDimensional Learning for FPGA and Low-Power Architectures</h1>
-    <p class="hero-subtitle">This work rethinks HD learning for FPGA and low-power systems, exposing practical accelerator tradeoffs for edge-scale deployment.</p>
-    <div class="hero-meta"><strong>Authors</strong> Mohsen Imani*, Zhuowen Zou, Samuel Bosch, Sanjay Anantha Rao, Sahand Salamat, Venkatesh Kumar, Yeseong Kim*, and Tajana Rosing</div>
-    
+    <p class="hero-subtitle">LookHD turns HDC encoding into a lookup problem and compresses multi-class memories into one or a few queryable hypervectors, making real-time low-power learning practical on ARM CPUs and FPGAs.</p>
+    <div class="hero-meta"><strong>Authors</strong> Mohsen Imani, Zhuowen Zou, Samuel Bosch, Sanjay Anantha Rao, Sahand Salamat, Venkatesh Kumar, Yeseong Kim, and Tajana Rosing<br><strong>Affiliations</strong> UC Irvine, UC San Diego, MIT, and DGIST</div>
+    <div class="hero-chips">
+      <div class="hero-chip">LookHD</div>
+      <div class="hero-chip">Equalized Quantization</div>
+      <div class="hero-chip">Model Compression</div>
+      <div class="hero-chip">ARM Cortex A53</div>
+      <div class="hero-chip">Kintex-7 FPGA</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,185 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">A practical reset for HDC on embedded hardware.</h2>
   <div class="abstract-box reveal">
-    <p>Today’s applications are using machine learning algorithms to analyze the data collected from a swarm of devices on the Internet of Things (IoT). However, most existing learning algorithms are overcomplex to enable real-time learning on IoT devices with limited resources and computing power. Recently, Hyperdimensional computing (HDC) is introduced as an alternative computing paradigm for enabling efficient and robust learning. HDC emulates the cognitive task by representing the values as patterns of neural activity in high-dimensional space. HDC first encodes all data points to high-dimensional vectors.</p>
+    <p>This HPCA paper starts from a blunt diagnosis: classic HDC is lightweight in principle, but two blocks keep it from being truly practical on low-power hardware. Encoding dominates training time, and associative search plus model size become painful as the number of classes grows.</p>
+    <p>LookHD attacks both problems at once. It precomputes and reuses encoded chunk hypervectors so training no longer pays the full encoding cost sample by sample, then compresses all class memories into a single hypervector or a small set of them so inference scales better. The paper demonstrates that this is not only an algorithmic simplification but a deployable architecture for ARM CPUs and Kintex-7 FPGA hardware.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">This work rethinks HD learning for FPGA and low-power systems, exposing practical accelerator tradeoffs for edge-scale deployment.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">HPCA 2021</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">FPGA, Low-Power Systems</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">What made baseline HDC too expensive in practice.</h2>
+  <p class="section-intro">The paper is a systems critique of conventional HDC. It argues that the usual "HDC is lightweight" narrative breaks down once the encoding cost and class-scaling behavior are measured on real embedded platforms.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Encoding dominates training</h3>
+      <p>Baseline HDC spends about 80 percent of total training time in the encoding stage. Every feature value triggers thousands of high-dimensional operations, which is exactly the sort of repeated work that embedded hardware struggles to hide.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Associative search dominates inference</h3>
+      <p>During inference, about 83 percent of the cost comes from comparing the query hypervector against every class hypervector. That means runtime and model size both grow with the number of classes.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Commodity edge hardware still matters</h3>
+      <p>The target is not a hypothetical accelerator. The paper explicitly shows how to map the redesigned HDC flow onto an ARM Cortex A53 software path and a Kintex-7 FPGA implementation, which is why the redesign focuses on memory access patterns and multiply reduction.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of FPGA and Low-Power Systems.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">28.3x</div>
+      <div class="highlight-caption">Average FPGA training speedup over the baseline HDC implementation when using the most efficient LookHD quantization setting.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">97.4x</div>
+      <div class="highlight-caption">Average FPGA training energy-efficiency improvement over baseline HDC.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">2.2x</div>
+      <div class="highlight-caption">Average FPGA inference speedup from combining lookup-based encoding with compressed associative search.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">6.3x</div>
+      <div class="highlight-caption">Average model-size reduction in inference relative to the same state-of-the-art HDC baseline.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>Today’s applications are using machine learning algorithms to analyze the data collected from a swarm of devices on the Internet of Things (IoT).</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>However, most existing learning algorithms are overcomplex to enable real-time learning on IoT devices with limited resources and computing power.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>HDC first encodes all data points to high-dimensional vectors.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How LookHD reshapes both training and inference.</h2>
+  <p class="section-intro">LookHD is more than a faster lookup table. The paper redesigns quantization, encoding, training accumulation, and associative memory so the whole HDC stack behaves like an embedded-friendly memory-and-dot-product pipeline.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Split features and quantize them intelligently</div>
+      <div class="step-desc">LookHD divides the input feature vector into small chunks and applies equalized quantization instead of naive linear quantization. That lets the system keep strong accuracy even with very small quantization levels such as q = 2 or q = 4, which is crucial for keeping the lookup tables feasible.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Replace encoding with direct-address lookup</div>
+      <div class="step-desc">Each quantized level is assigned a compact codebook, and concatenating the codebooks inside a chunk becomes a direct memory address to a pre-stored chunk hypervector. The expensive encode-every-sample path is replaced by table access plus lightweight chunk aggregation.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Count repeated patterns during training</div>
+      <div class="step-desc">Instead of summing every encoded hypervector as it arrives, LookHD counts how often each pre-stored chunk pattern occurs and multiplies the counters with the stored hypervectors once at the end of training. That is the main reason the training stage speeds up so sharply.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Compress class memories for scalable inference</div>
+      <div class="step-desc">LookHD exploits the orthogonality of random high-dimensional vectors to combine class hypervectors into a single compressed memory or a small exact-mode set. That reduces the number of multiplications in similarity search and shrinks the model footprint at the same time.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">The strongest story is how much computation disappears while accuracy largely stays put.</h2>
+  <p class="section-intro">The paper evaluates LookHD on speech recognition, activity recognition, physical monitoring, face recognition, and extra-sensory phone-position recognition. It reports both platform-level gains and the tradeoffs that appear as quantization, dimensionality, and class count change.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">80% / 83%</div>
+      <div class="metric-label">Baseline Bottlenecks</div>
+      <div class="metric-sub">Encoding dominates training while associative search dominates inference in the conventional HDC path.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">95.2%</div>
+      <div class="metric-label">Speech @ D=2000</div>
+      <div class="metric-sub">LookHD reaches 95.2 percent on speech recognition at D = 2000 versus 95.5 percent at D = 10000, showing less than 0.3 percent loss.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">1.2%</div>
+      <div class="metric-label">Quantization Win</div>
+      <div class="metric-sub">On speech recognition, q = 4 equalized quantization beats the baseline HDC using q = 16 linear quantization by 1.2 percent.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">14.6x</div>
+      <div class="metric-label">48-Class EDP</div>
+      <div class="metric-sub">At 48 classes, single-hypervector compression yields 14.6x EDP improvement and 19.2x smaller model size with about 2 percent quality loss.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the HPCA 2021 paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Training acceleration</td>
+          <td>FPGA LookHD with q = 2 is 28.3x faster and 97.4x more energy efficient than baseline HDC; q = 4 still delivers 14.1x and 48.7x improvements.</td>
+          <td>The payoff does not depend on one brittle operating point. Even the more accurate configuration stays dramatically cheaper.</td>
+        </tr>
+        <tr>
+          <td>Dimension reduction</td>
+          <td>At D = 2000, LookHD remains very close to the D = 10000 baseline across the benchmark set, including 95.2 versus 95.5 percent on speech recognition.</td>
+          <td>The method is robust enough to trade dimension for hardware efficiency without a large quality penalty.</td>
+        </tr>
+        <tr>
+          <td>Retraining and inference</td>
+          <td>On FPGA, LookHD is on average 2.2x faster and 4.1x more energy efficient in inference, and retraining is 2.4x faster and 4.5x more energy efficient.</td>
+          <td>The redesign helps the entire lifecycle, not only the initial training pass.</td>
+        </tr>
+        <tr>
+          <td>Scalability tradeoff</td>
+          <td>For 36 classes, exact-mode compression into three hypervectors keeps the same accuracy while still giving 8.7x model-size reduction; for 48 classes, a single compressed hypervector gives 19.2x smaller model size with about 2 percent quality loss.</td>
+          <td>The paper is explicit about when single-vector compression is exact and when it becomes an accuracy-efficiency tradeoff.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>Why this became a reference HDC systems page</h3>
+      <p>LookHD is one of the clearest papers in the lab's timeline for showing that HDC needs algorithm-hardware redesign, not just a faster implementation of the usual equations. It attacks the two dominant costs with methods tailored to memory-centric hardware.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>What is novel beyond lookup encoding</h3>
+      <p>The page should not reduce the contribution to "cache the encoder." Equalized quantization, counter-based training, compressed associative search, and exact-versus-approximate model modes are all part of the reason the system stays accurate while scaling down the compute.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why LookHD is a foundational project in CELL's efficient-HDC arc.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This is an early and still very clear statement that HDC's real bottlenecks are encoding and associative search, not the abstract learning rule alone.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">The project matters because it combines representation tricks, memory layout decisions, and accelerator mapping into one coherent design rather than treating them as separate optimizations.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">Chronologically, LookHD is a strong anchor for later CELL work on trainable encoders, hardware-aware HD learning, and scalable class representations for edge systems.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +468,21 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Mohsen Imani*, Zhuowen Zou, Samuel Bosch, Sanjay Anantha Rao, Sahand Salamat, Venkatesh Kumar, Yeseong Kim*, and Tajana Rosing, “Revisiting HyperDimensional Learning for FPGA and Low-Power Architectures,” IEEE International Symposium on High-Performance Computer Architecture (HPCA), Feb 2021 (*Co-corresponding authors)</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{imani2021lookhd,
+  author    = {Mohsen Imani and Zhuowen Zou and Samuel Bosch and Sanjay Anantha Rao and Sahand Salamat and Venkatesh Kumar and Yeseong Kim and Tajana Rosing},
+  title     = {Revisiting HyperDimensional Learning for FPGA and Low-Power Architectures},
+  booktitle = {2021 IEEE International Symposium on High-Performance Computer Architecture (HPCA)},
+  pages     = {221--234},
+  year      = {2021},
+  publisher = {IEEE},
+  doi       = {10.1109/HPCA51647.2021.00028},
+  url       = {https://doi.org/10.1109/HPCA51647.2021.00028}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>

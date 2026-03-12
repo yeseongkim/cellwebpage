@@ -3,9 +3,256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Massively parallel big data classification on a programmable processing in-memory architecture | CELL Project Page</title>
+<title>Massively Parallel Big Data Classification on a Programmable Processing In-Memory Architecture | CELL Project Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="project-style.css">
+<style>
+.hero-chips,
+.problem-grid,
+.pipeline-grid,
+.metric-grid,
+.analysis-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.hero-chips {
+  grid-template-columns: repeat(5, max-content);
+  justify-content: center;
+  margin: 0 auto 30px;
+}
+
+.hero-chip {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.problem-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 28px 0 24px;
+}
+
+.problem-card,
+.pipeline-step,
+.metric-card,
+.analysis-card,
+.table-card,
+.takeaway-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.problem-card,
+.metric-card,
+.analysis-card {
+  padding: 24px;
+}
+
+.problem-card h3,
+.analysis-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.problem-card p,
+.analysis-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, var(--accent-soft), rgba(0, 0, 0, 0));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.highlight-item {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.highlight-number {
+  margin-bottom: 6px;
+  font-family: "Instrument Serif", serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.highlight-caption {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pipeline-grid {
+  margin-top: 28px;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.step-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.step-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  padding: 24px;
+}
+
+.metric-value {
+  margin-bottom: 8px;
+  font-family: "Instrument Serif", serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.metric-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.table-card {
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.result-table th,
+.result-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.result-table th {
+  color: var(--muted);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.takeaway-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.takeaway-num {
+  color: var(--accent);
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.takeaway-text {
+  color: var(--muted);
+}
+
+.abstract-box p + p {
+  margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-step,
+  .takeaway-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-chips,
+  .problem-grid,
+  .metric-grid,
+  .analysis-grid,
+  .highlight-strip {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body data-area="systems">
 <button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
@@ -13,13 +260,19 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-label">CELL Project Page · ICCAD 2021</div>
-    <h1 class="hero-title">Massively parallel big data classification on a programmable processing in-memory architecture</h1>
-    <p class="hero-subtitle">A programmable processing-in-memory architecture brings large-scale classification closer to data to reduce movement and increase throughput.</p>
-    <div class="hero-meta"><strong>Authors</strong> Y. Kim, M. Imani, S. Gupta, M. Zhou, and T. S. Rosing</div>
-    
+    <h1 class="hero-title">Massively Parallel Big Data Classification on a Programmable Processing In-Memory Architecture</h1>
+    <p class="hero-subtitle">CHOIR turns storage-class ReRAM into a programmable classifier engine by supporting both conditional and arithmetic in-memory operations, so tree boosting can train and infer where the data already live.</p>
+    <div class="hero-meta"><strong>Authors</strong> Yeseong Kim, Mohsen Imani, Saransh Gupta, Minxuan Zhou, and Tajana S. Rosing</div>
+    <div class="hero-chips">
+      <div class="hero-chip">CHOIR</div>
+      <div class="hero-chip">ReRAM PIM</div>
+      <div class="hero-chip">CAM plus NOR</div>
+      <div class="hero-chip">Tree Boosting</div>
+      <div class="hero-chip">Programmable ISA</div>
+    </div>
     <div class="button-row">
       <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
-      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#pipeline">View Method</a>
       <a class="btn btn-secondary" href="#citation">Cite</a>
     </div>
   </div>
@@ -27,64 +280,190 @@
 
 <nav>
   <a class="nav-link active" href="#abstract">Abstract</a>
-  <a class="nav-link" href="#snapshot">Snapshot</a>
-  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#motivation">Motivation</a>
+  <a class="nav-link" href="#pipeline">Pipeline</a>
+  <a class="nav-link" href="#results">Results</a>
+  <a class="nav-link" href="#takeaways">Takeaways</a>
   <a class="nav-link" href="#citation">Citation</a>
 </nav>
 
 <section id="abstract">
   <div class="section-kicker">Abstract</div>
-  <h2 class="section-title">What the paper is doing.</h2>
+  <h2 class="section-title">A programmable PIM system for non-arithmetic-heavy classification.</h2>
   <div class="abstract-box reveal">
-    <p>With the emergence of Internet of Things, massive data created in the world pose huge technical challenges for efficient processing. Processing in-memory (PIM) technology has been widely investigated to overcome expensive data movements between processors and memory blocks. However, existing PIM designs incnr large area overhead to enable compnting capability via additional near-data processing cores and analog/mixed signal circnits. In this paper, we propose a new massively-parallel processing in-memory (PIM) architectnre, called CHOIR, based on emerging nonvolatile memory technology for big data classification. Unlike existing PIM designs which demand large analog/mixed signal circnits, we snpport the parallel PIM instructions for conditional and arithmetic operations in an area-efficient way.</p>
+    <p>CHOIR starts from a practical critique of prior processing-in-memory designs. Near-data accelerators still spend area and energy on extra CMOS logic, while many in-memory processors are excellent at vector arithmetic but awkward for workloads dominated by conditionals, branching, and tree-style decision logic.</p>
+    <p>This paper proposes Classification Hypothesis Online Identifier on Resistive memory, or CHOIR, a ReRAM-based PIM architecture built from digital-friendly CAM search and in-memory NOR operations instead of large ADC and DAC blocks. On top of that hardware, the paper rewrites a full tree-boosting workflow using programmable PIM APIs, including genetic sample selection, decision-tree learning, and AdaBoost-style reweighting. The result is a storage-class architecture that delivers GPU-level classification quality while improving training performance and energy by 123x and 52x over XGBoost on GPU.</p>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="snapshot">
-  <div class="section-kicker">Snapshot</div>
-  <h2 class="section-title">How this project fits inside CELL.</h2>
-  <p class="section-intro">A programmable processing-in-memory architecture brings large-scale classification closer to data to reduce movement and increase throughput.</p>
-  <div class="snapshot-grid">
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Research Thread</div>
-        <div class="snapshot-value">Efficient Systems and Accelerators</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Venue</div>
-        <div class="snapshot-value">ICCAD 2021</div>
-      </div>
-      <div class="snapshot-card reveal">
-        <div class="snapshot-label">Selected Focus</div>
-        <div class="snapshot-value">Processing in Memory, Big Data</div>
-      </div>
+<section id="motivation">
+  <div class="section-kicker">Motivation</div>
+  <h2 class="section-title">Why CHOIR had to be both programmable and memory-native.</h2>
+  <p class="section-intro">The paper is not just another PIM datapath. It is explicitly designed for workloads where comparisons, rule evaluation, and data movement dominate, which makes a generic arithmetic-only in-memory engine insufficient.</p>
+  <div class="problem-grid">
+    <article class="problem-card reveal">
+      <h3>Data movement was the first enemy</h3>
+      <p>Big-data classification pipelines move huge datasets between memory and processors even though much of the computation is simple branching and accumulation. CHOIR tries to keep both training and inference close to storage.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Analog PIM paid too much area tax</h3>
+      <p>Earlier analog or mixed-signal in-memory processors relied on large peripherals such as ADC and DAC blocks. The paper highlights that these can dominate chip area and undercut the density needed for storage-class memory.</p>
+    </article>
+    <article class="problem-card reveal">
+      <h3>Tree boosting needs conditionals, not only MACs</h3>
+      <p>AdaBoost and decision-tree training rely heavily on less-than checks, search, count, and selective updates. CHOIR is designed so those operations are first-class citizens inside memory rather than awkward host-side fallbacks.</p>
+    </article>
   </div>
-  <div class="context-box reveal">
-    <h3>Why it matters</h3>
-    <p>This project falls in CELL&#x27;s systems thread, where accelerators, memory systems, and deployment-aware optimization are redesigned for practical efficiency. The page highlights the paper through the lens of Processing in Memory and Big Data.</p>
+  <div class="highlight-strip reveal">
+    <div class="highlight-item">
+      <div class="highlight-number">36K</div>
+      <div class="highlight-caption">Row-parallel conditional operations such as less-than that CHOIR can execute in parallel.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">12M</div>
+      <div class="highlight-caption">Arithmetic operations such as addition that can be performed in parallel across the architecture.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">4%</div>
+      <div class="highlight-caption">Total area overhead added to the underlying resistive memory technology to support CHOIR's PIM functionality.</div>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-number">123x</div>
+      <div class="highlight-caption">Training performance gain over GPU XGBoost, paired with 52x better energy efficiency.</div>
+    </div>
   </div>
 </section>
 
 <hr class="divider">
 
-<section id="contributions">
-  <div class="section-kicker">Contributions</div>
-  <h2 class="section-title">Three takeaways from the work.</h2>
-  <div class="contributions-grid">
-      <div class="contribution-card reveal">
-        <h3>Core Idea</h3>
-        <p>With the emergence of Internet of Things, massive data created in the world pose huge technical challenges for efficient processing.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Design Move</h3>
-        <p>Processing in-memory (PIM) technology has been widely investigated to overcome expensive data movements between processors and memory blocks.</p>
-      </div>
-      <div class="contribution-card reveal">
-        <h3>Practical Impact</h3>
-        <p>Unlike existing PIM designs which demand large analog/mixed signal circnits, we snpport the parallel PIM instructions for conditional and arithmetic operations in an area-efficient way.</p>
-      </div>
+<section id="pipeline">
+  <div class="section-kicker">Pipeline</div>
+  <h2 class="section-title">How CHOIR turns a ReRAM array into a tree-boosting engine.</h2>
+  <p class="section-intro">The system is best understood as a hardware-software stack: a programmable ISA on top of low-overhead in-memory primitives, then a tree-boosting algorithm rewritten to exploit those primitives instead of fighting them.</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">Build PIM from CAM search and in-memory NOR</div>
+      <div class="step-desc">CHOIR uses a CAM-style parallel bit search for row-parallel conditional operations and MAGIC-style in-memory NOR for column-parallel arithmetic and logic. This avoids the expensive analog peripheral overhead found in other in-memory processors.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">Expose the array through a programmable ISA</div>
+      <div class="step-desc">The architecture lets software view memory blocks as arrays and invoke PIM instructions such as less-than, count, add, multiply, increment, copy, and cross-block write. Selection and computation are loosely separated so massively parallel operands can be targeted efficiently.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">Select representative samples with GA</div>
+      <div class="step-desc">CHOIR first uses a genetic algorithm on chromosome blocks to choose feature values that mimic the full data distribution. The fitness metric is mean absolute deviation, computed directly with in-memory less-than, count, and addition operations.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">Train decision stumps and boost them</div>
+      <div class="step-desc">The selected samples drive decision-tree learning inside the data-storage blocks. Entropy-based split evaluation, node-ID updates, and sample reweighting for SAMME.R-style boosting are all rewritten into the PIM programming model.</div>
+    </article>
+    <article class="pipeline-step reveal">
+      <div class="step-num">Step 05</div>
+      <div class="step-title">Run inference with the same in-memory rule flow</div>
+      <div class="step-desc">Online inference reuses row-parallel comparisons and node-ID updates to traverse the stored decision trees for many samples at once, then aggregates class probabilities across the boosted ensemble.</div>
+    </article>
   </div>
+</section>
+
+<hr class="divider">
+
+<section id="results">
+  <div class="section-kicker">Results</div>
+  <h2 class="section-title">CHOIR keeps competitive accuracy while removing the cost of moving data out to the GPU.</h2>
+  <p class="section-intro">The paper evaluates CHOIR on 13 datasets and compares it with scikit-learn, an OpenCL version of the same software flow, GPU XGBoost, and DNN baselines. The main story is that CHOIR stays accurate while shifting the computational bottleneck back into memory.</p>
+  <div class="metric-grid">
+    <article class="metric-card reveal">
+      <div class="metric-value">98.71%</div>
+      <div class="metric-label">Face Accuracy</div>
+      <div class="metric-sub">CHOIR reaches 98.71 percent on the FACE benchmark, beating both scikit-learn and XGBoost in the reported table.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">97.18%</div>
+      <div class="metric-label">Cardio Accuracy</div>
+      <div class="metric-sub">High accuracy on fetal disease diagnosis style classification, aligned with the paper's 97.2 percent headline claim.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">153x</div>
+      <div class="metric-label">Energy Gain</div>
+      <div class="metric-sub">Average training energy gain versus the OpenCL implementation, with 63x average performance improvement.</div>
+    </article>
+    <article class="metric-card reveal">
+      <div class="metric-value">93.6x</div>
+      <div class="metric-label">Transfer Reduction</div>
+      <div class="metric-sub">Reduction in data-transfer cost during training relative to the GPU architecture in the paper's breakdown study.</div>
+    </article>
+  </div>
+  <div class="table-card reveal">
+    <h3 class="table-header">Representative findings from the ICCAD 2021 paper</h3>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Theme</th>
+          <th>Reported result</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Area efficiency</td>
+          <td>CHOIR leaves 96 percent of the block area to the ReRAM array itself, with logic and latch support consuming only a small additional fraction.</td>
+          <td>The design remains plausible as storage-class memory rather than becoming a logic-heavy accelerator disguised as memory.</td>
+        </tr>
+        <tr>
+          <td>Training efficiency</td>
+          <td>Compared with GPU implementations, CHOIR improves training energy and performance on average by 153x and 63x over the OpenCL baseline and 123x and 52x over XGBoost.</td>
+          <td>The biggest win comes from avoiding repeated host-memory and GPU-memory traffic.</td>
+        </tr>
+        <tr>
+          <td>Inference efficiency</td>
+          <td>For inference, the paper reports average energy and performance improvements of 83x and 11x over the OpenCL baseline, and 82x and 7x over XGBoost.</td>
+          <td>The system is not just fast to train; the learned ensemble also executes efficiently inside the PIM architecture.</td>
+        </tr>
+        <tr>
+          <td>Quality retention</td>
+          <td>Across datasets such as SHUTTLE, PAGE, CARDIO, PAMAP2, UCIHAR, ISOLET, MNIST, FACE, HIGGS, and SUSY, CHOIR stays competitive with or better than conventional ML baselines.</td>
+          <td>The architecture is solving the compute-location problem without collapsing model quality.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analysis-grid">
+    <article class="analysis-card reveal">
+      <h3>A programmable memory-systems page</h3>
+      <p>CHOIR is one of the strongest early examples on the site of CELL pushing computation into memory without surrendering programmability. The ISA and runtime are as important as the array circuit choices.</p>
+    </article>
+    <article class="analysis-card reveal">
+      <h3>Why it is not just a MAC engine</h3>
+      <p>The paper's distinguishing feature is support for conditional logic, selection, and tree-style rule evaluation. That makes it relevant for non-arithmetic-centric machine learning workloads where many prior PIM designs struggle.</p>
+    </article>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="takeaways">
+  <div class="section-kicker">Takeaways</div>
+  <h2 class="section-title">Why this page matters in CELL's systems thread.</h2>
+  <ol class="takeaway-list">
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 01</div>
+      <div class="takeaway-text">This page should read as a full-stack memory-systems project: hardware primitives, ISA design, runtime support, and an algorithm reformulated around the architecture all matter here.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 02</div>
+      <div class="takeaway-text">CHOIR broadens the project list beyond language and HD learning by showing CELL's early work on programmable near-data and in-memory computing for data-intensive classification.</div>
+    </li>
+    <li class="takeaway-item reveal">
+      <div class="takeaway-num">Point 03</div>
+      <div class="takeaway-text">The key message for the website is not merely "PIM is fast." It is that carefully chosen digital-friendly primitives make storage-class, programmable, non-arithmetic-centric PIM realistic.</div>
+    </li>
+  </ol>
 </section>
 
 <hr class="divider">
@@ -94,12 +473,21 @@
   <h2 class="section-title">Reference entry.</h2>
   <div class="citation-box reveal">
     <button class="copy-btn" data-copy-target="citation-text">Copy</button>
-    <p class="citation-text" id="citation-text">Y. Kim, M. Imani, S. Gupta, M. Zhou, and T. S. Rosing, “ Massively parallel big data classification on a programmable processing in-memory architecture, ” in 2021 IEEE/ACM International Conference On Computer Aided Design (ICCAD), IEEE, 2021</p>
+    <pre class="citation-text" id="citation-text">@inproceedings{kim2021choir,
+  author    = {Yeseong Kim and Mohsen Imani and Saransh Gupta and Minxuan Zhou and Tajana S. Rosing},
+  title     = {Massively Parallel Big Data Classification on a Programmable Processing In-Memory Architecture},
+  booktitle = {2021 IEEE/ACM International Conference On Computer Aided Design (ICCAD)},
+  year      = {2021},
+  publisher = {IEEE},
+  doi       = {10.1109/ICCAD51958.2021.9643480},
+  url       = {https://doi.org/10.1109/ICCAD51958.2021.9643480},
+  numpages  = {9}
+}</pre>
   </div>
 </section>
 
 <footer>
-  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+  <p><a href="../projectpage.html#project-pages">Back to Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
 </footer>
 
 <script src="project.js"></script>
