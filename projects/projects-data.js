@@ -1,6 +1,76 @@
 window.CELL_PROJECTS = [
   {
     "area": "llm",
+    "title": "FOCUS & RePAIR: Mitigating Text Degeneration via Token-Level Guidance for Pruned Large Language Models",
+    "authors": "Junyoung Lee, Sehyeon Park, Shinhyoung Jang, Seonha Ryu, Hojeong Kim, Hyunsei Lee, Il Hong Suh, and Yeseong Kim",
+    "leadAuthor": "Junyoung Lee",
+    "summary": "FOCUS and RePAIR reduce repetition loops in pruned language models by guiding token-level recovery toward stable, high-quality generation.",
+    "tags": [
+      "LLM Pruning",
+      "Text Degeneration"
+    ],
+    "venue_short": "ICML 2026",
+    "page": "projects/focus-repair-llm-pruning.html",
+    "award": "Spotlight"
+  },
+  {
+    "area": "llm",
+    "title": "Million-Scale Text-to-Video Retrieval with Hyperdimensional Computing",
+    "authors": "Hyunsei Lee, Jaewoo Gwak, Shinhyoung Jang, Junyoung Lee, and Yeseong Kim",
+    "leadAuthor": "Hyunsei Lee",
+    "summary": "Hypervector Retrieval compresses videos into binary semantic representations and keeps million-scale text-to-video search both accurate and fast.",
+    "tags": [
+      "Video Retrieval",
+      "Hyperdimensional Computing"
+    ],
+    "venue_short": "EuroSys 2026",
+    "page": "projects/hvr-text-to-video-retrieval.html",
+    "award": null
+  },
+  {
+    "area": "llm",
+    "title": "GlowQ: Group-Shared LOw-Rank Approximation for Quantized LLMs",
+    "authors": "Selim An, Il Hong Suh, and Yeseong Kim",
+    "leadAuthor": "Selim An",
+    "summary": "GlowQ shares low-rank corrections across quantized transformer groups, reducing latency and memory overhead while preserving LLM quality.",
+    "tags": [
+      "LLM Quantization",
+      "Low-Rank Approximation"
+    ],
+    "venue_short": "ICLR 2026",
+    "page": "projects/glowq.html",
+    "award": null
+  },
+  {
+    "area": "hd",
+    "title": "MeshHD: Near-Linear Encoding for Hyperdimensional Computing via Multi-Scale Bases and Kronecker Factorization",
+    "authors": "Woong Jae Han, Jiseung Kim, Hyukjun Kwon, Hojeong Kim, Selim An, Shinhyoung Jang, and Yeseong Kim",
+    "leadAuthor": "Woong Jae Han",
+    "summary": "MeshHD makes hyperdimensional encoders spatially aware and near-linear, improving structured-data accuracy while cutting encoding cost.",
+    "tags": [
+      "Hyperdimensional Computing",
+      "Structured Encoding"
+    ],
+    "venue_short": "DATE 2026",
+    "page": "projects/meshhd.html",
+    "award": null
+  },
+  {
+    "area": "systems",
+    "title": "Enhanced CXL Pooled Memory System for Scalable AI via Embedding Access Prediction",
+    "authors": "Jongho Park, Hoyeon Lee, Seohyun Kim, Minho Ha, Byungil Koh, Jungmin Choi, and Yeseong Kim",
+    "leadAuthor": "Jongho Park",
+    "summary": "Predictive caching, prefetching, and selective near-memory execution make large embedding tables more practical on CXL pooled memory.",
+    "tags": [
+      "CXL Memory",
+      "Embedding Systems"
+    ],
+    "venue_short": "DATE 2026",
+    "page": "projects/sage-cxl-embedding.html",
+    "award": null
+  },
+  {
+    "area": "llm",
     "title": "FineScope: Precision Pruning for Domain-Specialized LLMs Using SAE-Guided Self-Data Cultivation",
     "authors": "Chaitali Bhattacharyya et al.",
     "lead_author": "Chaitali Bhattacharyya",

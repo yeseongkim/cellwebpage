@@ -259,6 +259,62 @@ OVERRIDES = {
         "award": "Best Paper Nomination",
         "title": "GenieHD: Efficient DNA Pattern Matching Accelerator Using Hyperdimensional Computing",
     },
+    "MeshHD.pdf": {
+        "slug": "meshhd",
+        "area": "hd",
+        "tags": ["Hyperdimensional Computing", "Structured Encoding"],
+        "venue_short": "DATE 2026",
+        "summary": "MeshHD makes hyperdimensional encoders spatially aware and near-linear, improving structured-data accuracy while cutting encoding cost.",
+        "title": "MeshHD: Near-Linear Encoding for Hyperdimensional Computing via Multi-Scale Bases and Kronecker Factorization",
+        "authors": "Woong Jae Han, Jiseung Kim, Hyukjun Kwon, Hojeong Kim, Selim An, Shinhyoung Jang, and Yeseong Kim",
+        "citation": "Woong Jae Han, Jiseung Kim, Hyukjun Kwon, Hojeong Kim, Selim An, Shinhyoung Jang, and Yeseong Kim. “MeshHD: Near-Linear Encoding for Hyperdimensional Computing via Multi-Scale Bases and Kronecker Factorization,” in 2026 Design, Automation & Test in Europe Conference & Exhibition (DATE), IEEE, 2026.",
+        "venue_full": "2026 Design, Automation & Test in Europe Conference & Exhibition (DATE), IEEE, 2026",
+    },
+    "enhanced.pdf": {
+        "slug": "sage-cxl-embedding",
+        "area": "systems",
+        "tags": ["CXL Memory", "Embedding Systems"],
+        "venue_short": "DATE 2026",
+        "summary": "Predictive caching, prefetching, and selective near-memory execution make large embedding tables more practical on CXL pooled memory.",
+        "title": "Enhanced CXL Pooled Memory System for Scalable AI via Embedding Access Prediction",
+        "authors": "Jongho Park, Hoyeon Lee, Seohyun Kim, Minho Ha, Byungil Koh, Jungmin Choi, and Yeseong Kim",
+        "citation": "Jongho Park, Hoyeon Lee, Seohyun Kim, Minho Ha, Byungil Koh, Jungmin Choi, and Yeseong Kim. “Enhanced CXL Pooled Memory System for Scalable AI via Embedding Access Prediction,” in 2026 Design, Automation & Test in Europe Conference & Exhibition (DATE), IEEE, 2026.",
+        "venue_full": "2026 Design, Automation & Test in Europe Conference & Exhibition (DATE), IEEE, 2026",
+    },
+    "glowq.pdf": {
+        "slug": "glowq",
+        "area": "llm",
+        "tags": ["LLM Quantization", "Low-Rank Approximation"],
+        "venue_short": "ICLR 2026",
+        "summary": "GlowQ shares low-rank corrections across quantized transformer groups, reducing latency and memory overhead while preserving LLM quality.",
+        "title": "GlowQ: Group-Shared LOw-Rank Approximation for Quantized LLMs",
+        "authors": "Selim An, Il Hong Suh, and Yeseong Kim",
+        "citation": "Selim An, Il Hong Suh, and Yeseong Kim. “GlowQ: Group-Shared LOw-Rank Approximation for Quantized LLMs,” in The Fourteenth International Conference on Learning Representations (ICLR), 2026.",
+        "venue_full": "The Fourteenth International Conference on Learning Representations (ICLR), 2026",
+    },
+    "milion_scale.pdf": {
+        "slug": "hvr-text-to-video-retrieval",
+        "area": "llm",
+        "tags": ["Video Retrieval", "Hyperdimensional Computing"],
+        "venue_short": "EuroSys 2026",
+        "summary": "Hypervector Retrieval compresses videos into binary semantic representations and keeps million-scale text-to-video search both accurate and fast.",
+        "title": "Million-Scale Text-to-Video Retrieval with Hyperdimensional Computing",
+        "authors": "Hyunsei Lee, Jaewoo Gwak, Shinhyoung Jang, Junyoung Lee, and Yeseong Kim",
+        "citation": "Hyunsei Lee, Jaewoo Gwak, Shinhyoung Jang, Junyoung Lee, and Yeseong Kim. “Million-Scale Text-to-Video Retrieval with Hyperdimensional Computing,” in 21st European Conference on Computer Systems (EuroSys ’26), April 27–30, 2026, Edinburgh, Scotland UK.",
+        "venue_full": "21st European Conference on Computer Systems (EuroSys ’26), April 27–30, 2026, Edinburgh, Scotland UK",
+    },
+    "FOCUS_RePAIR_Mitigating_ (2).pdf": {
+        "slug": "focus-repair-llm-pruning",
+        "area": "llm",
+        "tags": ["LLM Pruning", "Text Degeneration"],
+        "venue_short": "ICML 2026",
+        "summary": "FOCUS and RePAIR reduce repetition loops in pruned language models by guiding token-level recovery toward stable, high-quality generation.",
+        "title": "FOCUS & RePAIR: Mitigating Text Degeneration via Token-Level Guidance for Pruned Large Language Models",
+        "authors": "Junyoung Lee, Sehyeon Park, Shinhyoung Jang, Seonha Ryu, Hojeong Kim, Hyunsei Lee, Il Hong Suh, and Yeseong Kim",
+        "citation": "Junyoung Lee, Sehyeon Park, Shinhyoung Jang, Seonha Ryu, Hojeong Kim, Hyunsei Lee, Il Hong Suh, and Yeseong Kim. “FOCUS & RePAIR: Mitigating Text Degeneration via Token-Level Guidance for Pruned Large Language Models,” to appear in International Conference on Machine Learning (ICML) 2026.",
+        "venue_full": "International Conference on Machine Learning (ICML) 2026",
+        "award": "Spotlight",
+    },
 }
 
 
@@ -626,6 +682,21 @@ def render_data_js(cards):
     return "window.CELL_PROJECTS = " + json.dumps(cards, indent=2, ensure_ascii=False) + ";\n"
 
 
+def load_existing_cards():
+    if not DATA_JS.exists():
+        return []
+    raw = DATA_JS.read_text(encoding="utf-8")
+    prefix = "window.CELL_PROJECTS = "
+    if not raw.startswith(prefix):
+        return []
+    payload = raw[len(prefix) :].rstrip().rstrip(";")
+    try:
+        data = json.loads(payload)
+    except json.JSONDecodeError:
+        return []
+    return data if isinstance(data, list) else []
+
+
 def build_projects():
     entries = parse_publications()
     projects = []
@@ -685,9 +756,12 @@ def write_outputs(projects):
             continue
         page_path.write_text(render_page(project), encoding="utf-8")
 
-    cards = [FINE_SCOPE_CARD]
+    generated_cards = []
+    generated_pages = set()
     for project in projects:
-        cards.append(
+        page = f"projects/{project['slug']}.html"
+        generated_pages.add(page)
+        generated_cards.append(
             {
                 "area": project["area"],
                 "title": project["title"],
@@ -696,11 +770,18 @@ def write_outputs(projects):
                 "summary": project["summary"],
                 "tags": project["tags"],
                 "venue_short": project["venue_short"],
-                "page": f"projects/{project['slug']}.html",
+                "page": page,
                 "award": project.get("award"),
             }
         )
 
+    existing_cards = load_existing_cards()
+    preserved_cards = [
+        card
+        for card in existing_cards
+        if card.get("page") != FINE_SCOPE_CARD["page"] and card.get("page") not in generated_pages
+    ]
+    cards = generated_cards + [FINE_SCOPE_CARD] + preserved_cards
     DATA_JS.write_text(render_data_js(cards), encoding="utf-8")
 
 

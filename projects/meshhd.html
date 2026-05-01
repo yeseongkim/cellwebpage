@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeshHD: Near-Linear Encoding for Hyperdimensional Computing via Multi-Scale Bases and Kronecker Factorization | CELL Project Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="project-style.css">
+</head>
+<body data-area="hd">
+<button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">CELL Project Page · DATE 2026</div>
+    <h1 class="hero-title">MeshHD: Near-Linear Encoding for Hyperdimensional Computing via Multi-Scale Bases and Kronecker Factorization</h1>
+    <p class="hero-subtitle">MeshHD makes hyperdimensional encoders spatially aware and near-linear, improving structured-data accuracy while cutting encoding cost.</p>
+    <div class="hero-meta"><strong>Authors</strong> Woong Jae Han, Jiseung Kim, Hyukjun Kwon, Hojeong Kim, Selim An, Shinhyoung Jang, and Yeseong Kim</div>
+    
+    <div class="button-row">
+      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
+      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#citation">Cite</a>
+    </div>
+  </div>
+</section>
+
+<nav>
+  <a class="nav-link active" href="#abstract">Abstract</a>
+  <a class="nav-link" href="#snapshot">Snapshot</a>
+  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#citation">Citation</a>
+</nav>
+
+<section id="abstract">
+  <div class="section-kicker">Abstract</div>
+  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="abstract-box reveal">
+    <p>Hyperdimensional (HD) computing is attractive for low-power platforms, but common encoders flatten inputs and treat neighboring features as independent, discarding spatial structure and inflating the cost of a dense F ×D apply. We present M ESH HD, a spatially aware, relative and multi-scale base that maps 2D coordinates with random Fourier features to approximate a distance kernel; nearby locations receive similar hypervectors regardless of absolute position. We further introduce a compact Kronecker-structured apply that realizes the bundled base with three small GEMMs, reducing arithmetic and weight movement from O(F D) toward a near-linear form while preserving encoder semantics. Our experimental results show that M ESH HD consistently improves accuracy over the state-of-theart nonlinear HD encoders, especially at smaller D, and reduces per-batch encoding time by ∼ 3×, with up to 10× savings in encoder MACs/state at D=10,000.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="snapshot">
+  <div class="section-kicker">Snapshot</div>
+  <h2 class="section-title">How this project fits inside CELL.</h2>
+  <p class="section-intro">MeshHD makes hyperdimensional encoders spatially aware and near-linear, improving structured-data accuracy while cutting encoding cost.</p>
+  <div class="snapshot-grid">
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Research Thread</div>
+        <div class="snapshot-value">Brain-Inspired Hyperdimensional Computing</div>
+      </div>
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Venue</div>
+        <div class="snapshot-value">DATE 2026</div>
+      </div>
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Selected Focus</div>
+        <div class="snapshot-value">Hyperdimensional Computing, Structured Encoding</div>
+      </div>
+  </div>
+  <div class="context-box reveal">
+    <h3>Why it matters</h3>
+    <p>This project belongs to CELL&#x27;s hyperdimensional computing line, where lightweight symbolic representations are used to build efficient, robust learning systems. The page highlights the paper through the lens of Hyperdimensional Computing and Structured Encoding.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contributions">
+  <div class="section-kicker">Contributions</div>
+  <h2 class="section-title">Three takeaways from the work.</h2>
+  <div class="contributions-grid">
+      <div class="contribution-card reveal">
+        <h3>Core Idea</h3>
+        <p>Hyperdimensional (HD) computing is attractive for low-power platforms, but common encoders flatten inputs and treat neighboring features as independent, discarding spatial structure and inflating the cost of a dense F ×D apply.</p>
+      </div>
+      <div class="contribution-card reveal">
+        <h3>Design Move</h3>
+        <p>We present M ESH HD, a spatially aware, relative and multi-scale base that maps 2D coordinates with random Fourier features to approximate a distance kernel; nearby locations receive similar hypervectors regardless of absolute position.</p>
+      </div>
+      <div class="contribution-card reveal">
+        <h3>Practical Impact</h3>
+        <p>Our experimental results show that M ESH HD consistently improves accuracy over the state-of-theart nonlinear HD encoders, especially at smaller D, and reduces per-batch encoding time by ∼ 3×, with up to 10× savings in encoder MACs/state at D=10,000.</p>
+      </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="citation">
+  <div class="section-kicker">Citation</div>
+  <h2 class="section-title">Reference entry.</h2>
+  <div class="citation-box reveal">
+    <button class="copy-btn" data-copy-target="citation-text">Copy</button>
+    <p class="citation-text" id="citation-text">Woong Jae Han, Jiseung Kim, Hyukjun Kwon, Hojeong Kim, Selim An, Shinhyoung Jang, and Yeseong Kim. “MeshHD: Near-Linear Encoding for Hyperdimensional Computing via Multi-Scale Bases and Kronecker Factorization,” in 2026 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE), IEEE, 2026.</p>
+  </div>
+</section>
+
+<footer>
+  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+</footer>
+
+<script src="project.js"></script>
+</body>
+</html>

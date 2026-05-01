@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Million-Scale Text-to-Video Retrieval with Hyperdimensional Computing | CELL Project Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="project-style.css">
+</head>
+<body data-area="llm">
+<button class="theme-btn" id="themeBtn"><span id="themeLabel">Light</span></button>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">CELL Project Page · EuroSys 2026</div>
+    <h1 class="hero-title">Million-Scale Text-to-Video Retrieval with Hyperdimensional Computing</h1>
+    <p class="hero-subtitle">Hypervector Retrieval compresses videos into binary semantic representations and keeps million-scale text-to-video search both accurate and fast.</p>
+    <div class="hero-meta"><strong>Authors</strong> Hyunsei Lee, Jaewoo Gwak, Shinhyoung Jang, Junyoung Lee, and Yeseong Kim</div>
+    
+    <div class="button-row">
+      <a class="btn btn-primary" href="../projectpage.html#project-pages">Back to Project Pages</a>
+      <a class="btn btn-secondary" href="#abstract">Read Abstract</a>
+      <a class="btn btn-secondary" href="#citation">Cite</a>
+    </div>
+  </div>
+</section>
+
+<nav>
+  <a class="nav-link active" href="#abstract">Abstract</a>
+  <a class="nav-link" href="#snapshot">Snapshot</a>
+  <a class="nav-link" href="#contributions">Contributions</a>
+  <a class="nav-link" href="#citation">Citation</a>
+</nav>
+
+<section id="abstract">
+  <div class="section-kicker">Abstract</div>
+  <h2 class="section-title">What the paper is doing.</h2>
+  <div class="abstract-box reveal">
+    <p>Vision Encoder Scalable video retrieval is increasingly challenging as datasets reach tens of millions of videos. Current text-tovideo retrieval (T2VR) methods either compress videos into single dense vectors, losing segment-level detail, or expand them into multi-frame representations, incurring prohibitive storage and search costs. We propose a binary hyperdimensional representation that encodes each video into a compact 3,072-dimension hypervector, preserving semantic fidelity while reducing memory via bit-packing. To leverage the properties of hypervectors for sublinear search, we introduce Hypervector Retrieval (HVR), a frequency-aware inverted index that prioritizes rare informative positions and refines candidates using GPU-accelerated Hamming search. Experiments show that our approach matches or exceeds dense baselines for T2VR and surpasses state-of-the-art partially relevant video retrieval (PRVR) by over 5% Recall@10 on ActivityNet.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="snapshot">
+  <div class="section-kicker">Snapshot</div>
+  <h2 class="section-title">How this project fits inside CELL.</h2>
+  <p class="section-intro">Hypervector Retrieval compresses videos into binary semantic representations and keeps million-scale text-to-video search both accurate and fast.</p>
+  <div class="snapshot-grid">
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Research Thread</div>
+        <div class="snapshot-value">Domain-Specialized Language Systems</div>
+      </div>
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Venue</div>
+        <div class="snapshot-value">EuroSys 2026</div>
+      </div>
+      <div class="snapshot-card reveal">
+        <div class="snapshot-label">Selected Focus</div>
+        <div class="snapshot-value">Video Retrieval, Hyperdimensional Computing</div>
+      </div>
+  </div>
+  <div class="context-box reveal">
+    <h3>Why it matters</h3>
+    <p>This project sits in CELL&#x27;s work on retrieval, domain specialization, and adaptive compression for language systems under strict deployment budgets. The page highlights the paper through the lens of Video Retrieval and Hyperdimensional Computing.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contributions">
+  <div class="section-kicker">Contributions</div>
+  <h2 class="section-title">Three takeaways from the work.</h2>
+  <div class="contributions-grid">
+      <div class="contribution-card reveal">
+        <h3>Core Idea</h3>
+        <p>Vision Encoder Scalable video retrieval is increasingly challenging as datasets reach tens of millions of videos.</p>
+      </div>
+      <div class="contribution-card reveal">
+        <h3>Design Move</h3>
+        <p>Current text-tovideo retrieval (T2VR) methods either compress videos into single dense vectors, losing segment-level detail, or expand them into multi-frame representations, incurring prohibitive storage and search costs.</p>
+      </div>
+      <div class="contribution-card reveal">
+        <h3>Practical Impact</h3>
+        <p>Experiments show that our approach matches or exceeds dense baselines for T2VR and surpasses state-of-the-art partially relevant video retrieval (PRVR) by over 5% Recall@10 on ActivityNet.</p>
+      </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="citation">
+  <div class="section-kicker">Citation</div>
+  <h2 class="section-title">Reference entry.</h2>
+  <div class="citation-box reveal">
+    <button class="copy-btn" data-copy-target="citation-text">Copy</button>
+    <p class="citation-text" id="citation-text">Hyunsei Lee, Jaewoo Gwak, Shinhyoung Jang, Junyoung Lee, and Yeseong Kim. “Million-Scale Text-to-Video Retrieval with Hyperdimensional Computing,” in 21st European Conference on Computer Systems (EuroSys ’26), April 27–30, 2026, Edinburgh, Scotland UK.</p>
+  </div>
+</section>
+
+<footer>
+  <p><a href="../projectpage.html#project-pages">Project Pages</a> · <a href="https://cell.postech.ac.kr" target="_blank">CELL Lab @ POSTECH</a></p>
+</footer>
+
+<script src="project.js"></script>
+</body>
+</html>
